@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - CENTRE MÉDICAL EL AMAL ===
+Rendez-vous: #6 | Groupe: J4 | Appel: A1
+Patient: abdou Ahmed (1414141414)
+Montant Paye: 1300.0 MRU (Mode: CNAM)
+Date: 09/07/2026 12:53
+Code Secret Patient: 9FIYV9

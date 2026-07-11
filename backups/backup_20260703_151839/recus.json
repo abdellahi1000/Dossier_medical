@@ -1,0 +1,16 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47c9eceefb015ce5ab8828"
+    },
+    "id_reservation": {
+      "$oid": "6a47c9eceefb015ce5ab8825"
+    },
+    "date_generation": {
+      "$date": "2026-07-03T14:40:44.644Z"
+    },
+    "numero_group": 101,
+    "numero_de_rendez_vous": 1,
+    "code_secret": "XNRFQ9"
+  }
+]

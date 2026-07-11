@@ -1,0 +1,58 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47d29782dc2b97274683b3"
+    },
+    "id_resultat": {
+      "$oid": "6a47d29728ca95e2e84867c8"
+    },
+    "type_signature": "Signature \u00c9lectronique Standard (Certificat Serveur)",
+    "date_signature": {
+      "$date": "2026-07-03T15:17:43.221Z"
+    },
+    "signature_hash": "26a6ede4726fbcc3feac818c948d7d0534d67f265417636ec2d3345e51ad89ba",
+    "signataire_nom": "Dr. Mohamed Ahmed"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d29782dc2b97274683b5"
+    },
+    "id_resultat": {
+      "$oid": "6a47d29728ca95e2e84867c8"
+    },
+    "type_signature": "Cachet Officiel Num\u00e9rique (Certificat Centralis\u00e9)",
+    "date_signature": {
+      "$date": "2026-07-03T15:17:43.238Z"
+    },
+    "signature_hash": "6836d6956f9b17f5d5fb0e32109ff398930d8ebed87d5460333aa03f093c8744",
+    "signataire_nom": "Admin. Sidy Diallo"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d2ae08fb64364a2a6677"
+    },
+    "id_resultat": {
+      "$oid": "6a47d29728ca95e2e84867c8"
+    },
+    "type_signature": "Signature \u00c9lectronique Standard (Certificat Serveur)",
+    "date_signature": {
+      "$date": "2026-07-03T15:18:06.742Z"
+    },
+    "signature_hash": "7077235082541bcbab10995cc3077a1389720eb6300dcd92fc9cdc1c2dd51a9b",
+    "signataire_nom": "Dr. Mohamed Ahmed"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d2ae08fb64364a2a6679"
+    },
+    "id_resultat": {
+      "$oid": "6a47d29728ca95e2e84867c8"
+    },
+    "type_signature": "Cachet Officiel Num\u00e9rique (Certificat Centralis\u00e9)",
+    "date_signature": {
+      "$date": "2026-07-03T15:18:06.747Z"
+    },
+    "signature_hash": "ac2e9ea91e3ec8b429a5c7557e037ed1831485c9e5adde04865fb96c923b968b",
+    "signataire_nom": "Admin. Sidy Diallo"
+  }
+]

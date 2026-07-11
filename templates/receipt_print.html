@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu Numérique de Rendez-vous</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .lucide { width: 1.25em; height: 1.25em; stroke-width: 2px; vertical-align: middle; }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.5;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #1B7F3A;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #1B7F3A;
+            margin: 0 0 5px 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #2E9E4D;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .grid-item {
+            font-size: 14px;
+        }
+        .grid-item strong {
+            display: block;
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .appointment-box {
+            background-color: #D9F2D9;
+            border: 1px solid #2E9E4D;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .appointment-box h2 {
+            margin: 0 0 10px 0;
+            color: #1B7F3A;
+            font-size: 18px;
+        }
+        .codes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .code-item {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+        }
+        .code-item span {
+            display: block;
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        .code-item strong {
+            font-size: 16px;
+            color: #333;
+        }
+        .exams-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .exams-table th, .exams-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+        .exams-table th {
+            background-color: #f9f9f9;
+            color: #555;
+            font-weight: bold;
+        }
+        .total-box {
+            text-align: right;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .total-box span {
+            color: #1B7F3A;
+        }
+        .footer {
+            margin-top: 30px;
+            border-top: 1px dashed #ccc;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+        .print-btn {
+            background-color: #1B7F3A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0 auto;
+            transition: 0.2s;
+        }
+        .print-btn:hover {
+            background-color: #2E9E4D;
+        }
+        @media print {
+            .print-btn {
+                display: none;
+            }
+            body {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1><i data-lucide="building-2" style="width:28px;height:28px;margin-right:6px;"></i> Reçu Numérique de Rendez-vous</h1>
+        <p>Généré automatiquement par le Système de Gestion Médicale</p>
+    </div>
+
+    <!-- Appointment Code Box -->
+    <div class="appointment-box">
+        <h2>Rendez-vous Confirmé</h2>
+        <div class="codes-grid">
+            <div class="code-item">
+                <span>N° Groupe</span>
+                <strong>{{ reservation.numero_group }}</strong>
+            </div>
+            <div class="code-item">
+                <span>Code Secret</span>
+                <strong><code>{{ reservation.code_secret }}</code></strong>
+            </div>
+            <div class="code-item">
+                <span>N° Appel</span>
+                <strong style="color: #1B7F3A;">{{ reservation.lettre }}{{ reservation.numero_appel }}</strong>
+            </div>
+        </div>
+        <p style="font-size: 12px; color: #555; margin: 10px 0 0 0;">
+            Présentez ce reçu à l'administration dès votre arrivée.
+        </p>
+    </div>
+
+    <!-- Patient Info -->
+    <div class="section">
+        <div class="section-title">Informations Patient</div>
+        <div class="grid">
+            <div class="grid-item">
+                <strong>Nom Complet</strong>
+                {{ patient.prenom }} {{ patient.nom }}
+            </div>
+            <div class="grid-item">
+                <strong>Numéro National d'Identité</strong>
+                {{ patient.numero_national }}
+            </div>
+            <div class="grid-item" style="grid-column: span 2;">
+                <strong>Téléphone</strong>
+                {{ patient.telephone }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Info -->
+    <div class="section">
+        <div class="section-title">Centre de Santé</div>
+        <div class="grid">
+            <div class="grid-item" style="grid-column: span 2;">
+                <strong>Centre Médical</strong>
+                {{ centre.nom_centre }}
+            </div>
+            <div class="grid-item" style="grid-column: span 2;">
+                <strong>Adresse</strong>
+                {{ centre.adresse }}
+            </div>
+            <div class="grid-item">
+                <strong>Date & Heure</strong>
+                {{ reservation.date_reservation.strftime('%d/%m/%Y %H:%M') }}
+            </div>
+            <div class="grid-item">
+                <strong>N° de Ticket</strong>
+                #{{ reservation.numero_de_rendez_vous }}
+            </div>
+            {% if reservation.nom_medecin_assigne %}
+            <div class="grid-item" style="grid-column: span 2; background-color:#e8f4f8; padding:8px; border-radius:4px; margin-top:5px;">
+                <strong style="color:#0284c7;">Médecin Assigné</strong>
+                {{ reservation.nom_medecin_assigne }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Exam Info -->
+    <div class="section">
+        <div class="section-title">Examens Réservez</div>
+        <table class="exams-table">
+            <thead>
+                <tr>
+                    <th>Examen</th>
+                    <th>Catégorie</th>
+                    <th style="text-align: right;">Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ex in exams %}
+                    <tr>
+                        <td>{{ ex.type_examen }}</td>
+                        <td>{{ ex.categorie }}</td>
+                        <td style="text-align: right;">{{ ex.prix }} MRU</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="total-box">
+            Montant Total: <span>{{ reservation.montant_total }} MRU</span>
+        </div>
+        <div style="font-size: 12px; margin-top: 5px; color: #666;">
+            Mode de Prise en Charge: <strong>{{ mode_paiement }}</strong>
+            {% if mode_paiement == 'CNAM' %}
+                (N° Carte: {{ patient.nni }})
+                <br/>Couverture CNAM: {{ reservation.cnam.cnam_amount if reservation.cnam else reservation.montant_total * 0.9 | round(2) }} MRU
+                <br/>À payer (patient): {{ reservation.cnam.patient_amount if reservation.cnam else reservation.montant_total * 0.1 | round(2) }} MRU
+            {% endif %}</div>
+    </div>
+
+    <div class="footer">
+        <p>Merci de votre confiance. Pour toute modification, contactez le centre médical.</p>
+        <p style="font-size: 10px; color: #aaa;">Date d'impression: 03/07/2026</p>
+    </div>
+
+    <button class="print-btn" onclick="window.print()"><i data-lucide="printer"></i> Imprimer ce reçu</button>
+
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>

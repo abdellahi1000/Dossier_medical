@@ -1,0 +1,148 @@
+{% extends "hospital_base.html" %}
+{% set active_page = 'results' %}
+
+{% block title %}Validation des Résultats — Espace Hôpital{% endblock %}
+
+{% block hosp_content %}
+<!-- Page Header -->
+<div class="hosp-page-header" style="margin: 0 -1.5rem 1.75rem; padding: 1.4rem 1.5rem;">
+    <h1>
+        <i data-lucide="check-square" style="width:28px;height:28px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Validation & Co-signature Numérique des Résultats
+    </h1>
+    <p>Examinez les comptes-rendus médicaux des médecins, vérifiez les signatures et apposez le cachet administratif officiel.</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="stat-grid">
+    <div class="stat-card yellow">
+        <div class="stat-icon">
+            <i data-lucide="file-check" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>En attente de co-signature</p>
+            <h3>{{ pending_results|length }}</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i data-lucide="check-circle" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Signés ce mois</p>
+            <h3>{{ signed_this_month }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Pending Results Table -->
+<div class="hosp-card">
+    <h2><i data-lucide="clipboard-list" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Rapports Médicaux en Attente de Co-signature Administrative</h2>
+    <p class="section-desc">
+        Ces résultats ont été saisis et signés par les médecins. Examinez le compte-rendu, vérifiez la signature du médecin,
+        puis apposez le cachet officiel de l'hôpital pour les publier vers le patient.
+    </p>
+
+    {% if pending_results|length == 0 %}
+        <div class="empty-state">
+            <div class="empty-icon"><i data-lucide="party-popper" style="width:48px;height:48px;"></i></div>
+            <p>Aucun résultat en attente de co-signature. Tous les rapports ont été traités.</p>
+        </div>
+    {% else %}
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+            {% for res in pending_results %}
+            <div style="border:1px solid #e8f5e9; border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                <!-- Result Card Header -->
+                <div style="background:linear-gradient(135deg,#edfaf3,#f8fffe); padding:1rem 1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #d1f2d9;">
+                    <div>
+                        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+                            <span style="font-size:1.05rem;font-weight:700;color:#0f4c2a;">
+                                <i data-lucide="user" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ res.patient.prenom }} {{ res.patient.nom }}
+                            </span>
+                            <span class="status-badge status-pending">{{ res.statut }}</span>
+                        </div>
+                        <div style="font-size:0.82rem;color:#5a7a6a;margin-top:0.25rem;">
+                            NNI: <code>{{ res.patient.numero_national }}</code> &nbsp;|&nbsp;
+                            Code: <code>{{ res.code_secret }}</code> &nbsp;|&nbsp;
+                            Médecin: <strong>Dr. {{ res.medecin.prenom }} {{ res.medecin.nom }}</strong> ({{ res.medecin.specialite }})
+                        </div>
+                    </div>
+                    <div style="font-size:0.82rem;color:#888;">
+                        <i data-lucide="calendar" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ res.resultat.date_resultat.strftime('%d/%m/%Y à %H:%M') }}
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr auto; gap:1.5rem; padding:1.5rem; align-items:start; flex-wrap:wrap;">
+                    <!-- Report Content -->
+                    <div>
+                        <p style="font-size:0.8rem;font-weight:700;color:#0f4c2a;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;"><i data-lucide="file-text" style="width:14px;height:14px;vertical-align:bottom;"></i> Compte-Rendu Médical</p>
+                        {% if res.resultat %}
+                        <div style="background:#f8fffe; border:1px solid #d1f2d9; border-radius:10px; padding:1rem; font-size:0.9rem; line-height:1.7; max-height:300px; overflow-y:auto; color:#2D3748;">
+                            <strong>Observations:</strong>
+                            <p style="margin-top:0.2rem; margin-bottom:0.8rem;">{{ res.resultat.observations }}</p>
+                            <strong>Diagnostic:</strong>
+                            <p style="margin-top:0.2rem; margin-bottom:0.8rem;">{{ res.resultat.diagnosis }}</p>
+                            <strong>Résultats:</strong>
+                            <p style="margin-top:0.2rem; margin-bottom:0.8rem;">{{ res.resultat.results }}</p>
+                            {% if res.resultat.lab_items %}
+                            <strong>Analyses (Labo):</strong>
+                            <table style="width:100%; border-collapse:collapse; margin-bottom:0.8rem;">
+                                <tr style="background:#e9f5ec;"><th>Paramètre</th><th>Valeur</th><th>Réf</th></tr>
+                                {% for item in res.resultat.lab_items %}
+                                <tr><td style="border:1px solid #ddd;padding:2px;">{{ item.param }}</td><td style="border:1px solid #ddd;padding:2px;">{{ item.val }} {{ item.unit }}</td><td style="border:1px solid #ddd;padding:2px;">{{ item.ref }}</td></tr>
+                                {% endfor %}
+                            </table>
+                            {% endif %}
+                            <strong>Recommandations:</strong>
+                            <p style="margin-top:0.2rem; margin-bottom:0.8rem;">{{ res.resultat.recommendations }}</p>
+                            <strong>Conclusion:</strong>
+                            <p style="margin-top:0.2rem; margin-bottom:0;">{{ res.resultat.conclusion }}</p>
+                        </div>
+                        {% if res.resultat.images %}
+                            <div style="margin-top:0.75rem; display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:#198754; font-weight:600;">
+                                <i data-lucide="image" style="width:14px;height:14px;vertical-align:bottom;"></i> <span>{{ res.resultat.images|length }} cliché(s) joint(s) au rapport</span>
+                            </div>
+                        {% endif %}
+                        {% else %}
+                        <div style="background:#fff3cd; border:1px solid #ffeeba; border-radius:10px; padding:1rem; color:#856404;">
+                            Le rapport n'est pas encore disponible ou incomplet.
+                        </div>
+                        {% endif %}
+
+                        <!-- Doctor Signature Verification -->
+                        <div style="margin-top:1rem; padding:0.75rem 1rem; border-radius:10px; {% if res.medecin_signature %}background:#edfaf3; border:1px solid #c3e6cb;{% else %}background:#fdecea; border:1px solid #f5c6cb;{% endif %}">
+                            {% if res.medecin_signature %}
+                                <div style="font-size:0.85rem; font-weight:700; color:#146C43;"><i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:bottom;"></i> Signature Médecin Vérifiée</div>
+                                <div style="font-size:0.75rem; color:#555; margin-top:0.3rem; font-family:monospace;">Hash: {{ res.medecin_signature.signature_hash[:32] }}...</div>
+                            {% else %}
+                                <div style="font-size:0.85rem; font-weight:700; color:#D62828;"><i data-lucide="alert-triangle" style="width:14px;height:14px;vertical-align:bottom;"></i> Signature médecin manquante</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Co-signature Action Form -->
+                    <div style="min-width:260px;">
+                        <form action="{{ url_for('admin_sign_result', reservation_id=res._id) }}" method="POST" style="background:linear-gradient(135deg,#edfaf3,#f8fffe); padding:1.25rem; border-radius:12px; border:1.5px solid #c3e6cb;">
+                            <p style="font-size:0.8rem;font-weight:700;color:#0f4c2a;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;"><i data-lucide="building" style="width:14px;height:14px;vertical-align:bottom;"></i> Co-signature Administrative</p>
+
+                            <div class="hosp-form-group">
+                                <label>Type de Cachet Officiel</label>
+                                <select name="type_signature" required>
+                                    <option value="Cachet Officiel Numérique (Certificat Centralisé)">Cachet Officiel Numérique</option>
+                                    <option value="Signature Électronique Certifiée RGS">Signature Électronique RGS</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn-hosp btn-hosp-primary" style="width:100%; justify-content:center; padding:0.75rem; font-size:0.9rem;">
+                                <i data-lucide="pen-tool" style="width:14px;height:14px;vertical-align:bottom;"></i> Co-signer & Publier
+                            </button>
+                            <p style="font-size:0.72rem;color:#888;text-align:center;margin-top:0.5rem;">Le résultat sera rendu visible au patient après validation.</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

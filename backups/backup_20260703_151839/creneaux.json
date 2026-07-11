@@ -1,0 +1,56 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47bbcb981f90afe9d19f8b"
+    },
+    "specialite": "Analyse Sanguine",
+    "label": "08h00 - 10h00",
+    "capacite_max": 3,
+    "group_number": 101
+  },
+  {
+    "_id": {
+      "$oid": "6a47bbcb981f90afe9d19f8c"
+    },
+    "specialite": "Analyse Sanguine",
+    "label": "10h00 - 12h00",
+    "capacite_max": 3,
+    "group_number": 102
+  },
+  {
+    "_id": {
+      "$oid": "6a47bbcb981f90afe9d19f8d"
+    },
+    "specialite": "Analyse Sanguine",
+    "label": "14h00 - 16h00",
+    "capacite_max": 3,
+    "group_number": 103
+  },
+  {
+    "_id": {
+      "$oid": "6a47bbcb981f90afe9d19f8e"
+    },
+    "specialite": "Radiologie",
+    "label": "08h00 - 10h00",
+    "capacite_max": 3,
+    "group_number": 201
+  },
+  {
+    "_id": {
+      "$oid": "6a47bbcb981f90afe9d19f8f"
+    },
+    "specialite": "Radiologie",
+    "label": "10h00 - 12h00",
+    "capacite_max": 3,
+    "group_number": 202
+  },
+  {
+    "_id": {
+      "$oid": "6a47bbcb981f90afe9d19f90"
+    },
+    "specialite": "Radiologie",
+    "label": "14h00 - 16h00",
+    "capacite_max": 3,
+    "group_number": 203
+  }
+]

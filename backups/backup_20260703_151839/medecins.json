@@ -1,0 +1,16 @@
+[
+  {
+    "_id": "med_ahmed",
+    "nom": "Ahmed",
+    "prenom": "Mohamed",
+    "specialite": "Analyse Sanguine",
+    "password": "scrypt:32768:8:1$EoyVy1ofUkNfybZm$2e138f6491ca7e337435502ffe898344c27953a72fdd19dcd542a4f49faa5faea61ac8c2f7fcaab120b8c8e72aa46114989159658a7bc96bc24e3e376a517524"
+  },
+  {
+    "_id": "med_mariam",
+    "nom": "Mariam",
+    "prenom": "Kane",
+    "specialite": "Radiologie",
+    "password": "scrypt:32768:8:1$0i8TK31JL4BTFIqy$c6e7816650e3786e5f07f8616ca83ecfe5efc840bb703c14d045e36b318b2a647577f5835bef2c5c8046a499e8fe3409250cead4306f4fbd238ee4c1fddfd075"
+  }
+]

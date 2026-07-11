@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}Examen et Paiement - Système de Gestion Médicale{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding-bottom: 3rem;">
+    <div class="card" style="border-radius:16px; box-shadow: 0 10px 30px rgba(25,135,84,0.1); padding: 2rem;">
+        <h3 style="margin-bottom:2rem; color:var(--vert-principal); font-size:1.4rem; font-weight:800; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem;">
+            ÉTAPE 2 — CHOIX DES EXAMENS & PAIEMENT
+        </h3>
+        
+        <!-- Summary of choices -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
+            <h4 style="margin-top:0; font-size:1.1rem; color:var(--gris-fonce); display:flex; align-items:center; gap:0.5rem;">
+                <i data-lucide="file-text" style="width:20px;height:20px;"></i>
+                Résumé de votre réservation
+            </h4>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:1rem; font-size:0.95rem; color:#475569;">
+                <div><strong style="color:#1e293b;">Centre Médical :</strong> {{ centre.nom_centre }}</div>
+                <div><strong style="color:#1e293b;">Catégorie :</strong> {{ category }}</div>
+                <div><strong style="color:#1e293b;">Date :</strong> {{ appointment_date }}</div>
+                <div><strong style="color:#1e293b;">Heure :</strong> {{ slot.label }} (Groupe {{ slot.group_number }})</div>
+            </div>
+        </div>
+
+        <form id="booking-form" action="{{ url_for('book_exam') }}" method="POST" enctype="multipart/form-data">
+            
+            <!-- HIDDEN FIELDS FROM DASHBOARD -->
+            <input type="hidden" name="id_centre" value="{{ centre._id }}">
+            <input type="hidden" name="id_slot" value="{{ slot._id }}">
+            <input type="hidden" name="appointment_date" value="{{ appointment_date }}">
+            
+            <!-- 1. Exams Selection -->
+            <div style="margin-bottom: 2rem;">
+                <h4 style="color:var(--gris-fonce); font-size:1.15rem; font-weight:700; margin-bottom: 1rem;">1. Sélection des Examens</h4>
+                <p style="color: #64748b; margin-bottom: 1rem; font-size: 0.9rem;">Cochez les examens spécifiques que vous souhaitez réaliser (Catégorie: {{ category }}).</p>
+                
+                <div class="selectable-list" style="display: grid; gap: 0.75rem;">
+                    {% for exam in available_exams %}
+                        <label class="selectable-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: white;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <input type="checkbox" name="exams" value="{{ exam._id }}" data-price="{{ exam.prix }}" onchange="calculateTotal()" class="exam-checkbox" style="width: 1.2rem; height: 1.2rem; accent-color: var(--vert-principal);">
+                                <strong style="color: var(--gris-fonce); font-size: 1.05rem;">{{ exam.type_examen }}</strong>
+                            </div>
+                            <span style="font-weight: 700; color: var(--vert-principal); font-size: 1.1rem; background: #f0faf3; padding: 0.25rem 0.75rem; border-radius: 20px;">{{ exam.prix }} MRU</span>
+                        </label>
+                    {% endfor %}
+                </div>
+
+                <!-- Montant total display -->
+                <div style="margin-top: 1.5rem; padding: 1.25rem; background: #f8fafc; border-radius: 12px; border-left: 4px solid var(--vert-principal); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 1.1rem; font-weight: 600; color: #475569;">Montant Total à Payer :</span>
+                    <strong id="display-total" style="font-size: 1.4rem; color: var(--vert-principal);">0 MRU</strong>
+                    <input type="hidden" name="montant_total" id="input-total" value="0">
+                </div>
+            </div>
+
+            <!-- 2. Payment Section -->
+            <div style="margin-bottom: 2rem;">
+                <h4 style="color:var(--gris-fonce); font-size:1.15rem; font-weight:700; margin-bottom: 1rem;">2. Prise en Charge et Paiement</h4>
+                <p style="color: #64748b; margin-bottom: 1rem; font-size: 0.9rem;">Sélectionnez votre méthode de règlement.</p>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <label class="selectable-item" style="flex: 1; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 10px; cursor: pointer; text-align: center; background: white;">
+                        <input type="radio" name="mode_paiement" value="Normal" checked onchange="togglePaymentMode()" style="margin-bottom: 0.5rem; accent-color: var(--vert-principal);">
+                        <div style="margin-top: 0.5rem;">
+                            <strong style="color:var(--gris-fonce);">Paiement Normal</strong><br>
+                            <span style="font-size: 0.8rem; color: #64748b;">Règlement en ligne direct</span>
+                        </div>
+                    </label>
+                    <label class="selectable-item" style="flex: 1; padding: 1rem; border: 1px solid #cbd5e1; border-radius: 10px; cursor: pointer; text-align: center; background: white;">
+                        <input type="radio" name="mode_paiement" value="CNAM" onchange="togglePaymentMode()" style="margin-bottom: 0.5rem; accent-color: var(--vert-principal);">
+                        <div style="margin-top: 0.5rem;">
+                            <strong style="color:var(--gris-fonce);">Couverture CNAM</strong><br>
+                            <span style="font-size: 0.8rem; color: #64748b;">Assurance maladie</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Normal payment info -->
+                <div id="payment-normal-form" style="background-color: #f8fafc; padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem;">
+                    <h5 style="margin-top:0; color:#334155;">Paiement en Ligne (Simulation)</h5>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="payment_address_normal" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Adresse de Paiement :</label>
+                        <input type="text" id="payment_address_normal" name="payment_address" class="form-control" value="{{ payment_address }}" readonly style="background: #e2e8f0; border: 1px solid #cbd5e1; cursor: not-allowed; color: #475569; font-weight: 700; font-family: monospace; font-size: 1.1rem; letter-spacing: 1px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="payment_proof" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Preuve de Paiement (Reçu / Capture) :</label>
+                        <input type="file" id="payment_proof" name="payment_proof" class="form-control" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem;" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="card_expiry" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Date d'Expiration :</label>
+                            <input type="text" id="card_expiry" class="form-control" placeholder="MM/AA" value="12/28" style="background: white; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div class="form-group">
+                            <label for="card_cvv" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Cryptogramme (CVV) :</label>
+                            <input type="password" id="card_cvv" class="form-control" placeholder="123" value="123" style="background: white; border: 1px solid #cbd5e1;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CNAM payment info -->
+                <div id="payment-cnam-form" style="background-color: #f8fafc; padding: 1.5rem; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem; display: none;">
+                    <h5 style="margin-top:0; color:#334155;">Informations CNAM</h5>
+                    
+
+                    
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="ayant_droit" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Numéro de Carte :</label>
+                        <input type="text" id="ayant_droit" name="ayant_droit" class="form-control" value="{{ patient.nni }}" style="background: white; border: 1px solid #cbd5e1;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="type_couverture" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Type de Couverture :</label>
+                        <select id="type_couverture" name="type_couverture" class="form-control" style="background: white; border: 1px solid #cbd5e1;">
+                            <option value="Remboursement Partiel (90%)" selected>Remboursement Partiel (90%)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="date_expiration" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Date d'Expiration CNAM :</label>
+                        <input type="date" id="date_expiration" name="date_expiration" class="form-control" value="2028-12-31" style="background: white; border: 1px solid #cbd5e1;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="ayant_droit_nom" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Nom sur la carte :</label>
+                        <input type="text" id="ayant_droit_nom" name="ayant_droit_nom" class="form-control" value="{{ patient.prenom }} {{ patient.nom }}" style="background: white; border: 1px solid #cbd5e1;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="payment_address_cnam" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Adresse de Paiement :</label>
+                        <input type="text" id="payment_address_cnam" name="payment_address_cnam" class="form-control" value="{{ payment_address }}" readonly style="background: #e2e8f0; border: 1px solid #cbd5e1; cursor: not-allowed; color: #475569; font-weight: 700; font-family: monospace; font-size: 1.1rem; letter-spacing: 1px;">
+                    </div>
+
+                    <!-- CNI Uploader -->
+                    <div class="form-group" style="border-top: 1px dashed #cbd5e1; padding-top: 1.5rem; margin-top: 1.5rem;">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: #475569;">Copie de la CNI :</label>
+                        <div class="form-group" style="margin-bottom: 1rem; margin-top: 0.5rem;">
+                            <select id="cni_format" name="cni_format" class="form-control" onchange="toggleCniUploadFields()" style="background: white; border: 1px solid #cbd5e1;">
+                                <option value="unique">Un seul fichier (Recto/Verso)</option>
+                                <option value="double">Deux fichiers distincts</option>
+                            </select>
+                        </div>
+                        <div id="cni-unique-field" class="form-group">
+                            <input type="file" id="cni_unique" name="cni_unique" class="form-control" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                        </div>
+                        <div id="cni-double-fields" style="display: none;">
+                            <div class="form-group" style="margin-bottom: 0.5rem;">
+                                <label style="font-size: 0.75rem; color:#64748b;">Recto :</label>
+                                <input type="file" id="cni_recto" name="cni_recto" class="form-control" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 0.75rem; color:#64748b;">Verso :</label>
+                                <input type="file" id="cni_verso" name="cni_verso" class="form-control" style="background: white; border: 1px solid #cbd5e1; padding: 0.5rem;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Validation -->
+            <div style="display: flex; justify-content: space-between; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+                <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary" style="padding: 0.85rem 1.5rem; border-radius: 10px;">
+                    <i data-lucide="arrow-left" style="width:14px;height:14px;vertical-align:bottom;"></i> Retour
+                </a>
+                <button type="submit" class="btn btn-primary" onclick="return validateBeforeSubmit()" style="padding: 0.85rem 2.5rem; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 15px rgba(25,135,84,0.3); display: flex; align-items: center; gap: 0.5rem;">
+                    Confirmer & Payer
+                    <i data-lucide="check-circle" style="width:20px;height:20px;"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function calculateTotal() {
+        let total = 0;
+        document.querySelectorAll('.exam-checkbox:checked').forEach(cb => {
+            total += parseFloat(cb.getAttribute('data-price'));
+        });
+        
+        document.getElementById('display-total').textContent = total + ' MRU';
+        document.getElementById('input-total').value = total;
+    }
+
+    function togglePaymentMode() {
+        const mode = document.querySelector('input[name="mode_paiement"]:checked').value;
+        const normalForm = document.getElementById('payment-normal-form');
+        const cnamForm = document.getElementById('payment-cnam-form');
+        
+        const cniUniqueInput = document.getElementById('cni_unique');
+        const cniRectoInput = document.getElementById('cni_recto');
+        const cniVersoInput = document.getElementById('cni_verso');
+        const paymentProof = document.getElementById('payment_proof');
+        
+        if (mode === 'Normal') {
+            normalForm.style.display = 'block';
+            cnamForm.style.display = 'none';
+            cniUniqueInput.removeAttribute('required');
+            cniRectoInput.removeAttribute('required');
+            cniVersoInput.removeAttribute('required');
+            paymentProof.setAttribute('required', 'required');
+        } else {
+            normalForm.style.display = 'none';
+            cnamForm.style.display = 'block';
+            paymentProof.removeAttribute('required');
+            toggleCniUploadFields();
+        }
+    }
+
+    function toggleRelationshipField() {
+        const rel = document.getElementById('relation').value;
+        const holderInput = document.getElementById('ayant_droit');
+        if (rel === 'Bénéficiaire principal') {
+            holderInput.value = "{{ patient.prenom }} {{ patient.nom }}";
+        } else {
+            holderInput.value = "";
+            holderInput.placeholder = "Entrez le nom complet du parent (titulaire)";
+        }
+    }
+
+    function toggleCniUploadFields() {
+        const format = document.getElementById('cni_format').value;
+        const mode = document.querySelector('input[name="mode_paiement"]:checked').value;
+        
+        const uField = document.getElementById('cni-unique-field');
+        const dFields = document.getElementById('cni-double-fields');
+        
+        const cniUniqueInput = document.getElementById('cni_unique');
+        const cniRectoInput = document.getElementById('cni_recto');
+        const cniVersoInput = document.getElementById('cni_verso');
+
+        if (format === 'unique') {
+            uField.style.display = 'block';
+            dFields.style.display = 'none';
+            if (mode === 'CNAM') {
+                cniUniqueInput.setAttribute('required', 'required');
+                cniRectoInput.removeAttribute('required');
+                cniVersoInput.removeAttribute('required');
+            }
+        } else {
+            uField.style.display = 'none';
+            dFields.style.display = 'block';
+            if (mode === 'CNAM') {
+                cniUniqueInput.removeAttribute('required');
+                cniRectoInput.setAttribute('required', 'required');
+                cniVersoInput.setAttribute('required', 'required');
+            }
+        }
+    }
+
+    function validateBeforeSubmit() {
+        const checkedExams = document.querySelectorAll('.exam-checkbox:checked');
+        if (checkedExams.length === 0) {
+            alert("Veuillez sélectionner au moins un examen médical.");
+            return false;
+        }
+        return true;
+    }
+
+    // Initialize formatting
+    document.querySelectorAll('.exam-checkbox').forEach(cb => {
+        cb.addEventListener('change', function() {
+            if (this.checked) {
+                this.parentElement.parentElement.style.borderColor = 'var(--vert-principal)';
+                this.parentElement.parentElement.style.backgroundColor = '#f0faf3';
+            } else {
+                this.parentElement.parentElement.style.borderColor = '#cbd5e1';
+                this.parentElement.parentElement.style.backgroundColor = 'white';
+            }
+        });
+    });
+</script>
+{% endblock %}

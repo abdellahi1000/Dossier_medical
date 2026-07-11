@@ -1,0 +1,196 @@
+{% extends "hospital_base.html" %}
+{% set active_page = 'documents' %}
+
+{% block title %}Archives Documentaires — Espace Hôpital{% endblock %}
+
+{% block hosp_content %}
+<!-- Page Header -->
+<div class="hosp-page-header" style="margin: 0 -1.5rem 1.75rem; padding: 1.4rem 1.5rem;">
+    <h1>
+        <i data-lucide="folder-archive" style="width:28px;height:28px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Archives Documentaires & Dossiers Médicaux
+    </h1>
+    <p>Consultez, recherchez et téléchargez les dossiers médicaux archivés, les résultats PDF co-signés et les documents CNAM.</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i data-lucide="folder" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Dossiers archivés</p>
+            <h3>{{ archived_files|length }}</h3>
+        </div>
+    </div>
+    <div class="stat-card blue">
+        <div class="stat-icon">
+            <i data-lucide="search" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Résultats de recherche</p>
+            <h3>{{ search_results|length }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Search -->
+<div class="hosp-card">
+    <h2><i data-lucide="search" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Rechercher dans les Archives</h2>
+    <p class="section-desc">Recherchez par Numéro National (NNI), Code Secret ou numéro de rendez-vous.</p>
+    <form action="{{ url_for('admin_documents') }}" method="GET">
+        <div class="search-bar">
+            <span style="font-size:1.2rem;"><i data-lucide="search" style="width:20px;height:20px;"></i></span>
+            <input type="text" name="q" placeholder="Numéro National (NNI), Code Secret, N° Rendez-vous..." value="{{ search_query or '' }}" autocomplete="off">
+            <button type="submit">Rechercher</button>
+            {% if search_query %}
+                <a href="{{ url_for('admin_documents') }}" class="btn-hosp btn-hosp-sm" style="background:#f0f4f1;color:#555;text-decoration:none;"><i data-lucide="x" style="width:16px;height:16px;vertical-align:bottom;"></i> Effacer</a>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if search_query and search_results %}
+        <p style="color:#198754;font-weight:600;margin-bottom:1rem;">{{ search_results|length }} résultat(s) pour « {{ search_query }} »</p>
+        <div style="overflow-x:auto;">
+            <table class="hosp-table">
+                <thead>
+                    <tr>
+                        <th>N° RDV</th>
+                        <th>Patient & NNI</th>
+                        <th>Centre & Examens</th>
+                        <th>Paiement</th>
+                        <th>Statut</th>
+                        <th>Documents</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in search_results %}
+                    <tr>
+                        <td><strong>#{{ res.numero_de_rendez_vous }}</strong><br><span style="font-size:0.78rem;color:#888;">Code: <code>{{ res.code_secret }}</code></span></td>
+                        <td>
+                            <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                            <span style="font-size:0.82rem;color:#555;">NNI: {{ res.patient.numero_national }}</span>
+                        </td>
+                        <td>
+                            <strong>{{ res.centre.nom_centre }}</strong>
+                            <ul style="list-style:none;padding:0;font-size:0.82rem;">{% for ex in res.examens %}<li><i data-lucide="chevron-right" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ ex.type_examen }}</li>{% endfor %}</ul>
+                        </td>
+                        <td>{{ res.paiement.mode_paiement }}</td>
+                        <td><span class="status-badge {% if res.statut == 'Terminé' %}status-active{% else %}status-pending{% endif %}">{{ res.statut }}</span></td>
+                        <td>
+                            <a href="{{ url_for('download_receipt', reservation_id=res._id) }}" target="_blank" class="btn-hosp btn-hosp-sm btn-hosp-info"><i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% elif search_query %}
+        <div class="empty-state">
+            <div class="empty-icon"><i data-lucide="search"></i></div>
+            <p>Aucun dossier trouvé pour « <strong>{{ search_query }}</strong> »</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Archived Files Table -->
+<div class="hosp-card">
+    <h2><i data-lucide="archive" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Dossiers Médicaux Archivés (Terminés)</h2>
+    <p class="section-desc">
+        Tous les dossiers médicaux complétés et co-signés. Chaque dossier contient le rapport final, le reçu numérique, les documents CNAM et les clichés d'imagerie.
+    </p>
+
+    {% if archived_files|length == 0 %}
+        <div class="empty-state">
+            <div class="empty-icon"><i data-lucide="folder-open" style="width:48px;height:48px;"></i></div>
+            <p>Aucun dossier archivé pour le moment.</p>
+        </div>
+    {% else %}
+        <div style="overflow-x:auto;">
+            <table class="hosp-table">
+                <thead>
+                    <tr>
+                        <th>N° RDV</th>
+                        <th>Patient</th>
+                        <th>Centre & Examens</th>
+                        <th>Co-signatures</th>
+                        <th>Contenu du Dossier</th>
+                        <th>Téléchargements</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in archived_files %}
+                    <tr>
+                        <td>
+                            <strong style="color:#0f4c2a; font-size:1.05rem;">#{{ res.numero_de_rendez_vous }}</strong><br>
+                            <span class="status-badge status-active" style="margin-top:0.3rem;"><i data-lucide="check-circle" style="width:12px;height:12px;vertical-align:bottom;"></i> Terminé</span>
+                        </td>
+                        <td>
+                            <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                            <span style="font-size:0.82rem;color:#555;">NNI: {{ res.patient.numero_national }}</span>
+                        </td>
+                        <td>
+                            <strong>{{ res.centre.nom_centre }}</strong>
+                            <ul style="list-style:none;padding:0;margin-top:0.25rem;font-size:0.82rem;">
+                                {% for ex in res.examens %}<li><i data-lucide="chevron-right" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ ex.type_examen }}</li>{% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            <div style="font-size:0.82rem;">
+                                <div style="color:#146C43;font-weight:600;margin-bottom:0.25rem;">
+                                    <i data-lucide="stethoscope" style="width:14px;height:14px;vertical-align:bottom;"></i> Dr. {{ res.medecin.nom }}
+                                </div>
+                                {% if res.medecin_signature %}
+                                <code style="font-size:0.7rem;color:#888;word-break:break-all;display:block;">{{ res.medecin_signature.signature_hash[:20] }}...</code>
+                                {% endif %}
+                                <div style="color:#198754;font-weight:600;margin-top:0.4rem;">
+                                    <i data-lucide="building" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ res.admin_signature.signataire_nom if res.admin_signature else 'Admin' }}
+                                </div>
+                                {% if res.admin_signature %}
+                                <code style="font-size:0.7rem;color:#888;word-break:break-all;display:block;">{{ res.admin_signature.signature_hash[:20] }}...</code>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-size:0.82rem;display:flex;flex-direction:column;gap:0.2rem;">
+                                <span><i data-lucide="folder-open" style="width:14px;height:14px;vertical-align:bottom;"></i> Dossier Médical Principal</span>
+                                {% if res.paiement and res.paiement.mode_paiement == 'CNAM' %}
+                                    <span><i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> Documents CNAM</span>
+                                {% endif %}
+                                <span><i data-lucide="file-text" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu numérique</span>
+                                {% if res.resultat and res.resultat.images %}
+                                    <span style="color:#198754;font-weight:600;"><i data-lucide="image" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ res.resultat.images|length }} cliché(s)</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                                <div style="display:flex;gap:0.4rem;">
+                                    <a href="{{ url_for('download_result', reservation_id=res._id) }}" target="_blank" class="btn-hosp btn-hosp-sm btn-hosp-primary" style="flex:1;text-align:center;">
+                                        <i data-lucide="download" style="width:14px;height:14px;vertical-align:bottom;"></i> PDF
+                                    </a>
+                                    {% if res.resultat and res.resultat.images %}
+                                    <button class="btn-hosp btn-hosp-sm btn-hosp-secondary" style="background:#e2e8f0;color:#334155;cursor:not-allowed;" title="Dossier d'images archivé">
+                                        <i data-lucide="folder-open" style="width:14px;height:14px;vertical-align:bottom;"></i> Clichés
+                                    </button>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ url_for('download_receipt', reservation_id=res._id) }}" target="_blank" class="btn-hosp btn-hosp-sm btn-hosp-info">
+                                    <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu
+                                </a>
+                                {% if res.paiement and res.paiement.mode_paiement == 'CNAM' %}
+                                    <a href="{{ url_for('download_cnam', reservation_id=res._id) }}" target="_blank" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd;color:#1565c0;">
+                                        <i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> CNAM
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

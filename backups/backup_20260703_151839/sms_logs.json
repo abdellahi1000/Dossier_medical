@@ -1,0 +1,26 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47c9eceefb015ce5ab8829"
+    },
+    "phone": "36123456",
+    "message": "\ud83c\udfe5 R\u00e9servation confirm\u00e9e au Centre M\u00e9dical Chiffa. RDV le 03/07/2026 (Cr\u00e9neau: 08h00 - 10h00). Code secret: XNRFQ9, Groupe: 101, Appel: A1.",
+    "time": "03/07/2026 14:40:44"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d29782dc2b97274683b6"
+    },
+    "phone": "36123456",
+    "message": "Votre r\u00e9sultat final est disponible dans votre espace personnel. Code d'acc\u00e8s: XNRFQ9.",
+    "time": "03/07/2026 15:17:43"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d2ae08fb64364a2a667a"
+    },
+    "phone": "36123456",
+    "message": "Votre r\u00e9sultat final est disponible dans votre espace personnel. Code d'acc\u00e8s: XNRFQ9.",
+    "time": "03/07/2026 15:18:06"
+  }
+]

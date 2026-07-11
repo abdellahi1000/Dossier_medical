@@ -1,0 +1,498 @@
+{% extends "base.html" %}
+
+{% block title %}Espace Hôpital - Système de Gestion Médicale{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs" id="adminTab" role="tablist">
+<li class="nav-item"><a class="nav-link active" id="identity-tab" data-bs-toggle="tab" href="#identity" role="tab">Identity & Entry</a></li>
+<li class="nav-item"><a class="nav-link" id="signature-tab" data-bs-toggle="tab" href="#signature" role="tab">Results Signature</a></li>
+<li class="nav-item"><a class="nav-link" id="documents-tab" data-bs-toggle="tab" href="#documents" role="tab">Documents</a></li>
+<li class="nav-item"><a class="nav-link" id="doctors-tab" data-bs-toggle="tab" href="#doctors" role="tab">Doctors</a></li>
+<li class="nav-item"><a class="nav-link" id="audit-tab" data-bs-toggle="tab" href="#audit" role="tab">Audit</a></li>
+</ul>
+<div class="tab-content">
+<div style="margin-bottom: 2rem;">
+    <h2>Espace Hôpital</h2>
+    <p style="color: #666;">Gestion des réservations, validation des reçus, signature des résultats et archivage numérique.</p>
+</div>
+
+<!-- Search Panel -->
+<div class="card" style="margin-bottom: 2rem;">
+    <h3><i data-lucide="search" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Rechercher un Patient / Dossier</h3>
+    <p style="color: #666; margin-bottom: 1rem;">Recherchez un patient par Numéro National ou Code Secret.</p>
+    <form action="{{ url_for('admin_dashboard') }}" method="GET" style="display: flex; gap: 1rem; align-items: flex-end;">
+        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label for="search_query">Recherche :</label>
+            <input type="text" id="search_query" name="q" class="form-control" placeholder="Numéro national ou Code secret..." value="{{ search_query or '' }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+        {% if search_query %}
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Réinitialiser</a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Search Results -->
+{% if search_query %}
+<div class="card" style="margin-bottom: 2rem; border-color: var(--bleu-info);">
+    <h3>Résultats de recherche pour "{{ search_query }}"</h3>
+    {% if search_results|length == 0 %}
+        <p style="color: #888; font-style: italic;">Aucune réservation trouvée pour ce critère.</p>
+    {% else %}
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rendez-vous</th>
+                        <th>Patient</th>
+                        <th>Centre & Examens</th>
+                        <th>Montant & Paiement</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in search_results %}
+                        <tr>
+                            <td>
+                                <strong>#{{ res.numero_de_rendez_vous }}</strong><br>
+                                <span style="font-size: 0.8rem; color: #666;">Code: <code>{{ res.code_secret }}</code></span>
+                            </td>
+                            <td>
+                                <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                                <span style="font-size: 0.85rem; color: #666;">N° National: {{ res.patient.numero_national }}</span><br>
+                                <span style="font-size: 0.85rem; color: #666;">Tél: {{ res.patient.telephone }}</span>
+                            </td>
+                            <td>
+                                <strong>{{ res.centre.nom_centre }}</strong>
+                                <ul style="list-style: none; padding-left: 0; font-size: 0.85rem; margin-top: 0.25rem;">
+                                    {% for ex in res.examens %}
+                                        <li><i data-lucide="chevron-right" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ ex.type_examen }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <strong>{{ res.montant_total }} MRU</strong><br>
+                                <span class="badge {% if res.paiement.mode_paiement == 'CNAM' %}badge-info{% else %}badge-success{% endif %}">
+                                    {{ res.paiement.mode_paiement }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge {% if res.statut == 'Terminé' %}badge-success{% elif res.statut == 'Saisi' or res.statut == 'Signé par Médecin' %}badge-warning{% else %}badge-info{% endif %}">
+                                    {{ res.statut }}
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                    <a href="{{ url_for('download_receipt', reservation_id=res._id) }}" target="_blank" class="btn btn-secondary btn-sm">
+                                        <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Imprimer Reçu
+                                    </a>
+                                    
+                                    {% if res.statut == 'En attente de validation' %}
+                                        <form action="{{ url_for('admin_validate_receipt', reservation_id=res._id) }}" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn btn-primary btn-sm"><i data-lucide="check" style="width:14px;height:14px;vertical-align:bottom;"></i> Valider l'entrée</button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Pending Administrative Actions -->
+<div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+
+    <!-- 1. Pending Receipt Approvals -->
+    <div class="card">
+        <h3>1. Vérification de l'Identité & Validation d'Entrée</h3>
+        <p style="color: #666; margin-bottom: 1.5rem;">Patients présents à l'accueil en attente d'orientation vers les médecins.</p>
+        
+        {% if pending_receipts|length == 0 %}
+            <p style="color: #888; font-style: italic;">Aucun patient en attente de validation d'entrée.</p>
+        {% else %}
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rendez-vous</th>
+                            <th>Patient & Numéro National</th>
+                            <th>Centre</th>
+                            <th>Type Examen / Prix</th>
+                            <th>CNAM / Paiement</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in pending_receipts %}
+                            <tr>
+                                <td>
+                                    <strong>#{{ res.numero_de_rendez_vous }}</strong><br>
+                                    <span style="font-size: 0.8rem; color: #666;">Appel: {{ res.lettre }}{{ res.numero_appel }}</span><br>
+                                    <span style="font-size: 0.8rem; color: #666;">Code: <code>{{ res.code_secret }}</code></span>
+                                </td>
+                                <td>
+                                    <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                                    <span style="font-size: 0.85rem; color: #333; font-weight: 500;">N° National: {{ res.patient.numero_national }}</span>
+                                </td>
+                                <td>{{ res.centre.nom_centre }}</td>
+                                <td>
+                                    <ul style="list-style: none; padding-left: 0; font-size: 0.85rem;">
+                                        {% for ex in res.examens %}
+                                            <li><i data-lucide="chevron-right" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ ex.type_examen }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>
+                                    <strong>{{ res.montant_total }} MRU</strong><br>
+                                    {% if res.paiement.mode_paiement == 'CNAM' %}
+                                        <span class="badge badge-info">CNAM</span><br>
+                                    <span style="font-size: 0.8rem; color: #666;">N° CNAM: {{ res.patient.nni }}</span><br>
+                                        <span style="font-size: 0.8rem; color: #666;">Ayant droit: {{ res.cnam.ayant_droit }}</span><br>
+                                        <span style="font-size: 0.8rem; color: #666;">Lien: <strong>{{ res.cnam.relation }}</strong></span>
+                                    {% else %}
+                                        <span class="badge badge-success">Normal</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                                        <a href="{{ url_for('download_receipt', reservation_id=res._id) }}" target="_blank" class="btn btn-secondary btn-sm" style="text-align: center;">
+                                            <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Imprimer Reçu
+                                        </a>
+                                        {% if res.paiement.mode_paiement == 'CNAM' %}
+                                            <a href="{{ url_for('download_cnam', reservation_id=res._id) }}" target="_blank" class="btn btn-info btn-sm" style="background-color: var(--bleu-info); text-align: center;">
+                                                <i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> Vérifier CNI CNAM
+                                            </a>
+                                        {% endif %}
+                                        <form action="{{ url_for('admin_validate_receipt', reservation_id=res._id) }}" method="POST">
+                                            <button type="submit" class="btn btn-primary btn-sm btn-block" style="margin-top: 0.2rem;"><i data-lucide="check" style="width:14px;height:14px;vertical-align:bottom;"></i> Valider & Orienter</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- 2. Pending Results Validation & Digital Signature -->
+    <div class="card">
+        <h3>2. Validation & Co-signature Numérique des Résultats</h3>
+        <p style="color: #666; margin-bottom: 1.5rem;">Résultats saisis et signés par les médecins, en attente de signature administrative finale.</p>
+        
+        {% if pending_results|length == 0 %}
+            <p style="color: #888; font-style: italic;">Aucun résultat en attente de co-signature.</p>
+        {% else %}
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Médecin</th>
+                            <th>Compte-Rendu</th>
+                            <th>Signature Médecin</th>
+                            <th>Action Co-signature</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in pending_results %}
+                            <tr>
+                                <td>
+                                    <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                                    <span style="font-size: 0.8rem; color: #666;">Code Secret: <code>{{ res.code_secret }}</code></span><br>
+                                    <span style="font-size: 0.8rem; color: #666;">N° National: {{ res.patient.numero_national }}</span>
+                                </td>
+                                <td>
+                                    <strong>Dr. {{ res.medecin.prenom }} {{ res.medecin.nom }}</strong><br>
+                                    <span style="font-size: 0.8rem; color: #666;">Spéc. {{ res.medecin.specialite }}</span>
+                                </td>
+                                <td>
+                                    <div style="max-width: 250px; font-size: 0.9rem; background-color: var(--gris-clair); padding: 0.75rem; border-radius: var(--border-radius-sm); max-height: 120px; overflow-y: auto;">
+                                        {{ res.resultat.commentaire }}
+                                    </div>
+                                    {% if res.resultat.images %}
+                                        <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--vert-principal); font-weight: bold;">
+                                            <i data-lucide="image" style="width:14px;height:14px;vertical-align:bottom;"></i> Image attachée: {{ res.resultat.images|length }} cliché(s)
+                                        </div>
+                                    {% endif %}
+                                    <span style="font-size: 0.75rem; color: #666; display: block; margin-top: 0.25rem;">Date résultat: {{ res.resultat.date_resultat.strftime('%d/%m/%Y %H:%M') }}</span>
+                                </td>
+                                <td>
+                                    {% if res.medecin_signature %}
+                                        <span style="color: var(--vert-principal); font-size: 0.85rem; font-weight: 600;"><i data-lucide="pen-tool" style="width:14px;height:14px;vertical-align:bottom;"></i> Signé (Médecin)</span><br>
+                                        <code style="font-size: 0.75rem; word-break: break-all;">Hash: {{ res.medecin_signature.signature_hash[:16] }}...</code>
+                                    {% else %}
+                                        <span style="color: var(--rouge); font-size: 0.85rem;">En attente de signature médecin</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form action="{{ url_for('admin_sign_result', reservation_id=res._id) }}" method="POST" style="background-color: var(--vert-clair); padding: 0.75rem; border-radius: var(--border-radius-md); border: 1px solid var(--vert-secondaire);">
+                                        <div class="form-group" style="margin-bottom: 0.5rem;">
+                                            <label style="font-size: 0.8rem; font-weight: bold; margin-bottom: 0.25rem;">Type Cachet Admin :</label>
+                                            <select name="type_signature" class="form-control btn-sm" style="background: white;" required>
+                                                <option value="Cachet Officiel Numérique (Certificat Centralisé)">Cachet Officiel Numérique (Certificat Centralisé)</option>
+                                                <option value="Signature Électronique Certifiée RGS">Signature Électronique Certifiée RGS</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm btn-block" style="background-color: var(--vert-secondaire);">
+                                            <i data-lucide="pen-tool" style="width:14px;height:14px;vertical-align:bottom;"></i> Co-signer & Envoyer au Patient
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- 3. Archives / Completed Files -->
+    <div class="card">
+        <h3>3. Gestion Documentaire & Dossiers Archivés</h3>
+        <p style="color: #666; margin-bottom: 1.5rem;">Consultez et gérez les dossiers numériques archivés des patients.</p>
+        
+        {% if archived_files|length == 0 %}
+            <p style="color: #888; font-style: italic;">Aucun dossier archivé.</p>
+        {% else %}
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N° RDV</th>
+                            <th>Patient</th>
+                            <th>Centre & Examens</th>
+                            <th>Co-signatures Cryptographiques</th>
+                            <th>Contenu Dossier Patient</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in archived_files %}
+                            <tr>
+                                <td>
+                                    <strong>#{{ res.numero_de_rendez_vous }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                                    <span style="font-size: 0.85rem; color: #666;">N° National: {{ res.patient.numero_national }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ res.centre.nom_centre }}</strong>
+                                    <ul style="list-style: none; padding-left: 0; font-size: 0.85rem; margin-top: 0.25rem;">
+                                        {% for ex in res.examens %}
+                                            <li><i data-lucide="chevron-right" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ ex.type_examen }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>
+                                    <span style="font-size: 0.8rem; display: block; color: var(--vert-principal);">
+                                        <i data-lucide="stethoscope" style="width:14px;height:14px;vertical-align:bottom;"></i> Médecin: <strong>Dr. {{ res.medecin.nom }}</strong>
+                                        <code style="font-size: 0.7rem; display: block;">{{ res.medecin_signature.signature_hash[:16] }}...</code>
+                                    </span>
+                                    <span style="font-size: 0.8rem; display: block; color: var(--vert-secondaire); margin-top: 0.25rem;">
+                                        <i data-lucide="building" style="width:14px;height:14px;vertical-align:bottom;"></i> Admin: <strong>{{ res.admin_signature.signataire_nom }}</strong>
+                                        <code style="font-size: 0.7rem; display: block;">{{ res.admin_signature.signature_hash[:16] }}...</code>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                                        <span style="font-size: 0.8rem; color: #555;"><i data-lucide="folder-open" style="width:14px;height:14px;vertical-align:bottom;"></i> Dossier Médical Principal</span>
+                                        {% if res.paiement.mode_paiement == 'CNAM' %}
+                                            <span style="font-size: 0.8rem; color: #555;"><i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> Documents CNAM (N° {{ res.patient.nni }})</span>
+                                        {% endif %}
+                                        <span style="font-size: 0.8rem; color: #555;"><i data-lucide="file-text" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu numérique</span>
+                                        {% if res.resultat.images %}
+                                            <span style="font-size: 0.8rem; color: var(--vert-secondaire); font-weight: bold;"><i data-lucide="image" style="width:14px;height:14px;vertical-align:bottom;"></i> Clichés originaux archivés séparément</span>
+                                        {% endif %}
+                                        <a href="{{ url_for('download_result', reservation_id=res._id) }}" target="_blank" class="btn btn-info btn-xs" style="font-size: 0.75rem; padding: 0.2rem 0.5rem; text-align: center;">
+                                            <i data-lucide="download" style="width:14px;height:14px;vertical-align:bottom;"></i> Résultat final (PDF co-signé)
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- 3. Gestion des Médecins -->
+<div class="card" style="margin-top: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div>
+            <h3><i data-lucide="users" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Gestion des Médecins</h3>
+            <p style="color: #666; margin: 0;">Créer et gérer les comptes des médecins de l'hôpital.</p>
+        </div>
+        <button onclick="document.getElementById('add-doctor-modal').style.display='block'" class="btn btn-primary">
+            + Nouveau Médecin
+        </button>
+    </div>
+    
+    <div style="overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>N° NNI</th>
+                    <th>Spécialité</th>
+                    <th>Centre</th>
+                    <th>Date d'inscription</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for med in medecins %}
+                <tr>
+                    <td><strong>Dr. {{ med.prenom }} {{ med.nom }}</strong></td>
+                    <td>{{ med.numero_nni }}</td>
+                    <td><span class="badge badge-info">{{ med.specialite }}</span></td>
+                    <td>{{ med.centre_medical }}</td>
+                    <td style="font-size: 0.85rem; color:#666;">
+                        {{ med.date_inscription.strftime('%d/%m/%Y') if med.date_inscription else 'N/A' }}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteDoctor('{{ med._id }}', this)">
+                            <i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:bottom;"></i> Supprimer
+                        </button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #888;">Aucun médecin enregistré.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Creation Medecin -->
+<div id="add-doctor-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; overflow-y:auto;">
+    <div style="background:white; max-width:600px; margin: 2rem auto; padding:2rem; border-radius:12px; position:relative;">
+        <span onclick="document.getElementById('add-doctor-modal').style.display='none'" style="position:absolute; right:1rem; top:1rem; cursor:pointer; font-size:1.5rem;">&times;</span>
+        <h2>Créer un compte Médecin</h2>
+        
+        <form action="{{ url_for('admin_create_doctor') }}" method="POST">
+            <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom_med" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom_med" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Numéro NNI</label>
+                <input type="text" name="numero_nni" class="form-control" required minlength="10" maxlength="10">
+            </div>
+            <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label>Spécialité</label>
+                    <input type="text" name="specialite" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Centre médical</label>
+                    <input type="text" name="centre_medical_med" class="form-control" value="Hôpital Central" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Mot de passe (provisoire)</label>
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <div style="margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary btn-block">Enregistrer le médecin</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 4. System Audit Trail (New in Phase 2) -->
+<div class="card" style="margin-top: 2rem;">
+    <h3><i data-lucide="history" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Journal d'Audit & Traçabilité (Sécurité)</h3>
+    <p style="color: #666; margin-bottom: 1.5rem;">Historique complet et traçabilité en temps réel des accès au système, des réservations, des paiements, des signatures et des téléchargements.</p>
+    <div style="max-height: 350px; overflow-y: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date/Heure</th>
+                    <th>Utilisateur</th>
+                    <th>Rôle</th>
+                    <th>Action</th>
+                    <th>Détails de l'opération</th>
+                    <th>Adresse IP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in audit_logs %}
+                    <tr>
+                        <td style="font-family: monospace; font-size: 0.85rem;">{{ log.timestamp.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                        <td><strong>{{ log.user_name }}</strong></td>
+                        <td><span class="badge badge-info" style="font-size: 0.75rem;">{{ log.role }}</span></td>
+                        <td><strong>{{ log.action }}</strong></td>
+                        <td style="font-size: 0.85rem; color: #555;">{{ log.details }}</td>
+                        <td style="font-family: monospace; font-size: 0.85rem; color: #888;">{{ log.ip_address }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function deleteDoctor(doctorId, btn) {
+        Swal.fire({
+            title: 'Delete this item?',
+            text: 'This action cannot be undone. Are you sure you want to delete this item?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'hosp-modal-popup'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send AJAX POST request to delete doctor
+                fetch(`/admin/doctors/delete/${doctorId}`, {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Deleted successfully.',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        // Remove row from UI without reloading
+                        let row = btn.closest('tr');
+                        row.style.transition = 'opacity 0.3s ease';
+                        row.style.opacity = '0';
+                        setTimeout(() => row.remove(), 300);
+                    } else {
+                        Swal.fire('Erreur', 'Impossible de supprimer ce médecin.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Erreur', 'Erreur de connexion.', 'error');
+                });
+            }
+        });
+    }
+</script>
+{% endblock %}

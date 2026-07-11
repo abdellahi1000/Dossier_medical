@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}Espace Médecin - Système de Gestion Médicale{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h2>Espace Médecin : Dr. {{ session.get('user_name') }}</h2>
+    <p style="color: #666;">Spécialité : <strong>{{ medecin.specialite }}</strong></p>
+</div>
+
+<!-- Queue of scheduled patients -->
+<div class="card" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h3 style="margin: 0;">Patients Programmés & Files d'Attente</h3>
+            <p style="color: #666; margin: 0;">Voici la liste des patients orientés vers votre service.</p>
+        </div>
+        <form method="GET" action="{{ url_for('doctor_dashboard') }}" style="display: flex; gap: 0.5rem; background: #f8fafc; padding: 0.5rem; border-radius: 8px; border: 1px solid #cbd5e1;">
+            <input type="text" name="code_secret" placeholder="Rechercher par Code Secret..." class="form-control" style="width: 250px; padding: 0.4rem 0.8rem; border-radius: 6px;" value="{{ request.args.get('code_secret', '') }}">
+            <button type="submit" class="btn btn-primary" style="padding: 0.4rem 1rem;"><i data-lucide="search" style="width:16px;height:16px;vertical-align:bottom;"></i> Rechercher</button>
+            {% if request.args.get('code_secret') %}
+                <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary" style="padding: 0.4rem 1rem;"><i data-lucide="x" style="width:16px;height:16px;vertical-align:bottom;"></i></a>
+            {% endif %}
+        </form>
+    </div>
+    
+    {% if reservations|length == 0 %}
+        <p style="color: #888; font-style: italic; text-align: center; padding: 2rem;">Aucun patient programmé actuellement.</p>
+    {% else %}
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>N° Rendez-vous</th>
+                        <th>Patient</th>
+                        <th>Infos Patient</th>
+                        <th>Examens Demandés</th>
+                        <th>Code Secret / Reçu</th>
+                        <th>Statut Résultat</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in reservations %}
+                        <tr>
+                            <td>
+                                <strong style="font-size: 1.1rem;">#{{ res.numero_de_rendez_vous }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                                <span style="font-size: 0.85rem; color: #666;">N° National: {{ res.patient.numero_national }}</span>
+                            </td>
+                            <td>
+                                <div style="background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; font-size: 0.85rem; color: #475569;">
+                                    <div style="margin-bottom: 4px;"><strong>Groupe:</strong> {{ res.numero_group }}</div>
+                                    <div style="margin-bottom: 4px;"><strong>Appel:</strong> {{ res.lettre }}{{ res.numero_appel }}</div>
+                                    <div style="margin-bottom: 4px;"><strong>Date:</strong> {{ res.date_reservation.strftime('%d/%m/%Y') }}</div>
+                                    <div style="margin-bottom: 4px;"><strong>Heure:</strong> {{ res.date_reservation.strftime('%H:%M') }}</div>
+                                    {% if res.nom_medecin_assigne %}
+                                        <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed #cbd5e1; color: var(--vert-principal);">
+                                            <strong>Médecin:</strong> {{ res.nom_medecin_assigne }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <ul style="list-style: none; padding-left: 0;">
+                                    {% for ex in res.examens %}
+                                        <li><i data-lucide="chevron-right" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ ex.type_examen }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.9rem; font-family: monospace; background: var(--vert-clair); padding: 0.2rem 0.5rem; border-radius: var(--border-radius-sm); color: var(--vert-principal);">
+                                    {{ res.code_secret }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if res.resultat %}
+                                    <span class="badge {% if res.resultat.statut_resultat == 'Validé par Administration' %}badge-success{% else %}badge-warning{% endif %}">
+                                        {{ res.resultat.statut_resultat }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-danger">Non Saisi</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% set is_lab = 'true' if res.examens|selectattr("categorie", "equalto", "laboratoire")|list|length > 0 else 'false' %}
+                                {% set is_imaging = 'true' if res.examens|selectattr("categorie", "equalto", "radiologie")|list|length > 0 or res.examens|selectattr("categorie", "equalto", "cardiologie")|list|length > 0 else 'false' %}
+                                {% if not res.resultat or res.resultat.statut_resultat == 'Saisi' %}
+                                    <button class="btn btn-primary btn-sm" onclick="openResultForm({{ (res._id|string)|tojson|forceescape }}, {{ (res.patient.prenom ~ ' ' ~ res.patient.nom)|tojson|forceescape }}, {{ res.code_secret|tojson|forceescape }}, {{ is_lab }}, {{ is_imaging }})">
+                                        <i data-lucide="edit-3" style="width:14px;height:14px;vertical-align:bottom;"></i> Saisir Résultat
+                                    </button>
+                                {% else %}
+                                    <span style="color: #666; font-size: 0.85rem; font-style: italic;">
+                                        Transmis pour validation
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Result Entry Section -->
+<div id="result-entry-card" class="card" style="display: none; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 id="result-form-title">Saisir les résultats pour...</h3>
+        <button class="btn btn-secondary btn-sm" onclick="closeResultForm()">Annuler</button>
+    </div>
+    
+    <form id="result-form" action="{{ url_for('enter_result') }}" method="POST" enctype="multipart/form-data" onsubmit="prepareLabData()">
+        <input type="hidden" name="id_reservation" id="form-id-reservation">
+        
+        <div class="form-group">
+            <label>Patient :</label>
+            <input type="text" id="form-patient-name" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>Code Secret du Reçu :</label>
+            <input type="text" id="form-code-secret" class="form-control" readonly>
+        </div>
+
+        <div class="form-group">
+            <label>Observations Médicales :</label>
+            <textarea name="observations" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Diagnostic :</label>
+            <textarea name="diagnosis" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Résultats de l'Examen :</label>
+            <textarea name="results" class="form-control" rows="4" required></textarea>
+        </div>
+        
+        <!-- Dynamic Lab Section -->
+        <div id="lab-section" style="display:none; margin-bottom: 2rem; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem;">
+            <h4 style="margin-top:0;"><i data-lucide="test-tube"></i> Tableau des Résultats d'Analyse (Laboratoire)</h4>
+            <p style="font-size: 0.85rem; color: #666;">Ajoutez les paramètres, leurs valeurs et les plages de référence. Ils seront inclus dans le PDF.</p>
+            <table id="lab-table" style="width:100%; margin-bottom: 1rem; border-collapse: collapse;">
+                <thead>
+                    <tr style="background:#f1f5f9; text-align:left;">
+                        <th style="padding:0.5rem; border-bottom:1px solid #cbd5e1;">Paramètre</th>
+                        <th style="padding:0.5rem; border-bottom:1px solid #cbd5e1;">Résultat</th>
+                        <th style="padding:0.5rem; border-bottom:1px solid #cbd5e1;">Valeur de référence</th>
+                        <th style="padding:0.5rem; border-bottom:1px solid #cbd5e1;">Unité</th>
+                        <th style="padding:0.5rem; border-bottom:1px solid #cbd5e1;">Observation</th>
+                        <th style="padding:0.5rem; border-bottom:1px solid #cbd5e1;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="lab-tbody">
+                    <!-- rows added by js -->
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addLabRow()">+ Ajouter Paramètre</button>
+            <input type="hidden" name="lab_data" id="lab_data">
+        </div>
+
+        <!-- Dynamic Imaging Section -->
+        <div id="imaging-section" style="display:none; margin-bottom: 2rem; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem;">
+            <h4 style="margin-top:0;"><i data-lucide="image"></i> Clichés d'Imagerie</h4>
+            <p style="font-size: 0.85rem; color: #666;">Téléchargez les images médicales (elles ne seront pas intégrées au PDF mais archivées séparément).</p>
+            <input type="file" name="medical_images" multiple accept="image/*, .dcm" class="form-control" style="padding:0.4rem;">
+        </div>
+
+        <div class="form-group">
+            <label>Recommandations :</label>
+            <textarea name="recommendations" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Conclusion :</label>
+            <textarea name="conclusion" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="type_resultat">Disponibilité du Résultat :</label>
+            <select id="type_resultat" name="type_resultat" class="form-control" onchange="toggleDeferredMsg()" required>
+                <option value="immediat">Résultat Immédiat (Prêt tout de suite)</option>
+                <option value="differe">Résultat Différé (Nécessite analyse ultérieure)</option>
+            </select>
+            <p id="deferred-info" style="font-size: 0.85rem; color: var(--rouge); margin-top: 0.25rem; display: none;">
+                <i data-lucide="alert-triangle" style="width:14px;height:14px;vertical-align:bottom;"></i> Un SMS sera envoyé au patient indiquant que son examen est en cours d'analyse et que le résultat sera disponible ultérieurement.
+            </p>
+        </div>
+
+        <div class="form-group" id="signature-section">
+            <h4 style="margin-top: 1.5rem; margin-bottom: 0.75rem;">Signature Numérique du Médecin</h4>
+            <div class="form-group">
+                <label for="type_signature">Type de Clé / Signature :</label>
+                <select id="type_signature" name="type_signature" class="form-control" required>
+                    <option value="Signature Électronique Standard (Certificat Serveur)">Signature Électronique Standard (Certificat Serveur)</option>
+                    <option value="Clé Numérique de Sécurité Matérielle (Token USB)">Clé Numérique de Sécurité Matérielle (Token USB)</option>
+                    <option value="Code OTP Signature Unique">Code OTP Signature Unique</option>
+                </select>
+            </div>
+            
+            <div style="background-color: var(--vert-clair); padding: 1rem; border-radius: var(--border-radius-md); border-left: 4px solid var(--vert-principal); margin-bottom: 1.25rem;">
+                <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                    <input type="checkbox" id="sign-checkbox" required style="width: 1.25rem; height: 1.25rem; accent-color: var(--vert-principal);">
+                    <strong style="color: var(--vert-principal);">Je certifie les résultats ci-dessus et applique ma signature numérique cryptographique.</strong>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary"><i data-lucide="save" style="width:14px;height:14px;vertical-align:bottom;"></i> Enregistrer & Signer Numériquement</button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openResultForm(resId, patientName, codeSecret, isLab, isImaging) {
+        document.getElementById('form-id-reservation').value = resId;
+        document.getElementById('form-patient-name').value = patientName;
+        document.getElementById('form-code-secret').value = codeSecret;
+        
+        document.getElementById('lab-section').style.display = isLab ? 'block' : 'none';
+        document.getElementById('imaging-section').style.display = isImaging ? 'block' : 'none';
+        
+        document.getElementById('result-form-title').innerText = "Saisir les résultats pour " + patientName;
+        document.getElementById('result-entry-card').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('result-entry-card').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function closeResultForm() {
+        document.getElementById('result-entry-card').style.display = 'none';
+        document.getElementById('result-form').reset();
+        document.getElementById('lab-tbody').innerHTML = '';
+    }
+
+    function toggleDeferredMsg() {
+        const type = document.getElementById('type_resultat').value;
+        document.getElementById('deferred-info').style.display = (type === 'differe') ? 'block' : 'none';
+    }
+    
+    function addLabRow() {
+        const tbody = document.getElementById('lab-tbody');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="padding:0.25rem;"><input type="text" class="form-control lab-param" placeholder="Ex: Hémoglobine" required></td>
+            <td style="padding:0.25rem;"><input type="text" class="form-control lab-val" placeholder="Ex: 14.5" required></td>
+            <td style="padding:0.25rem;"><input type="text" class="form-control lab-ref" placeholder="Ex: 13.0 - 17.0"></td>
+            <td style="padding:0.25rem;"><input type="text" class="form-control lab-unit" placeholder="Ex: g/dL"></td>
+            <td style="padding:0.25rem;"><input type="text" class="form-control lab-obs" placeholder="Ex: Normal"></td>
+            <td style="padding:0.25rem;"><button type="button" class="btn btn-danger btn-sm" onclick="this.closest('tr').remove()" style="padding:0.4rem;"><i data-lucide="trash" style="width:14px;height:14px;"></i></button></td>
+        `;
+        tbody.appendChild(tr);
+        lucide.createIcons();
+    }
+    
+    function prepareLabData() {
+        const rows = document.querySelectorAll('#lab-tbody tr');
+        const data = [];
+        rows.forEach(tr => {
+            data.push({
+                param: tr.querySelector('.lab-param').value,
+                val: tr.querySelector('.lab-val').value,
+                ref: tr.querySelector('.lab-ref').value,
+                unit: tr.querySelector('.lab-unit').value,
+                obs: tr.querySelector('.lab-obs').value
+            });
+        });
+        document.getElementById('lab_data').value = JSON.stringify(data);
+    }
+</script>
+{% endblock %}

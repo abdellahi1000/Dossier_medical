@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Système de Gestion Médicale{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .lucide { width: 1.25em; height: 1.25em; stroke-width: 2px; vertical-align: middle; }
+    </style>
+    {% block head %}{% endblock %}
+
+    <style>
+        /* ══ DOCUMENT PANEL OVERLAY ══ */
+        #doc-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        #doc-overlay.open { display: block; }
+
+        /* ══ SLIDE PANEL ══ */
+        #doc-panel {
+            position: fixed;
+            top: 0; right: -520px;
+            width: 100%; max-width: 500px;
+            height: 100vh;
+            background: #fff;
+            z-index: 1001;
+            box-shadow: -8px 0 40px rgba(0,0,0,0.18);
+            display: flex;
+            flex-direction: column;
+            transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+            font-family: 'Outfit', sans-serif;
+        }
+        #doc-panel.open { right: 0; }
+
+        /* Panel header */
+        .dp-header {
+            background: linear-gradient(135deg, #146C43 0%, #198754 100%);
+            padding: 1.5rem 1.5rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .dp-header-left { display: flex; align-items: center; gap: 0.75rem; }
+        .dp-header-icon {
+            width: 44px; height: 44px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+        }
+        .dp-header h2 { color: #fff; font-size: 1.1rem; font-weight: 700; margin: 0; }
+        .dp-header p  { color: rgba(255,255,255,0.75); font-size: 0.78rem; margin: 0; }
+        .dp-close {
+            background: rgba(255,255,255,0.15);
+            border: none; color: #fff;
+            width: 34px; height: 34px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .dp-close:hover { background: rgba(255,255,255,0.3); }
+
+        /* Search bar */
+        .dp-search {
+            padding: 1rem 1.25rem 0.75rem;
+            border-bottom: 1px solid #e8f5e9;
+            flex-shrink: 0;
+        }
+        .dp-search input {
+            width: 100%;
+            padding: 0.65rem 1rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .dp-search input:focus { border-color: #198754; }
+
+        /* Panel body */
+        .dp-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 1.25rem 1.5rem;
+        }
+        .dp-body::-webkit-scrollbar { width: 5px; }
+        .dp-body::-webkit-scrollbar-track { background: #f0f4f1; }
+        .dp-body::-webkit-scrollbar-thumb { background: #a7d7b3; border-radius: 4px; }
+
+        /* Loading state */
+        .dp-loading {
+            text-align: center;
+            padding: 3rem 0;
+            color: #718096;
+        }
+        .dp-spinner {
+            width: 36px; height: 36px;
+            border: 3px solid #d1f2d9;
+            border-top-color: #198754;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Empty state */
+        .dp-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #718096;
+        }
+        .dp-empty-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+
+        /* Reservation group card */
+        .dp-group {
+            background: #fff;
+            border: 1.5px solid #e8f5e9;
+            border-radius: 14px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(25,135,84,0.07);
+        }
+        .dp-group-header {
+            background: linear-gradient(90deg, #f0fdf4 0%, #fff 100%);
+            padding: 0.85rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            border-bottom: 1px solid #e8f5e9;
+            user-select: none;
+        }
+        .dp-group-header:hover { background: #e8f5e9; }
+        .dp-group-meta { display: flex; align-items: center; gap: 0.6rem; }
+        .dp-group-icon {
+            width: 36px; height: 36px;
+            background: #d1f2d9;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .dp-group-title { font-weight: 700; font-size: 0.9rem; color: #2D3748; margin: 0; }
+        .dp-group-sub { font-size: 0.75rem; color: #718096; margin: 0; }
+        .dp-group-status {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+        }
+        .status-termine  { background: #d1fae5; color: #065f46; }
+        .status-attente  { background: #fef9c3; color: #92400e; }
+        .status-other    { background: #e0e7ff; color: #3730a3; }
+
+        /* Doc list inside group */
+        .dp-doc-list {
+            padding: 0.6rem 0.75rem;
+            display: none;
+        }
+        .dp-doc-list.expanded { display: block; }
+        .dp-doc-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.5rem;
+            border-radius: 8px;
+            transition: background 0.18s;
+            gap: 0.5rem;
+        }
+        .dp-doc-item:hover { background: #f0fdf4; }
+        .dp-doc-left { display: flex; align-items: center; gap: 0.6rem; flex: 1; min-width: 0; }
+        .dp-doc-type-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .dp-doc-name {
+            font-size: 0.83rem;
+            font-weight: 600;
+            color: #2D3748;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .dp-doc-sub { font-size: 0.72rem; color: #718096; }
+        .dp-doc-actions { display: flex; gap: 0.35rem; flex-shrink: 0; }
+        .dp-btn {
+            display: inline-flex; align-items: center;
+            padding: 0.3rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 0.25rem;
+        }
+        .dp-btn-primary { background: #198754; color: #fff; }
+        .dp-btn-primary:hover { background: #146C43; color: #fff; }
+        .dp-btn-outline { background: #f0fdf4; color: #198754; border: 1px solid #a7d7b3; }
+        .dp-btn-outline:hover { background: #d1f2d9; }
+
+        /* Divider in doc list */
+        .dp-divider { border: none; border-top: 1px dashed #e8f5e9; margin: 0.4rem 0; }
+
+        /* ══ FOLDER ICON BUTTON in Navbar ══ */
+        .nav-folder-btn {
+            position: relative;
+            background: rgba(255,255,255,0.18);
+            border: 1.5px solid rgba(255,255,255,0.35);
+            color: #fff;
+            border-radius: 50%;
+            width: 42px; height: 42px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 0.5rem;
+            flex-shrink: 0;
+        }
+        .nav-folder-btn:hover {
+            background: rgba(255,255,255,0.32);
+            transform: scale(1.08);
+        }
+        .nav-folder-badge {
+            position: absolute;
+            top: -4px; right: -4px;
+            background: #F4C542;
+            color: #333;
+            font-size: 0.6rem;
+            font-weight: 800;
+            width: 17px; height: 17px;
+            border-radius: 50%;
+            display: none;
+            align-items: center; justify-content: center;
+            border: 1.5px solid #198754;
+        }
+        .nav-folder-badge.show { display: flex; }
+        
+        /* ── SMS Deletion UI ── */
+        .sms-log-entry {
+            position: relative;
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .sms-delete-btn {
+            position: absolute;
+            top: -2px;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ff6b6b;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s, background 0.2s;
+        }
+        .sms-log-entry:hover .sms-delete-btn {
+            opacity: 1;
+        }
+        .sms-delete-btn:hover {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff4757;
+        }
+        .btn-delete-all {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            padding: 0.35rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+        }
+        .btn-delete-all:hover {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: rgba(255, 107, 107, 0.4);
+            color: #ff4757;
+        }
+        /* Custom Confirm Modal */
+        #custom-confirm-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(2px);
+        }
+        #custom-confirm-modal.show {
+            display: flex;
+        }
+        .confirm-dialog {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 1.5rem;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            color: #eee;
+            font-family: 'Outfit', sans-serif;
+        }
+        .confirm-dialog p {
+            margin: 0 0 1.25rem 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        .confirm-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .confirm-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .confirm-btn-cancel {
+            background: #444;
+            color: #eee;
+        }
+        .confirm-btn-cancel:hover { background: #555; }
+        .confirm-btn-danger {
+            background: #dc3545;
+            color: #fff;
+        }
+        .confirm-btn-danger:hover { background: #c82333; }
+
+        @media (max-width: 500px) {
+            #doc-panel { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ══ SLIDE PANEL OVERLAY ══ -->
+    <div id="doc-overlay" onclick="closeDocPanel()"></div>
+
+    <!-- ══ DOCUMENT SLIDE PANEL ══ -->
+    <div id="doc-panel" role="dialog" aria-label="Mon Dossier Médical">
+        <div class="dp-header">
+            <div class="dp-header-left">
+                <div class="dp-header-icon"><i data-lucide="folder-open"></i></div>
+                <div>
+                    <h2>Mon Dossier Médical</h2>
+                    <p>Tous vos documents médicaux en un seul endroit</p>
+                </div>
+            </div>
+            <button class="dp-close" onclick="closeDocPanel()" title="Fermer"><i data-lucide="x"></i></button>
+        </div>
+
+        <div class="dp-search">
+            <input type="text" id="dp-search-input" placeholder="Rechercher un document..." oninput="filterDocs(this.value)">
+        </div>
+
+        <div class="dp-body" id="dp-body">
+            <div class="dp-loading" id="dp-loading">
+                <div class="dp-spinner"></div>
+                <p>Chargement de vos documents...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ SMS PANEL OVERLAY ══ -->
+    <div id="sms-overlay" onclick="closeSMSPanel()" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; backdrop-filter: blur(3px);"></div>
+
+    <!-- ══ SMS SLIDE PANEL ══ -->
+    <div id="sms-panel" role="dialog" aria-label="Console SMS" style="position: fixed; top: 0; right: -520px; width: 100%; max-width: 500px; height: 100vh; background: #1e1e1e; z-index: 1001; box-shadow: -8px 0 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; transition: right 0.35s cubic-bezier(0.4,0,0.2,1); font-family: 'Outfit', sans-serif;">
+        <div class="dp-header" style="background: linear-gradient(135deg, #2a2a2a 0%, #333 100%);">
+            <div class="dp-header-left">
+                <div class="dp-header-icon" style="background: rgba(255,255,255,0.1);"><i data-lucide="message-square"></i></div>
+                <div>
+                    <h2>Console de Simulation SMS</h2>
+                    <p style="color: rgba(255,255,255,0.6);">Logs des messages envoyés</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <button class="btn-delete-all" onclick="confirmDeleteAllSMS()" title="Supprimer tous les SMS">
+                    <i data-lucide="trash-2" style="width:14px;height:14px;"></i> Tout Supprimer
+                </button>
+                <button class="dp-close" onclick="closeSMSPanel()" title="Fermer"><i data-lucide="x"></i></button>
+            </div>
+        </div>
+        <div class="dp-body" id="sms-log-container" style="flex: 1; overflow-y: auto; padding: 1.5rem; color: #a9dc76; font-family: monospace; font-size: 0.85rem; position: relative;">
+            <p style="color:#666;font-style:italic;">No SMS notifications.</p>
+        </div>
+    </div>
+
+    <!-- ══ CUSTOM CONFIRM MODAL ══ -->
+    <div id="custom-confirm-modal">
+        <div class="confirm-dialog">
+            <p>Êtes-vous sûr de vouloir supprimer définitivement tous les SMS ?</p>
+            <div class="confirm-actions">
+                <button class="confirm-btn confirm-btn-cancel" onclick="document.getElementById('custom-confirm-modal').classList.remove('show')">Annuler</button>
+                <button class="confirm-btn confirm-btn-danger" onclick="executeDeleteAllSMS()">Tout Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ DOCUMENT VIEWER MODAL ══ -->
+    <div id="pdf-viewer-modal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s ease;">
+        
+        <!-- Toolbar -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; height: 60px; background: #1e293b; display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 10;">
+            <div style="font-weight: 600; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="file-text" style="color: #4ade80;"></i>
+                <span id="pdf-viewer-title">Visualiseur de Document</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;" class="pdf-toolbar-btns">
+                <button onclick="pdfZoomIn()" title="Zoom +" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex;"><i data-lucide="zoom-in"></i></button>
+                <button onclick="pdfZoomOut()" title="Zoom -" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex;"><i data-lucide="zoom-out"></i></button>
+                <button onclick="pdfRotate()" title="Rotation" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex;"><i data-lucide="rotate-cw"></i></button>
+                <button onclick="pdfFullscreen()" title="Plein écran" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex;"><i data-lucide="maximize"></i></button>
+                <a id="pdf-download-btn" href="#" target="_blank" download title="Télécharger" style="background: var(--vert-principal); border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; font-weight: 600; margin-left: 0.5rem;">
+                    <i data-lucide="download"></i> Télécharger
+                </a>
+                <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.2); margin: 0 0.5rem;"></div>
+                <button onclick="closePdfModal()" title="Fermer" style="background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.4); color: #ef4444; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex;"><i data-lucide="x"></i></button>
+            </div>
+        </div>
+
+        <!-- Viewer Container -->
+        <div id="pdf-scroll-container" style="position: absolute; top: 60px; left: 0; right: 0; bottom: 0; overflow: auto; display: flex; justify-content: center; align-items: center; padding: 2rem;">
+            <div id="pdf-transform-wrapper" style="width: 100%; height: 100%; max-width: 900px; transition: transform 0.3s ease;">
+                <iframe id="pdf-iframe" src="" style="width: 100%; height: 100%; min-height: 80vh; border: none; background: #fff; border-radius: 8px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ HEADER / NAVBAR ══ -->
+    <header class="no-print">
+        <div class="nav-container">
+            <div class="logo-section" style="display:flex;align-items:center;gap:0.75rem;">
+                {% if session.get('role') == 'admin' %}
+                    <button id="main-sidebar-toggle" style="background:transparent; border:none; color:var(--blanc); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0.4rem; margin-right:0.5rem; transition:background 0.2s; border-radius:6px;" title="Menu">
+                        <i data-lucide="menu" style="width:28px;height:28px;"></i>
+                    </button>
+                {% endif %}
+                <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:2px solid rgba(255,255,255,0.35);"><i data-lucide="activity"></i></div>
+                <h1 style="color:var(--blanc);font-size:1.4rem;font-weight:700;margin-bottom:0;">Système de Gestion Médicale</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    {% if session.get('role') == 'patient' %}
+                        <li><a href="{{ url_for('patient_dashboard') }}" class="nav-link">Mon Espace</a></li>
+                        <li><a href="{{ url_for('book_exam') }}" class="nav-link">Réserver un Examen</a></li>
+                        <!-- 📂 Folder Icon -->
+                        <li>
+                            <button class="nav-folder-btn" onclick="openDocPanel()" title="Mon Dossier Médical">
+                                <i data-lucide="folder"></i>
+                                <span class="nav-folder-badge" id="doc-badge"></span>
+                            </button>
+                        </li>
+                        <li><a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm logout-btn">Déconnexion</a></li>
+                    {% elif session.get('role') == 'medecin' %}
+                        <li><a href="{{ url_for('doctor_dashboard') }}" class="nav-link">Espace Médecin (Dr. {{ session.get('user_name') }})</a></li>
+                        <li><a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm logout-btn">Déconnexion</a></li>
+                    {% elif session.get('role') == 'admin' %}
+                        <li><a href="{{ url_for('admin_identity') }}" class="nav-link">Espace Hôpital</a></li>
+                        <li><a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm logout-btn">Déconnexion</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}" class="nav-link">Connexion</a></li>
+                    {% endif %}
+                    
+                    {% if session.get('role') == 'patient' %}
+                        <!-- 💬 SMS Icon -->
+                        <li>
+                            <button class="nav-folder-btn" onclick="openSMSPanel()" title="Console SMS" style="background: rgba(220,53,69,0.8); border-color: #dc3545; margin-left: 0.5rem;">
+                                <i data-lucide="message-square"></i>
+                                <span class="nav-folder-badge" id="sms-badge"></span>
+                            </button>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container no-print">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category if category != 'error' else 'danger' }}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+
+    </main>
+
+    <footer class="no-print">
+        <p>&copy; 2026 Système de Gestion Médicale. Tous droits réservés.</p>
+        <p style="font-size:0.8rem;color:#555;">Développé conformément aux spécifications du document de conception.</p>
+    </footer>
+
+    {% if session.get('role') %}
+    <script>
+        /* ── SMS Panel Toggle ── */
+        function openSMSPanel() {
+            document.getElementById('sms-overlay').style.display = 'block';
+            document.getElementById('sms-panel').style.right = '0';
+            document.body.style.overflow = 'hidden';
+            updateSMSLogs();
+            document.getElementById('sms-badge').style.display = 'none'; // reset badge on open
+        }
+
+        function closeSMSPanel() {
+            document.getElementById('sms-overlay').style.display = 'none';
+            document.getElementById('sms-panel').style.right = '-520px';
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSMSPanel(); });
+
+        /* ── SMS logs ── */
+        let smsCount = 0;
+        function updateSMSLogs() {
+            fetch('/api/sms_logs')
+                .then(r => r.json())
+                .then(logs => {
+                    const c = document.getElementById('sms-log-container');
+                    const b = document.getElementById('sms-badge');
+                    if (!c) return;
+                    
+                    if (b && logs.length > smsCount && document.getElementById('sms-panel').style.right !== '0px') {
+                        b.textContent = logs.length - smsCount;
+                        b.style.display = 'flex';
+                    }
+                    smsCount = logs.length;
+
+                    if (!logs.length) { c.innerHTML = '<p style="color:#666;font-style:italic;">No SMS notifications.</p>'; return; }
+                    c.innerHTML = logs.map(l => `
+                        <div class="sms-log-entry" id="sms-${l.id}" style="margin-bottom:1rem; border-bottom:1px solid #333; padding-bottom:0.75rem;">
+                            <span class="sms-log-time" style="color:#78dce8;">[${l.time}]</span> <strong style="color:#fc9867;">À: ${l.phone}</strong><br>
+                            <span style="color:#a9dc76;">${l.message}</span>
+                            <button class="sms-delete-btn" onclick="deleteSMS('${l.id}')" title="Supprimer ce SMS">
+                                <i data-lucide="x" style="width:14px;height:14px;"></i>
+                            </button>
+                        </div>
+                    `).join('');
+                    lucide.createIcons({ root: c });
+                });
+        }
+        
+        function deleteSMS(id) {
+            const el = document.getElementById(`sms-${id}`);
+            if (el) {
+                el.style.transform = 'scale(0.95)';
+                el.style.opacity = '0';
+            }
+            fetch(`/api/sms_logs/${id}`, { method: 'DELETE' })
+                .then(() => {
+                    if (el) el.remove();
+                    updateSMSLogs();
+                })
+                .catch(err => console.error(err));
+        }
+        
+        function confirmDeleteAllSMS() {
+            document.getElementById('custom-confirm-modal').classList.add('show');
+        }
+        
+        function executeDeleteAllSMS() {
+            document.getElementById('custom-confirm-modal').classList.remove('show');
+            const container = document.getElementById('sms-log-container');
+            if (container) {
+                container.style.opacity = '0';
+                container.style.transition = 'opacity 0.3s ease';
+            }
+            fetch('/api/sms_logs', { method: 'DELETE' })
+                .then(() => {
+                    if (container) {
+                        setTimeout(() => {
+                            container.style.opacity = '1';
+                            updateSMSLogs();
+                        }, 300);
+                    } else {
+                        updateSMSLogs();
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        setInterval(updateSMSLogs, 3000);
+        updateSMSLogs();
+    </script>
+    {% endif %}
+
+    {% if session.get('role') == 'patient' %}
+    <script>
+        /* ══ DOCUMENT PANEL LOGIC ══ */
+        let docsData = [];
+        let panelLoaded = false;
+
+        function openDocPanel() {
+            document.getElementById('doc-overlay').classList.add('open');
+            document.getElementById('doc-panel').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            if (!panelLoaded) loadDocuments();
+        }
+
+        function closeDocPanel() {
+            document.getElementById('doc-overlay').classList.remove('open');
+            document.getElementById('doc-panel').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Close with Escape
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDocPanel(); });
+
+        /* ── Fetch docs from API ── */
+        function loadDocuments() {
+            fetch('/api/patient/documents')
+                .then(r => r.json())
+                .then(data => {
+                    docsData = data;
+                    panelLoaded = true;
+                    renderDocs(data);
+                    updateBadge(data.length);
+                    if (typeof lucide !== 'undefined') {
+                        setTimeout(() => lucide.createIcons(), 10);
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('dp-body').innerHTML =
+                        '<div class="dp-empty"><div class="dp-empty-icon"><i data-lucide="alert-triangle"></i></div><p>Impossible de charger vos documents.</p></div>';
+                });
+        }
+
+        /* ── Render groups ── */
+        function renderDocs(reservations) {
+            const body = document.getElementById('dp-body');
+            if (!reservations.length) {
+                body.innerHTML = `
+                    <div class="dp-empty">
+                        <div class="dp-empty-icon"><i data-lucide="folder-open"></i></div>
+                        <p style="font-weight:600;color:#2D3748;margin-bottom:0.35rem;">Dossier vide</p>
+                        <p style="font-size:0.85rem;">Vos documents médicaux apparaîtront ici après votre première réservation.</p>
+                    </div>`;
+                return;
+            }
+
+            body.innerHTML = reservations.map((res, idx) => {
+                const statusClass = res.statut === 'Terminé' ? 'status-termine' :
+                                    res.statut.includes('attente') ? 'status-attente' : 'status-other';
+                const docs = buildDocItems(res);
+                return `
+                <div class="dp-group" data-idx="${idx}" data-searchable="${res.centre + ' ' + res.examens + ' ' + res.date}">
+                    <div class="dp-group-header" onclick="toggleGroup(${idx})">
+                        <div class="dp-group-meta">
+                            <div class="dp-group-icon"><i data-lucide="folder-archive"></i></div>
+                            <div>
+                                <p class="dp-group-title">${res.centre}</p>
+                                <p class="dp-group-sub"><i data-lucide="calendar" style="width:14px;height:14px;vertical-align:bottom;"></i> ${res.date} &nbsp;|&nbsp; ${res.examens} &nbsp;|&nbsp; Médecin: ${res.doctor}</p>
+                            </div>
+                        </div>
+                        <span class="dp-group-status ${statusClass}">${res.statut}</span>
+                    </div>
+                    <div class="dp-doc-list ${idx === 0 ? 'expanded' : ''}" id="doclist-${idx}">
+                        ${docs}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function buildDocItems(res) {
+            let items = '';
+
+            // Receipt
+            items += docItem('<i data-lucide="file-text"></i>', 'Reçu Numérique', `Centre: ${res.centre}`, res.receipt_url, res.receipt_url);
+
+            // CNAM doc
+            if (res.cnam_url) {
+                items += `<hr class="dp-divider">`;
+                items += docItem('<i data-lucide="clipboard-list"></i>', 'Document CNAM', `N° CNAM: ${res.cnam_num || '—'}`, res.cnam_url, res.cnam_url);
+            }
+
+            // Final result PDF
+            if (res.result_url) {
+                items += `<hr class="dp-divider">`;
+                items += docItem('<i data-lucide="download"></i>', 'Rapport Médical Signé', `Résultat final — ${res.examens}`, res.result_url, res.result_url);
+            }
+
+            // Medical images
+            if (res.images && res.images.length) {
+                items += `<hr class="dp-divider">`;
+                res.images.forEach((img, i) => {
+                    items += docItem('<i data-lucide="image"></i>', `Cliché d'Imagerie ${i+1}`, `Image médicale originale`, img, img);
+                });
+            }
+
+            return items || `<div class="dp-doc-item"><span style="color:#718096;font-size:0.82rem;padding:0.25rem 0.5rem;">Aucun document disponible pour cette réservation.</span></div>`;
+        }
+
+        function docItem(icon, name, sub, viewUrl, dlUrl) {
+            // Escape names for JS function argument
+            const safeName = name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+            return `
+            <div class="dp-doc-item">
+                <div class="dp-doc-left">
+                    <span class="dp-doc-type-icon">${icon}</span>
+                    <div>
+                        <div class="dp-doc-name">${name}</div>
+                        <div class="dp-doc-sub">${sub}</div>
+                    </div>
+                </div>
+                <div class="dp-doc-actions">
+                    <button onclick="event.preventDefault(); openPdfModal('${viewUrl}', '${safeName}')" class="dp-btn dp-btn-outline" title="Voir"><i data-lucide="eye" style="width:16px;height:16px;"></i></button>
+                    <a href="${dlUrl}" target="_blank" class="dp-btn dp-btn-primary" title="Télécharger"><i data-lucide="download" style="width:16px;height:16px;"></i></a>
+                </div>
+            </div>`;
+        }
+
+        function toggleGroup(idx) {
+            const list = document.getElementById(`doclist-${idx}`);
+            list.classList.toggle('expanded');
+        }
+
+        function updateBadge(count) {
+            const badge = document.getElementById('doc-badge');
+            if (count > 0) {
+                badge.textContent = count > 9 ? '9+' : count;
+                badge.classList.add('show');
+            }
+        }
+
+        /* ── Search filter ── */
+        function filterDocs(query) {
+            const q = query.toLowerCase();
+            document.querySelectorAll('.dp-group').forEach(g => {
+                const text = g.dataset.searchable.toLowerCase();
+                g.style.display = text.includes(q) ? '' : 'none';
+            });
+        }
+
+        /* Load badge count on page load */
+        fetch('/api/patient/documents')
+            .then(r => r.json())
+            .then(data => updateBadge(data.length))
+            .catch(() => {});
+    </script>
+    {% endif %}
+
+    {% block scripts %}{% endblock %}
+    
+    <!-- PDF Viewer Logic -->
+    <script>
+        let currentPdfZoom = 1;
+        let currentPdfRotation = 0;
+        
+        function openPdfModal(url, title) {
+            const modal = document.getElementById('pdf-viewer-modal');
+            const iframe = document.getElementById('pdf-iframe');
+            const titleEl = document.getElementById('pdf-viewer-title');
+            const dlBtn = document.getElementById('pdf-download-btn');
+            
+            // Reset states
+            currentPdfZoom = 1;
+            currentPdfRotation = 0;
+            applyPdfTransform();
+            
+            titleEl.textContent = title || "Visualiseur de Document";
+            iframe.src = url;
+            dlBtn.href = url;
+            
+            modal.style.display = 'block';
+            // Trigger reflow for animation
+            void modal.offsetWidth;
+            modal.style.opacity = '1';
+            
+            document.body.style.overflow = 'hidden';
+            
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        
+        function closePdfModal() {
+            const modal = document.getElementById('pdf-viewer-modal');
+            const iframe = document.getElementById('pdf-iframe');
+            
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.style.display = 'none';
+                iframe.src = '';
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        
+        function applyPdfTransform() {
+            const wrapper = document.getElementById('pdf-transform-wrapper');
+            wrapper.style.transform = `scale(${currentPdfZoom}) rotate(${currentPdfRotation}deg)`;
+        }
+        
+        function pdfZoomIn() {
+            currentPdfZoom += 0.25;
+            applyPdfTransform();
+        }
+        
+        function pdfZoomOut() {
+            if (currentPdfZoom > 0.5) {
+                currentPdfZoom -= 0.25;
+                applyPdfTransform();
+            }
+        }
+        
+        function pdfRotate() {
+            currentPdfRotation = (currentPdfRotation + 90) % 360;
+            applyPdfTransform();
+        }
+        
+        function pdfFullscreen() {
+            const modal = document.getElementById('pdf-viewer-modal');
+            if (!document.fullscreenElement) {
+                if (modal.requestFullscreen) {
+                    modal.requestFullscreen();
+                } else if (modal.webkitRequestFullscreen) {
+                    modal.webkitRequestFullscreen();
+                } else if (modal.msRequestFullscreen) {
+                    modal.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

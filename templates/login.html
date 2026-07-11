@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion — Système de Gestion Médicale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .lucide { width: 1.25em; height: 1.25em; stroke-width: 2px; vertical-align: middle; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green: #198754;
+            --green-dark: #146C43;
+            --green-light: #D1F2D9;
+            --green-xlight: #f0faf3;
+            --white: #FFFFFF;
+            --gray-light: #F5F5F5;
+            --text: #2D3748;
+            --text-muted: #718096;
+            --border: #E2E8F0;
+            --shadow: 0 6px 20px rgba(0,0,0,.12);
+            --shadow-lg: 0 20px 60px rgba(25, 135, 84, 0.15);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #f0faf3 0%, #e8f5e9 50%, #f5f5f5 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            background: linear-gradient(90deg, var(--green-dark) 0%, var(--green) 100%);
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(25,135,84,0.3);
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        .nav-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: white;
+            padding: 3px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .nav-title {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .nav-badge {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(255,255,255,0.15);
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+        /* ── MAIN LAYOUT ── */
+        .page-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+        }
+
+        .auth-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 440px;
+            overflow: hidden;
+            animation: slideUp 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── CARD HEADER ── */
+        .card-header {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+            padding: 2.5rem 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0; right: 0;
+            height: 30px;
+            background: var(--white);
+            border-radius: 30px 30px 0 0;
+        }
+        .card-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+        .card-header h1 {
+            color: white;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+        .card-header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+
+        /* ── CARD BODY ── */
+        .card-body {
+            padding: 0 2.5rem 2.5rem;
+        }
+
+        /* Flash messages */
+        .flash {
+            padding: 0.85rem 1.1rem;
+            border-radius: 10px;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .flash.error   { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+        .flash.success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .flash.info    { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: none; /* Using placeholders only */
+        }
+        .input-wrap {
+            position: relative;
+        }
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.97rem;
+            color: var(--text);
+            background: #fafafa;
+            transition: var(--transition);
+            outline: none;
+        }
+        .form-control::placeholder { color: #a0aec0; }
+        .form-control:focus {
+            border-color: var(--green);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.12);
+        }
+
+        /* Submit button */
+        .btn-submit {
+            width: 100%;
+            padding: 0.95rem;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(25,135,84,0.35);
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, var(--green-dark) 0%, #0f5132 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(25,135,84,0.4);
+        }
+        .btn-submit:active { transform: translateY(0); }
+
+        /* Register link */
+        .register-link {
+            text-align: center;
+            margin-top: 1.75rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.93rem;
+            color: var(--text-muted);
+        }
+        .register-link a {
+            color: var(--green);
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 0.3rem;
+            transition: var(--transition);
+        }
+        .register-link a:hover {
+            color: var(--green-dark);
+            text-decoration: underline;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .nav-title { font-size: 1rem; }
+            .card-body { padding: 0 1.5rem 2rem; }
+            .card-header { padding: 2rem 1.5rem 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+    <a class="nav-brand" href="#">
+        <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:2px solid rgba(255,255,255,0.35);"><i data-lucide="activity"></i></div>
+        <span class="nav-title">Système de Gestion Médicale</span>
+    </a>
+    <span class="nav-badge"><i data-lucide="lock" style="width:16px;height:16px;margin-right:4px;"></i> Connexion</span>
+</nav>
+
+<!-- ── PAGE CONTENT ── -->
+<div class="page-wrap">
+    <div class="auth-card">
+
+        <!-- Header -->
+        <div class="card-header">
+            <h1>Bon retour !</h1>
+            <p>Connectez-vous à votre espace médical sécurisé</p>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for cat, msg in messages %}
+                    <div class="flash {{ cat }}">
+                        {% if cat == 'error' %}<i data-lucide="alert-triangle"></i>{% elif cat == 'success' %}<i data-lucide="check-circle"></i>{% else %}<i data-lucide="info"></i>{% endif %}
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endwith %}
+
+            <!-- Login Form -->
+            <form action="/login" method="POST" autocomplete="off">
+
+                <div class="form-group">
+                    <label for="username">Numéro National (NNI)</label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-control"
+                            placeholder="Entrez votre numéro national / identifiant"
+                            required
+                            autocomplete="new-password"
+                            value="">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i data-lucide="key" style="width:18px;height:18px;"></i></span>
+                        <input
+                            type="password" 
+                            name="password" 
+                            id="password" 
+                            class="form-control" 
+                            placeholder="Password"
+                            required
+                            autocomplete="new-password"
+                            value="">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    Se connecter &nbsp;→
+                </button>
+            </form>
+
+            <!-- Registration Link -->
+            <div class="register-link">
+                Vous n'avez pas encore de compte ?
+                <a href="/register">S'inscrire</a>
+            </div>
+
+        </div><!-- /card-body -->
+    </div><!-- /auth-card -->
+</div><!-- /page-wrap -->
+
+<footer>
+    &copy; 2026 Système de Gestion Médicale — Tous droits réservés
+</footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

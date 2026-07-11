@@ -1,0 +1,268 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47c46eee8afad33232b64a"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T14:17:18.834Z"
+    },
+    "user_id": "6a47c46eee8afad33232b649",
+    "user_name": "Abdel Abdellahi",
+    "role": "patient",
+    "action": "Inscription",
+    "details": "Nouveau patient inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47c9eceefb015ce5ab882a"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T14:40:44.645Z"
+    },
+    "user_id": "6a47c46eee8afad33232b649",
+    "user_name": "Abdel Abdellahi",
+    "role": "patient",
+    "action": "Reservation",
+    "details": "Patient #9876543210 a reserve le ticket #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47cdcdee8afad33232b64b"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T14:57:17.780Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse avec r\u00f4le: admin, ID: Admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47cdeaee8afad33232b64c"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T14:57:46.791Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse avec r\u00f4le: admin, ID: Admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47ce16ee8afad33232b64d"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T14:58:30.601Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse avec r\u00f4le: admin, ID: Admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47ce3fee8afad33232b64e"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T14:59:11.433Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse avec r\u00f4le: admin, ID: admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47ce6aee8afad33232b64f"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T14:59:54.871Z"
+    },
+    "user_id": "med_ahmed",
+    "user_name": "Mohamed Ahmed",
+    "role": "medecin",
+    "action": "Connexion",
+    "details": "M\u00e9decin connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47ce76ee8afad33232b650"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:00:06.590Z"
+    },
+    "user_id": "med_ahmed",
+    "user_name": "Mohamed Ahmed",
+    "role": "medecin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47cf2aee8afad33232b651"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:03:06.521Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse avec r\u00f4le: admin, ID: Admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47cf54ee8afad33232b652"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:03:48.515Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse avec r\u00f4le: admin, ID: admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47cf83ee8afad33232b653"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:04:35.085Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse avec r\u00f4le: admin, ID: admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d29782dc2b97274683b1"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:17:43.154Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Sidy Diallo",
+    "role": "admin",
+    "action": "Validation Reception",
+    "details": "Recu de reservation #1 valide par l'admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d29782dc2b97274683b2"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:17:43.196Z"
+    },
+    "user_id": "med_ahmed",
+    "user_name": "Mohamed Ahmed",
+    "role": "medecin",
+    "action": "Depot Image Clinique",
+    "details": "Image medicale de type Radiographie_Thorax enregistree separ\u00e9ment",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d29782dc2b97274683b4"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:17:43.233Z"
+    },
+    "user_id": "med_ahmed",
+    "user_name": "Mohamed Ahmed",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d29782dc2b97274683b7"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:17:43.249Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Sidy Diallo",
+    "role": "admin",
+    "action": "Co-signature Administration",
+    "details": "Visa final et cachet apposes sur le rapport #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d2ae08fb64364a2a6675"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:18:06.722Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Sidy Diallo",
+    "role": "admin",
+    "action": "Validation Reception",
+    "details": "Recu de reservation #1 valide par l'admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d2ae08fb64364a2a6676"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:18:06.740Z"
+    },
+    "user_id": "med_ahmed",
+    "user_name": "Mohamed Ahmed",
+    "role": "medecin",
+    "action": "Depot Image Clinique",
+    "details": "Image medicale de type Radiographie_Thorax enregistree separ\u00e9ment",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d2ae08fb64364a2a6678"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:18:06.743Z"
+    },
+    "user_id": "med_ahmed",
+    "user_name": "Mohamed Ahmed",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a47d2ae08fb64364a2a667b"
+    },
+    "timestamp": {
+      "$date": "2026-07-03T15:18:06.752Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Sidy Diallo",
+    "role": "admin",
+    "action": "Co-signature Administration",
+    "details": "Visa final et cachet apposes sur le rapport #1",
+    "ip_address": "127.0.0.1"
+  }
+]

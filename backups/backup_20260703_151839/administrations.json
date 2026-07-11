@@ -1,0 +1,8 @@
+[
+  {
+    "_id": "admin_sidy",
+    "nom": "Sidy",
+    "prenom": "Diallo",
+    "password": "scrypt:32768:8:1$1yzDyHml3WAz2xpx$ace62b2eba2d66c5784297b972075c4a3c42b85aaf4a95551b59df77e7114284a0eb7a44ca324b9e33d5dc34e57d2a9cfc05c8f3b57ee60b014bdd1b7b964fd3"
+  }
+]

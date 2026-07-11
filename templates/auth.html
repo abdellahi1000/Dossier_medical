@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion / Inscription - Système de Gestion Médicale{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+        
+        <!-- Login Card -->
+        <div class="card">
+            <h2>Se Connecter</h2>
+            <p style="color: #666; margin-bottom: 1.5rem;">Accédez à votre espace sécurisé.</p>
+            
+            <form action="{{ url_for('login') }}" method="POST">
+                <div class="form-group">
+                    <label for="login_role">Vous êtes :</label>
+                    <select id="login_role" name="role" class="form-control" onchange="toggleLoginFields()" required>
+                        <option value="patient">Patient</option>
+                        <option value="medecin">Médecin</option>
+                        <option value="admin">Hôpital</option>
+                    </select>
+                </div>
+                
+                <!-- Patient / Admin Login fields -->
+                <div id="patient_admin_fields">
+                    <div class="form-group">
+                        <label for="username" id="username_label">Numéro National / Identifiant :</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Entrez votre identifiant" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+            </form>
+        </div>
+        
+        <!-- Registration Card (Only for Patient) -->
+        <div class="card">
+            <h2>S'inscrire (Patient)</h2>
+            <p style="color: #666; margin-bottom: 1.5rem;">Nouveau sur la plateforme ? Créez votre dossier patient.</p>
+            
+            <form action="{{ url_for('register') }}" method="POST">
+                <div class="form-group">
+                    <label for="nom">Nom :</label>
+                    <input type="text" id="nom" name="nom" class="form-control" placeholder="Ex: Diop" required>
+                </div>
+                <div class="form-group">
+                    <label for="prenom">Prénom :</label>
+                    <input type="text" id="prenom" name="prenom" class="form-control" placeholder="Ex: Amadou" required>
+                </div>
+                <div class="form-group">
+                    <label for="numero_national">Numéro National :</label>
+                    <input type="text" id="numero_national" name="numero_national" class="form-control" placeholder="Ex: 1234567890" required>
+                </div>
+                <div class="form-group">
+                    <label for="telephone">Téléphone :</label>
+                    <input type="tel" id="telephone" name="telephone" class="form-control" placeholder="Ex: 45678901" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg_password">Mot de passe :</label>
+                    <input type="password" id="reg_password" name="password" class="form-control" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Créer mon compte</button>
+            </form>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleLoginFields() {
+        const role = document.getElementById('login_role').value;
+        const label = document.getElementById('username_label');
+        const usernameInput = document.getElementById('username');
+        
+        if (role === 'patient') {
+            label.textContent = "Numéro National (NNI) :";
+            usernameInput.placeholder = "Ex: 1234567890";
+        } else if (role === 'medecin') {
+            label.textContent = "Nom du Médecin :";
+            usernameInput.placeholder = "Ex: Ahmed";
+        } else if (role === 'admin') {
+            label.textContent = "Identifiant Hôpital :";
+            usernameInput.placeholder = "Ex: Admin";
+        }
+    }
+    
+    // Run on load
+    document.addEventListener("DOMContentLoaded", toggleLoginFields);
+</script>
+{% endblock %}

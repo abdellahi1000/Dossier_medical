@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - Centre Médical Chiffa ===
+Rendez-vous: #2 | Groupe: 103 | Appel: A1
+Patient: Seyid Abdellahi (7455299607)
+Montant Paye: 2000.0 MRU (Mode: CNAM)
+Date: 03/07/2026 15:22
+Code Secret Patient: 707X1H

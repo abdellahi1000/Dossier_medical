@@ -1,0 +1,34 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47c9eceefb015ce5ab8825"
+    },
+    "id_patient": {
+      "$oid": "6a47c46eee8afad33232b649"
+    },
+    "id_centre": {
+      "$oid": "6a47ab218c380979f08c8398"
+    },
+    "examens_ids": [
+      {
+        "$oid": "6a47ab218c380979f08c839a"
+      },
+      {
+        "$oid": "6a47ab218c380979f08c839b"
+      }
+    ],
+    "id_slot": {
+      "$oid": "6a47bbcb981f90afe9d19f8b"
+    },
+    "date_reservation": {
+      "$date": "2026-07-03T14:40:44.637Z"
+    },
+    "montant_total": 1300.0,
+    "code_secret": "XNRFQ9",
+    "numero_appel": 1,
+    "lettre": "A",
+    "numero_group": 101,
+    "numero_de_rendez_vous": 1,
+    "statut": "Termin\u00e9"
+  }
+]

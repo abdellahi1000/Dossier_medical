@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - CENTRE MÉDICAL EL AMAL ===
+Rendez-vous: #5 | Groupe: J4 | Appel: R2
+Patient:  Freiend (3636636336)
+Montant Paye: 0.0 MRU (Mode: CNAM)
+Date: 06/07/2026 15:36
+Code Secret Patient: BCFOCE

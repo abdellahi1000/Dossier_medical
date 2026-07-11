@@ -1,0 +1,34 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47ab218c380979f08c839a"
+    },
+    "type_examen": "Analyse Sanguine - VIH",
+    "categorie": "Analyse Sanguine",
+    "prix": 500.0
+  },
+  {
+    "_id": {
+      "$oid": "6a47ab218c380979f08c839b"
+    },
+    "type_examen": "Analyse Sanguine - FLH",
+    "categorie": "Analyse Sanguine",
+    "prix": 800.0
+  },
+  {
+    "_id": {
+      "$oid": "6a47ab218c380979f08c839c"
+    },
+    "type_examen": "Radiologie Thoracique",
+    "categorie": "Radiologie",
+    "prix": 1200.0
+  },
+  {
+    "_id": {
+      "$oid": "6a47ab218c380979f08c839d"
+    },
+    "type_examen": "\u00c9chographie Abdominale",
+    "categorie": "Radiologie",
+    "prix": 1500.0
+  }
+]

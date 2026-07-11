@@ -1,0 +1,15 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47c46eee8afad33232b649"
+    },
+    "nom": "Abdellahi",
+    "prenom": "Abdel",
+    "numero_national": "9876543210",
+    "telephone": "36123456",
+    "date_inscription": {
+      "$date": "2026-07-03T14:17:18.719Z"
+    },
+    "password": "scrypt:32768:8:1$3Xu9dWI1ndLSwjo0$c63ca7673070046243dc94a6cb8b5e279f26c6f2bfdc324004ac9d745c286480049e5353fd89233eab5594665ab429179b0d13b4734a5752a64e1c0c133813b2"
+  }
+]

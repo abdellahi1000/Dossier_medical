@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - Centre Médical Chiffa ===
+Rendez-vous: #1 | Groupe: 101 | Appel: A1
+Patient: Abdel Abdellahi (9876543210)
+Montant Paye: 1300.0 MRU (Mode: CNAM)
+Date: 03/07/2026 14:40
+Code Secret Patient: XNRFQ9

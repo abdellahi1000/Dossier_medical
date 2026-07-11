@@ -1,0 +1,20 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47c9eceefb015ce5ab8827"
+    },
+    "id_reservation": {
+      "$oid": "6a47c9eceefb015ce5ab8825"
+    },
+    "numero_cnam": "CNAM-123456",
+    "date_expiration": "2028-12-31",
+    "type_couverture": "Remboursement Int\u00e9gral (100%)",
+    "statut": "Valid\u00e9",
+    "ayant_droit": "Abdel Parent Principal",
+    "relation": "p\u00e8re",
+    "cni_files": [
+      "c:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_9876543210\\Centre_M\u00e9dical_Chiffa_03-07-2026_14h40_Analyse_Sanguine\\cni_recto_XNRFQ9.png",
+      "c:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_9876543210\\Centre_M\u00e9dical_Chiffa_03-07-2026_14h40_Analyse_Sanguine\\cni_verso_XNRFQ9.png"
+    ]
+  }
+]

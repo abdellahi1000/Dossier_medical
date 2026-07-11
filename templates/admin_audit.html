@@ -1,0 +1,172 @@
+{% extends "hospital_base.html" %}
+{% set active_page = 'audit' %}
+
+{% block title %}Journal d'Audit — Espace Hôpital{% endblock %}
+
+{% block hosp_content %}
+<!-- Page Header -->
+<div class="hosp-page-header" style="margin: 0 -1.5rem 1.75rem; padding: 1.4rem 1.5rem;">
+    <h1>
+        <i data-lucide="history" style="width:28px;height:28px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Journal d'Audit & Traçabilité
+    </h1>
+    <p>Suivi des comptes médecins — inscriptions, connexions et statuts. Les données patients ne sont pas affichées ici.</p>
+</div>
+
+<!-- Stat Cards: Doctor-Focused -->
+<div class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i data-lucide="shield-check" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Total Médecins</p>
+            <h3>{{ total_medecins }}</h3>
+        </div>
+    </div>
+    <div class="stat-card yellow">
+        <div class="stat-icon">
+            <i data-lucide="activity" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Créations ce mois</p>
+            <h3>{{ created_this_month }}</h3>
+        </div>
+    </div>
+    <div class="stat-card blue">
+        <div class="stat-icon">
+            <i data-lucide="alert-circle" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Actions (24h)</p>
+            <h3>{{ actions_24h }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Doctor Accounts Status Table -->
+<div class="hosp-card">
+    <h2>
+        <i data-lucide="users" style="width:24px;height:24px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Comptes Médecins — Statuts & Historique
+    </h2>
+    <p class="section-desc">Liste de tous les médecins enregistrés dans le système, avec leur statut et date d'inscription.</p>
+
+    {% if medecins|length == 0 %}
+        <div class="empty-state">
+            <i data-lucide="alert-triangle" style="width:48px;height:48px;color:#D62828;"></i>
+            <p>Aucun médecin enregistré pour le moment.</p>
+        </div>
+    {% else %}
+        <div style="overflow-x:auto;">
+            <table class="hosp-table">
+                <thead>
+                    <tr>
+                        <th>Médecin</th>
+                        <th>N° NNI</th>
+                        <th>Spécialité</th>
+                        <th>Centre Médical</th>
+                        <th>Date d'inscription</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for med in medecins %}
+                    <tr>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:0.65rem;">
+                                <div style="width:36px;height:36px;background:#edfaf3;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <i data-lucide="user" style="width:18px;height:18px;color:#198754;"></i>
+                                </div>
+                                <div>
+                                    <strong style="color:#0f4c2a;">Dr. {{ med.prenom }} {{ med.nom }}</strong>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <code style="background:#f5f7f6;padding:0.18rem 0.5rem;border-radius:5px;font-size:0.8rem;color:#555;">{{ med.numero_nni }}</code>
+                        </td>
+                        <td>
+                            <span class="status-badge status-done">{{ med.specialite }}</span>
+                        </td>
+                        <td>
+                            <span style="font-size:0.84rem;">{{ med.centre_medical }}</span>
+                        </td>
+                        <td>
+                            <span style="font-size:0.82rem;color:#666;">
+                                {{ med.date_inscription.strftime('%d/%m/%Y') if med.date_inscription else '—' }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-badge status-active">
+                                <i data-lucide="circle-dot" style="width:14px;height:14px;vertical-align:bottom;color:#146C43;margin-right:2px;"></i> Actif
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Admin & Doctor Activity Log (filtered - no patient data) -->
+<div class="hosp-card">
+    <h2>
+        <i data-lucide="shield-check" style="width:24px;height:24px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Historique des Actions — Médecins & Administration
+    </h2>
+    <p class="section-desc">Uniquement les actions concernant les comptes médecins et les opérations administratives de l'hôpital.</p>
+
+    {% if audit_logs|length == 0 %}
+        <div class="empty-state">
+            <i data-lucide="list" style="width:48px;height:48px;color:#198754;"></i>
+            <p>Aucune activité administrative enregistrée.</p>
+        </div>
+    {% else %}
+        <div style="overflow-x:auto;">
+            <table class="hosp-table">
+                <thead>
+                    <tr>
+                        <th>Date / Heure</th>
+                        <th>Utilisateur</th>
+                        <th>Rôle</th>
+                        <th>Action</th>
+                        <th>Détails</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in audit_logs %}
+                    <tr>
+                        <td>
+                            <span style="font-family:monospace;font-size:0.79rem;color:#444;">
+                                {{ log.timestamp.strftime('%d/%m/%Y') }}<br>
+                                <strong>{{ log.timestamp.strftime('%H:%M') }}</strong>
+                            </span>
+                        </td>
+                        <td>
+                            <strong style="font-size:0.86rem;">{{ log.user_name }}</strong>
+                        </td>
+                        <td>
+                            {% if log.role == 'admin' %}
+                                <span class="status-badge status-active"><i data-lucide="building-2" style="width:12px;height:12px;vertical-align:bottom;"></i> Hôpital</span>
+                            {% elif log.role == 'medecin' %}
+                                <span class="status-badge status-done"><i data-lucide="stethoscope" style="width:12px;height:12px;vertical-align:bottom;"></i> Médecin</span>
+                            {% else %}
+                                <span class="status-badge status-pending">Autre</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong style="font-size:0.85rem;color:#0f4c2a;">{{ log.action }}</strong>
+                        </td>
+                        <td>
+                            <span style="font-size:0.82rem;color:#555;max-width:340px;display:block;">{{ log.details }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

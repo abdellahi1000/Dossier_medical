@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultat Final d'Examen Médical</title>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .lucide { width: 1.25em; height: 1.25em; stroke-width: 2px; vertical-align: middle; }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            padding: 30px;
+            max-width: 750px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px double #1B7F3A;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .header-logo {
+            font-size: 28px;
+            color: #1B7F3A;
+            font-weight: bold;
+        }
+        .header-info {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+        }
+        .title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .title h1 {
+            color: #333;
+            font-size: 22px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .title p {
+            margin: 5px 0 0 0;
+            color: #888;
+            font-size: 13px;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #1B7F3A;
+            border-bottom: 1px solid #1B7F3A;
+            padding-bottom: 5px;
+            margin-bottom: 12px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .grid-item {
+            font-size: 14px;
+        }
+        .grid-item strong {
+            display: block;
+            color: #777;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        .report-box {
+            background-color: #F9F9F9;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            padding: 20px;
+            font-size: 14px;
+            white-space: pre-line;
+            min-height: 150px;
+            margin-bottom: 25px;
+        }
+        .signatures-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+            page-break-inside: avoid;
+        }
+        .signature-card {
+            border: 1px solid #2E9E4D;
+            background-color: #D9F2D9;
+            border-radius: 6px;
+            padding: 15px;
+            font-size: 12px;
+            position: relative;
+        }
+        .signature-card.admin {
+            border-color: #2196F3;
+            background-color: #E8F0FE;
+        }
+        .signature-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 13px;
+            color: #1B7F3A;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(27, 127, 58, 0.2);
+            padding-bottom: 5px;
+        }
+        .signature-card.admin h3 {
+            color: #2196F3;
+            border-bottom-color: rgba(33, 150, 243, 0.2);
+        }
+        .signature-meta {
+            margin-bottom: 5px;
+        }
+        .signature-hash {
+            font-family: monospace;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            word-break: break-all;
+            display: block;
+            margin-top: 5px;
+        }
+        .footer {
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+        }
+        .lab-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-size: 13px;
+        }
+        .lab-table th, .lab-table td {
+            border: 1px solid #E0E0E0;
+            padding: 10px;
+            text-align: left;
+        }
+        .lab-table th {
+            background-color: #f1f5f9;
+            color: #333;
+            font-weight: bold;
+        }
+        .images-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+        .images-list li {
+            background: #F9F9F9;
+            border: 1px solid #E0E0E0;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .print-btn {
+            background-color: #1B7F3A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0 auto;
+            transition: 0.2s;
+        }
+        .print-btn:hover {
+            background-color: #2E9E4D;
+        }
+        @media print {
+            .print-btn, .no-print {
+                display: none !important;
+            }
+            body {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-logo"><i data-lucide="building-2" style="width:32px;height:32px;margin-right:8px;"></i> DOSSIER MÉDICAL</div>
+        <div class="header-info">
+            <strong>{{ centre.nom_centre }}</strong><br>
+            {{ centre.adresse }}<br>
+            Tél: {{ centre.telephone }}
+        </div>
+    </div>
+
+    <div class="title">
+        <h1>Rapport d'Examen Clinique</h1>
+        <p>Généré le {{ date_impression }} | Dossier de référence #{{ reservation.numero_de_rendez_vous }}</p>
+    </div>
+
+    <!-- Patient Info -->
+    <div class="section">
+        <div class="section-title">Informations du Patient</div>
+        <div class="grid">
+            <div class="grid-item">
+                <strong>Nom du Patient</strong>
+                {{ patient.prenom }} {{ patient.nom }}
+            </div>
+            <div class="grid-item">
+                <strong>Numéro National d'Identité</strong>
+                {{ patient.numero_national }}
+            </div>
+            <div class="grid-item">
+                <strong>Téléphone</strong>
+                {{ patient.telephone }}
+            </div>
+            <div class="grid-item">
+                <strong>Date de la Visite</strong>
+                {{ reservation.date_reservation.strftime('%d/%m/%Y %H:%M') }}
+            </div>
+            {% if reservation.nom_medecin_assigne %}
+            <div class="grid-item" style="grid-column: span 2; background-color:#e8f4f8; padding:8px; border-radius:4px; margin-top:5px;">
+                <strong style="color:#0284c7;">Médecin Assigné</strong>
+                {{ reservation.nom_medecin_assigne }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Exam Info -->
+    <div class="section">
+        <div class="section-title">Examens Réalisés</div>
+        <div class="grid">
+            <div class="grid-item" style="grid-column: span 2;">
+                <strong>Nature des Examens</strong>
+                <ul style="margin: 5px 0 0 0; padding-left: 20px;">
+                    {% for ex in exams %}
+                        <li>{{ ex.type_examen }} (Catégorie: {{ ex.categorie }})</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report -->
+    <div class="section">
+        <div class="section-title">Observations Cliniques et Résultats</div>
+        
+        <div style="margin-bottom: 15px;">
+            <h4 style="margin: 0 0 5px 0; color: #333; font-size: 13px;">Observations Médicales</h4>
+            <div class="report-box" style="min-height: auto; margin-bottom: 15px;">{{ result.observations }}</div>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <h4 style="margin: 0 0 5px 0; color: #333; font-size: 13px;">Diagnostic</h4>
+            <div class="report-box" style="min-height: auto; margin-bottom: 15px;">{{ result.diagnosis }}</div>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <h4 style="margin: 0 0 5px 0; color: #333; font-size: 13px;">Résultats de l'Examen</h4>
+            <div class="report-box" style="min-height: auto; margin-bottom: 15px;">{{ result.results }}</div>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <h4 style="margin: 0 0 5px 0; color: #333; font-size: 13px;">Recommandations</h4>
+            <div class="report-box" style="min-height: auto; margin-bottom: 15px;">{{ result.recommendations }}</div>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <h4 style="margin: 0 0 5px 0; color: #333; font-size: 13px;">Conclusion</h4>
+            <div class="report-box" style="min-height: auto; margin-bottom: 15px;">{{ result.conclusion }}</div>
+        </div>
+    </div>
+
+    <!-- Lab Results -->
+    {% if result.lab_items and result.lab_items|length > 0 %}
+    <div class="section">
+        <div class="section-title">Tableau des Résultats d'Analyse (Laboratoire)</div>
+        <table class="lab-table">
+            <thead>
+                <tr>
+                    <th>Paramètre</th>
+                    <th>Résultat</th>
+                    <th>Valeur de référence</th>
+                    <th>Unité</th>
+                    <th>Observation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in result.lab_items %}
+                <tr>
+                    <td>{{ item.param }}</td>
+                    <td><strong>{{ item.val }}</strong></td>
+                    <td>{{ item.ref }}</td>
+                    <td>{{ item.unit }}</td>
+                    <td>{{ item.obs }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <!-- Medical Images -->
+    {% if attached_images and attached_images|length > 0 %}
+    <div class="section">
+        <div class="section-title">Fichiers d'Imagerie Joints</div>
+        <ul class="images-list">
+            {% for img in attached_images %}
+            <li><i data-lucide="paperclip" style="width:14px;height:14px;vertical-align:middle;margin-right:5px;color:#1B7F3A;"></i> {{ img.split('/')[-1] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Signatures Section -->
+    <div class="section">
+        <div class="section-title">Certifications & Signatures Numériques</div>
+        <p style="font-size: 11px; color: #666; margin-top: -5px; margin-bottom: 10px;">
+            Ce document médical a été signé numériquement et scellé électroniquement par les parties prenantes ci-dessous.
+        </p>
+        
+        <div class="signatures-section">
+            <!-- Doctor Signature -->
+            <div class="signature-card">
+                <h3><i data-lucide="pen-tool"></i> Signature du Praticien</h3>
+                <div class="signature-meta">
+                    <strong>Médecin Signataire :</strong> Dr. {{ medecin.prenom }} {{ medecin.nom }} (Spéc. {{ medecin.specialite }})
+                </div>
+                <div class="signature-meta">
+                    <strong>Date de signature :</strong> {{ medecin_signature.date_signature.strftime('%d/%m/%Y %H:%M:%S') }}
+                </div>
+                <div class="signature-meta">
+                    <strong>Méthode d'Authentification :</strong> {{ medecin_signature.type_signature }}
+                </div>
+                <div class="signature-meta">
+                    <strong>Empreinte Cryptographique (SHA-256) :</strong>
+                    <span class="signature-hash">{{ medecin_signature.signature_hash }}</span>
+                </div>
+            </div>
+
+            <!-- Admin Signature -->
+            <div class="signature-card admin">
+                <h3><i data-lucide="building"></i> Visa de l'Administration</h3>
+                <div class="signature-meta">
+                    <strong>Co-signataire :</strong> {{ admin_signature.signataire_nom }} (Administration de la santé)
+                </div>
+                <div class="signature-meta">
+                    <strong>Date de signature :</strong> {{ admin_signature.date_signature.strftime('%d/%m/%Y %H:%M:%S') }}
+                </div>
+                <div class="signature-meta">
+                    <strong>Méthode d'Authentification :</strong> {{ admin_signature.type_signature }}
+                </div>
+                <div class="signature-meta">
+                    <strong>Empreinte Cryptographique (SHA-256) :</strong>
+                    <span class="signature-hash">{{ admin_signature.signature_hash }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attached Images Section (New in Phase 2) -->
+    {% if attached_images %}
+    <div class="section no-print" style="margin-top: 30px; border-top: 1px dashed #ccc; padding-top: 20px;">
+        <div class="section-title" style="color: var(--bleu-info); border-color: var(--bleu-info);"><i data-lucide="image"></i> Clichés d'Imagerie Originaux Annexés</div>
+        <p style="font-size: 11px; color: #666; margin-bottom: 15px;">
+            Conformément aux directives de gestion documentaire, ces clichés originaux sont conservés en haute qualité et stockés séparément du document PDF principal. Vous pouvez les télécharger individuellement ci-dessous :
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            {% for img_url in attached_images %}
+                <div style="border: 1px solid #ddd; padding: 10px; border-radius: 6px; text-align: center; background: #fafafa;">
+                    <span style="font-size: 12px; font-weight: bold; display: block; margin-bottom: 5px;">Cliché Original</span>
+                    <img src="{{ img_url }}" style="max-width: 100%; max-height: 120px; border-radius: 4px; display: block; margin: 0 auto 10px auto;">
+                    <a href="{{ img_url }}" target="_blank" class="btn btn-info btn-sm" style="font-size: 0.8rem; padding: 0.2rem 0.5rem; background-color: var(--bleu-info); color: white;">
+                        Télécharger Haute Qualité
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        <p>Ce document est confidentiel et protégé par le secret médical. Les signatures ci-dessus font foi devant les autorités compétentes.</p>
+        <p style="font-size: 10px; color: #bbb;"><i data-lucide="shield-check"></i> Scellement numérique du dossier médical • ID: {{ result._id }}</p>
+    </div>
+
+    <button class="print-btn" onclick="window.print()"><i data-lucide="printer"></i> Imprimer le Résultat</button>
+
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>

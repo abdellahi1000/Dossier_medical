@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription — Système de Gestion Médicale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .lucide { width: 1.25em; height: 1.25em; stroke-width: 2px; vertical-align: middle; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green: #198754;
+            --green-dark: #146C43;
+            --green-light: #D1F2D9;
+            --white: #FFFFFF;
+            --gray-bg: #F5F5F5;
+            --text: #2D3748;
+            --text-muted: #718096;
+            --border: #E2E8F0;
+            --shadow: 0 6px 20px rgba(0,0,0,.12);
+            --shadow-lg: 0 20px 60px rgba(25,135,84,0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #f0faf3 0%, #e8f5e9 50%, #f5f5f5 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            background: linear-gradient(90deg, var(--green-dark) 0%, var(--green) 100%);
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(25,135,84,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+        .nav-logo {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: white;
+            padding: 3px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .nav-title {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        .nav-link-back {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(255,255,255,0.15);
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.25);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .nav-link-back:hover { background: rgba(255,255,255,0.25); }
+
+        /* ── PAGE WRAP ── */
+        .page-wrap {
+            flex: 1;
+            padding: 2.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Page title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.4s ease;
+        }
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+        .page-title p {
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            font-size: 0.97rem;
+        }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(-15px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── ROLE CARDS ── */
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+        .role-card {
+            background: var(--white);
+            border: 2.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            user-select: none;
+        }
+        .role-card:hover {
+            border-color: var(--green);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(25,135,84,0.15);
+        }
+        .role-card.active {
+            border-color: var(--green);
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            box-shadow: 0 6px 20px rgba(25,135,84,0.2);
+            transform: translateY(-2px);
+        }
+        .role-card .role-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .role-card .role-label {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        .role-card.active .role-label { color: var(--green-dark); }
+
+        /* ── FORM CARD ── */
+        .form-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            animation: slideUp 0.45s cubic-bezier(0.4,0,0.2,1);
+        }
+        @keyframes slideUp {
+            from { opacity:0; transform:translateY(25px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        .form-card-header {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .form-card-header span { font-size: 2rem; }
+        .form-card-header h2 {
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        .form-card-header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        .form-card-body {
+            padding: 2rem;
+        }
+
+        /* Flash */
+        .flash {
+            padding: 0.85rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .flash.error   { background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; }
+        .flash.success { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
+
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Inputs */
+        .form-group { margin-bottom: 1.1rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .input-wrap { position: relative; }
+        .input-icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            opacity: 0.45;
+            pointer-events: none;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.6rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text);
+            background: #fafafa;
+            transition: var(--transition);
+            outline: none;
+        }
+        .form-control::placeholder { color: #a0aec0; }
+        .form-control:focus {
+            border-color: var(--green);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(25,135,84,0.1);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0 1.25rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Submit */
+        .btn-submit {
+            width: 100%;
+            padding: 0.95rem;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 12px rgba(25,135,84,0.35);
+            letter-spacing: 0.3px;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, var(--green-dark) 0%, #0f5132 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(25,135,84,0.45);
+        }
+        .btn-submit:active { transform: translateY(0); }
+
+        /* Login back link */
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.93rem;
+            color: var(--text-muted);
+        }
+        .login-link a {
+            color: var(--green);
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 0.3rem;
+        }
+        .login-link a:hover { text-decoration: underline; }
+
+        /* Sub-forms hidden by default */
+        .sub-form { display: none; }
+        .sub-form.active { display: block; animation: fadeIn 0.3s ease; }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .role-cards { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+            .role-card { padding: 1rem 0.5rem; }
+            .role-card .role-icon { font-size: 1.8rem; }
+            .role-card .role-label { font-size: 0.78rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .form-card-body { padding: 1.5rem; }
+            .nav-title { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+    <a class="nav-brand" href="#">
+        <img class="nav-logo" src="/static/logo_officiel.png" alt="Logo">
+        <span class="nav-title">Système de Gestion Médicale</span>
+    </a>
+    <a class="nav-link-back" href="/login">← Retour Connexion</a>
+</nav>
+
+<div class="page-wrap">
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <h1>Créer un compte</h1>
+        <p>Sélectionnez votre type de profil pour commencer</p>
+    </div>
+
+    <!-- Role Selection -->
+    <div class="role-cards" style="grid-template-columns: repeat(2,1fr);">
+        <div class="role-card active" id="card-patient" onclick="switchRole('patient')">
+            <span class="role-icon" id="role-icon-patient"><i data-lucide="user"></i></span>
+            <div class="role-label">Patient</div>
+        </div>
+        <div class="role-card" id="card-admin" onclick="switchRole('admin')">
+            <span class="role-icon" id="role-icon-admin"><i data-lucide="building-2"></i></span>
+            <div class="role-label">Hôpital</div>
+        </div>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+            <div class="flash {{ cat }}" style="width:100%;max-width:700px;margin-bottom:1rem;">
+                {% if cat == 'error' %}<i data-lucide="alert-triangle" style="width:18px;height:18px;vertical-align:bottom;"></i>{% else %}<i data-lucide="check-circle" style="width:18px;height:18px;vertical-align:bottom;"></i>{% endif %} {{ msg }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- Form Card -->
+    <div class="form-card">
+
+        <!-- Dynamic Header -->
+        <div class="form-card-header" id="form-header">
+            <span id="header-icon"><i data-lucide="user"></i></span>
+            <div>
+                <h2 id="header-title">Inscription Patient</h2>
+                <p id="header-sub">Créez votre dossier patient en toute sécurité</p>
+            </div>
+        </div>
+
+        <div class="form-card-body">
+            <form action="/register" method="POST" id="reg-form" onsubmit="return checkPasswords()">
+                <input type="hidden" name="role" id="role-input" value="patient">
+
+                <!-- ══ PATIENT FORM ══ -->
+                <div class="sub-form active" id="sub-patient">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
+                                <input type="text" name="nom" class="form-control" placeholder="Entrez votre nom">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Prénom</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
+                                <input type="text" name="prenom" class="form-control" placeholder="Entrez votre prénom">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Numéro National (NNI)</label>
+                        <div class="input-wrap">
+                            <span class="input-icon"><i data-lucide="id-card" style="width:18px;height:18px;"></i></span>
+                            <input type="text" name="numero_national" class="form-control" placeholder="Entrez votre numéro national">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <div class="input-wrap">
+                            <span class="input-icon"><i data-lucide="phone" style="width:18px;height:18px;"></i></span>
+                            <input type="tel" name="telephone" class="form-control" placeholder="Entrez votre numéro de téléphone">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══ ADMIN FORM ══ -->
+                <div class="sub-form" id="sub-admin">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
+                                <input type="text" name="nom_adm" class="form-control" placeholder="Entrez votre nom">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Prénom</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
+                                <input type="text" name="prenom_adm" class="form-control" placeholder="Entrez votre prénom">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Identifiant Administratif</label>
+                        <div class="input-wrap">
+                            <span class="input-icon"><i data-lucide="id-card" style="width:18px;height:18px;"></i></span>
+                            <input type="text" name="identifiant_administratif" class="form-control" placeholder="Entrez votre identifiant administratif">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Centre médical</label>
+                        <div class="input-wrap">
+                            <span class="input-icon"><i data-lucide="building-2" style="width:18px;height:18px;"></i></span>
+                            <input type="text" name="centre_medical_adm" style="text-transform: uppercase;" class="form-control" placeholder="Nom du centre médical">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ══ PASSWORD (COMMON) ══ -->
+                <div class="divider"><i data-lucide="lock" style="width:16px;height:16px;vertical-align:bottom;margin-right:0.25rem;"></i> Sécurité du compte</div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <div class="input-wrap">
+                            <span class="input-icon"><i data-lucide="key" style="width:18px;height:18px;"></i></span>
+                            <input type="password" name="password" id="pw1" class="form-control" placeholder="Password" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmation</label>
+                        <div class="input-wrap">
+                            <span class="input-icon"><i data-lucide="check" style="width:18px;height:18px;"></i></span>
+                            <input type="password" name="confirm_password" id="pw2" class="form-control" placeholder="Password" required>
+                        </div>
+                    </div>
+                </div>
+                <div id="pw-error" style="color:#b91c1c;font-size:0.85rem;margin-top:-0.5rem;margin-bottom:0.75rem;display:none;">
+                    <i data-lucide="alert-triangle" style="width:14px;height:14px;vertical-align:bottom;"></i> Les mots de passe ne correspondent pas.
+                </div>
+
+                <button type="submit" class="btn-submit" id="submit-btn">
+                    Créer mon compte &nbsp;→
+                </button>
+            </form>
+
+            <div class="login-link">
+                Déjà inscrit ?
+                <a href="/login">Se connecter</a>
+            </div>
+        </div>
+    </div><!-- /form-card -->
+
+</div><!-- /page-wrap -->
+
+<footer>&copy; 2026 Système de Gestion Médicale — Tous droits réservés</footer>
+
+<script>
+    const ROLES = {
+        patient: {
+            iconId: 'user',
+            title: 'Inscription Patient',
+            sub: 'Créez votre dossier patient en toute sécurité'
+        },
+        admin: {
+            iconId: 'building-2',
+            title: 'Inscription Hôpital',
+            sub: 'Accédez aux outils de gestion du centre médical'
+        }
+    };
+
+    let currentRole = 'patient';
+
+    function switchRole(role) {
+        if (role === currentRole) return;
+        currentRole = role;
+
+        // Update cards styling
+        document.querySelectorAll('.role-card').forEach(c => c.classList.remove('active'));
+        document.getElementById('card-' + role).classList.add('active');
+
+        // Update hidden input
+        document.getElementById('role-input').value = role;
+
+        // Update header
+        const r = ROLES[role];
+        document.getElementById('header-icon').innerHTML = `<i data-lucide="${r.iconId}"></i>`;
+        lucide.createIcons();
+        document.getElementById('header-title').textContent = r.title;
+        document.getElementById('header-sub').textContent = r.sub;
+
+        // Show correct sub-form
+        document.querySelectorAll('.sub-form').forEach(f => f.classList.remove('active'));
+        document.getElementById('sub-' + role).classList.add('active');
+
+        // Update submit label
+        document.getElementById('submit-btn').textContent = 'Créer mon compte →';
+    }
+
+    function checkPasswords() {
+        const pw1 = document.getElementById('pw1').value;
+        const pw2 = document.getElementById('pw2').value;
+        const errEl = document.getElementById('pw-error');
+        if (pw1 !== pw2) {
+            errEl.style.display = 'block';
+            document.getElementById('pw2').style.borderColor = '#b91c1c';
+            return false;
+        }
+        errEl.style.display = 'none';
+        return true;
+    }
+
+    // Live password match check
+    document.getElementById('pw2').addEventListener('input', function() {
+        const pw1 = document.getElementById('pw1').value;
+        const errEl = document.getElementById('pw-error');
+        if (this.value && this.value !== pw1) {
+            errEl.style.display = 'block';
+            this.style.borderColor = '#b91c1c';
+        } else {
+            errEl.style.display = 'none';
+            this.style.borderColor = '';
+        }
+    });
+    lucide.createIcons();
+</script>
+</body>
+</html>

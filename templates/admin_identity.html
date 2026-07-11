@@ -1,0 +1,315 @@
+{% extends "hospital_base.html" %}
+{% set active_page = 'identity' %}
+
+{% block title %}Vérification d'Identité — Espace Hôpital{% endblock %}
+
+{% block hosp_content %}
+<!-- Page Header -->
+<div class="hosp-page-header" style="margin: 0 -1.5rem 1.75rem; padding: 1.4rem 1.5rem;">
+    <h1>
+        <i data-lucide="shield-check" style="width:28px;height:28px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Vérification d'Identité & Validation d'Entrée
+    </h1>
+    <p>Recherchez un patient, vérifiez son identité et validez son entrée en orientant vers le médecin.</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="stat-grid">
+    <div class="stat-card yellow">
+        <div class="stat-icon">
+            <i data-lucide="clock" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>En attente de validation</p>
+            <h3>{{ pending_receipts|length }}</h3>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">
+            <i data-lucide="check-circle" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Validés aujourd'hui</p>
+            <h3>{{ validated_today }}</h3>
+        </div>
+    </div>
+    <div class="stat-card blue">
+        <div class="stat-icon">
+            <i data-lucide="search" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Résultats de recherche</p>
+            <h3>{{ search_results|length }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Search Panel -->
+<div class="hosp-card">
+    <h2><i data-lucide="search" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Rechercher un Patient / Dossier</h2>
+    <p class="section-desc">Recherchez par Numéro National (NNI), Code Secret ou numéro de rendez-vous.</p>
+    <form action="{{ url_for('admin_identity') }}" method="GET">
+        <div class="search-bar">
+            <span style="font-size:1.2rem;"><i data-lucide="search" style="width:20px;height:20px;"></i></span>
+            <input type="text" name="q" placeholder="Numéro National (NNI), Code Secret, N° Rendez-vous..." value="{{ search_query or '' }}" autocomplete="off">
+            <button type="submit">Rechercher</button>
+            {% if search_query %}
+                <a href="{{ url_for('admin_identity') }}" class="btn-hosp btn-hosp-sm" style="background:#f0f4f1; color:#555; text-decoration:none;"><i data-lucide="x" style="width:16px;height:16px;vertical-align:bottom;"></i> Réinitialiser</a>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if search_query %}
+        {% if search_results|length == 0 %}
+            <div class="empty-state">
+                <div class="empty-icon"><i data-lucide="search"></i></div>
+                <p>Aucune réservation trouvée pour « <strong>{{ search_query }}</strong> »</p>
+            </div>
+        {% else %}
+            <p style="color:#198754; font-weight:600; margin-bottom:1rem;">{{ search_results|length }} résultat(s) pour « {{ search_query }} »</p>
+            <div style="overflow-x:auto;">
+                <table class="hosp-table">
+                    <thead>
+                        <tr>
+                            <th>Rendez-vous</th>
+                            <th>Date de réservation</th>
+                            <th>Patient & NNI</th>
+                            <th>Centre Médical</th>
+                            <th>Type d'examen</th>
+                            <th>Montant & Paiement</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in search_results %}
+                        <tr>
+                            <td>
+                                <strong>#{{ res.numero_de_rendez_vous }}</strong><br>
+                                <span style="font-size:0.78rem;color:#888;">Code: <code>{{ res.code_secret }}</code></span>
+                            </td>
+                            <td>
+                                <strong style="color:#0f4c2a;">{% if res.date_reservation %}{{ res.date_reservation.strftime('%d/%m/%Y') }}{% endif %}</strong><br>
+                                <span style="font-size:0.8rem;color:#666;">{% if res.date_reservation %}{{ res.date_reservation.strftime('%H:%M') }}{% endif %}</span>
+                            </td>
+                            <td>
+                                <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                                <span style="font-size:0.82rem;color:#555;">NNI: {{ res.patient.numero_national }}</span><br>
+                                <span style="font-size:0.82rem;color:#555;"><i data-lucide="phone" style="width:12px;height:12px;vertical-align:bottom;"></i> {{ res.patient.telephone }}</span>
+                            </td>
+                            <td>
+                                <strong>{{ res.centre.nom_centre }}</strong>
+                            </td>
+                            <td>
+                                <ul style="list-style:none;padding:0;margin:0;font-size:0.82rem;">
+                                    {% for ex in res.examens %}<li><i data-lucide="chevron-right" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ ex.type_examen }}</li>{% endfor %}
+                                </ul>
+                            </td>
+                            <td>
+                                <strong>{{ res.montant_total }} MRU</strong><br>
+                                <span class="status-badge {% if res.paiement.mode_paiement == 'CNAM' %}status-done{% else %}status-active{% endif %}">
+                                    {{ res.paiement.mode_paiement }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge {% if res.statut == 'Terminé' %}status-active{% elif res.statut in ['Saisi','Signé par Médecin'] %}status-pending{% else %}status-done{% endif %}">
+                                    {{ res.statut }}
+                                </span>
+                                {% if res.nom_medecin_assigne %}
+                                <div style="margin-top:0.4rem; font-size:0.8rem; color:#475569; font-weight:600; display:flex; align-items:center; gap:0.25rem;">
+                                    <i data-lucide="user-check" style="width:14px;height:14px;"></i> {{ res.nom_medecin_assigne }}
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                                    <button type="button" class="btn-hosp btn-hosp-sm btn-hosp-info" onclick="openIframeModal('Reçu de Réservation', '{{ url_for('download_receipt', reservation_id=res._id) }}')">
+                                        <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu
+                                    </button>
+                                    {% if res.statut == 'En attente de validation' %}
+                                        <form action="{{ url_for('admin_validate_receipt', reservation_id=res._id) }}" method="POST" style="display:flex;flex-direction:column;gap:0.5rem;margin:0;">
+                                            <select name="assigned_doctor" required class="hosp-form-group" style="padding:0.4rem; border-radius:6px; border:1px solid #cbd5e1; font-size:0.8rem; width:100%; margin:0;">
+                                                <option value="" disabled selected>-- Assigner Médecin --</option>
+                                                {% for doc in res.available_doctors %}
+                                                <option value="{{ doc._id }}">Dr. {{ doc.prenom }} {{ doc.nom }} ({{ doc.specialite }})</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary" style="width:100%;"><i data-lucide="check" style="width:14px;height:14px;vertical-align:bottom;"></i> Valider</button>
+                                        </form>
+                                    {% endif %}
+                                    <button type="button" class="btn-hosp btn-hosp-sm btn-hosp-danger" onclick="openDeleteModal('{{ res._id }}', '{{ res.patient.prenom|tojson|forceescape }} {{ res.patient.nom|tojson|forceescape }}', '{% if res.date_reservation %}{{ res.date_reservation.strftime('%d/%m/%Y') }}{% endif %}')">
+                                        <i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:bottom;"></i> Supprimer
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<!-- Pending Patients Awaiting Entry Validation -->
+<div class="hosp-card">
+    <h2><i data-lucide="clock" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Patients en Attente de Validation d'Entrée</h2>
+    <p class="section-desc">Patients présents à l'accueil — vérifiez le NNI, le code secret et le reçu, puis validez l'entrée pour les orienter vers le médecin.</p>
+
+    {% if pending_receipts|length == 0 %}
+        <div class="empty-state">
+            <div class="empty-icon"><i data-lucide="check-circle"></i></div>
+            <p>Aucun patient en attente de validation d'entrée pour le moment.</p>
+        </div>
+    {% else %}
+        <div style="overflow-x:auto;">
+            <table class="hosp-table">
+                <thead>
+                    <tr>
+                        <th>N° RDV & Appel</th>
+                        <th>Date de réservation</th>
+                        <th>Patient & NNI</th>
+                        <th>Centre Médical</th>
+                        <th>Type d'examen</th>
+                        <th>Mode Paiement</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for res in pending_receipts %}
+                    <tr>
+                        <td>
+                            <strong style="font-size:1.05rem;color:#0f4c2a;">#{{ res.numero_de_rendez_vous }}</strong><br>
+                            <span style="font-size:0.78rem;color:#888;">Appel: {{ res.lettre }}{{ res.numero_appel }}</span><br>
+                            <span style="font-size:0.78rem;color:#888;">Code: <code style="background:#f0f4f1;padding:0.1rem 0.3rem;border-radius:4px;">{{ res.code_secret }}</code></span>
+                        </td>
+                        <td>
+                            <strong style="color:#0f4c2a;">{% if res.date_reservation %}{{ res.date_reservation.strftime('%d/%m/%Y') }}{% endif %}</strong><br>
+                            <span style="font-size:0.8rem;color:#666;">{% if res.date_reservation %}{{ res.date_reservation.strftime('%H:%M') }}{% endif %}</span>
+                        </td>
+                        <td>
+                            <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong><br>
+                            <span style="font-size:0.85rem;color:#333;font-weight:600;">NNI: <code>{{ res.patient.numero_national }}</code></span>
+                        </td>
+                        <td>
+                            <strong>{{ res.centre.nom_centre }}</strong>
+                        </td>
+                        <td>
+                            <ul style="list-style:none;padding:0;margin:0;font-size:0.85rem;">
+                                {% for ex in res.examens %}<li><i data-lucide="chevron-right" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ ex.type_examen }}</li>{% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            {% if res.paiement.mode_paiement == 'CNAM' %}
+                                <span class="status-badge status-done"><i data-lucide="building-2" style="width:12px;height:12px;vertical-align:bottom;"></i> CNAM</span><br>
+                                <span style="font-size:0.78rem;color:#666;">N° CNAM: {{ res.patient.nni }}</span><br>
+                                <span style="font-size:0.78rem;color:#666;">Ayant droit: {{ res.cnam.ayant_droit }}</span>
+                            {% else %}
+                                <span class="status-badge status-active"><i data-lucide="banknote" style="width:12px;height:12px;vertical-align:bottom;"></i> Paiement Normal</span>
+                            {% endif %}<br>
+                            <strong style="color:#0f4c2a;font-size:0.9rem;">{{ res.montant_total }} MRU</strong>
+                        </td>
+                        <td>
+                            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                                <button type="button" class="btn-hosp btn-hosp-sm btn-hosp-info" onclick="openIframeModal('Reçu de Réservation', '{{ url_for('download_receipt', reservation_id=res._id) }}')">
+                                    <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu
+                                </button>
+                                {% if res.paiement.mode_paiement == 'CNAM' %}
+                                    <button type="button" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd;color:#1565c0;border:none;" onclick="openIframeModal('Vérification CNAM', '{{ url_for('download_cnam', reservation_id=res._id) }}')">
+                                        <i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> CNAM
+                                    </button>
+                                {% endif %}
+                                <form action="{{ url_for('admin_validate_receipt', reservation_id=res._id) }}" method="POST" style="display:flex;flex-direction:column;gap:0.5rem;margin:0;">
+                                    <select name="assigned_doctor" required class="hosp-form-group" style="padding:0.4rem; border-radius:6px; border:1px solid #cbd5e1; font-size:0.8rem; width:100%; margin:0;">
+                                        <option value="" disabled selected>-- Assigner Médecin --</option>
+                                        {% for doc in res.available_doctors %}
+                                        <option value="{{ doc._id }}">Dr. {{ doc.prenom }} {{ doc.nom }} ({{ doc.specialite }})</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn-hosp btn-hosp-primary btn-hosp-sm" style="width:100%;">
+                                        <i data-lucide="check" style="width:14px;height:14px;vertical-align:bottom;"></i> Valider & Orienter
+                                    </button>
+                                </form>
+                                <button type="button" class="btn-hosp btn-hosp-sm btn-hosp-danger" onclick="openDeleteModal('{{ res._id }}', '{{ res.patient.prenom|tojson|forceescape }} {{ res.patient.nom|tojson|forceescape }}', '{% if res.date_reservation %}{{ res.date_reservation.strftime('%d/%m/%Y') }}{% endif %}')">
+                                    <i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:bottom;"></i> Supprimer
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+
+<!-- IFRAME MODAL (For Reçu & CNAM) -->
+<div class="hosp-modal-overlay" id="iframeModal">
+    <div class="hosp-modal" style="max-width:800px; width:90%; height:85vh; display:flex; flex-direction:column; padding:0;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:1.2rem 1.5rem; border-bottom:1px solid #e2e8f0; background:#fff; border-radius:12px 12px 0 0;">
+            <h2 id="iframeModalTitle" style="margin:0; font-size:1.15rem; color:#1e293b; display:flex; align-items:center; gap:0.5rem;"><i data-lucide="file-text" style="color:#0f4c2a;"></i> Document</h2>
+            <button type="button" class="hosp-modal-close" onclick="closeIframeModal()"><i data-lucide="x"></i></button>
+        </div>
+        <div style="flex:1; background:#f8fafc; position:relative;">
+            <iframe id="iframeModalContent" src="" style="width:100%; height:100%; border:none;"></iframe>
+        </div>
+        <div style="padding:1rem 1.5rem; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:0.75rem; background:#fff; border-radius:0 0 12px 12px;">
+            <button type="button" class="btn-hosp btn-hosp-neutral" onclick="closeIframeModal()">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div class="hosp-modal-overlay" id="deleteModal">
+    <div class="hosp-modal" style="max-width:500px; padding:2rem;">
+        <div style="text-align:center; margin-bottom:1.5rem;">
+            <div style="width:64px; height:64px; border-radius:50%; background:#fee2e2; color:#ef4444; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem;">
+                <i data-lucide="alert-triangle" style="width:32px; height:32px;"></i>
+            </div>
+            <h2 style="color:#1e293b; font-size:1.3rem; margin-bottom:0.5rem;">Supprimer la Réservation</h2>
+            <p style="color:#64748b; font-size:0.95rem; margin:0; line-height:1.5;">
+                Êtes-vous sûr de vouloir supprimer la réservation de <strong id="delPatientName" style="color:#0f172a;"></strong> du <strong id="delResDate" style="color:#0f172a;"></strong> ?<br>
+                Cette action est irréversible et supprimera toutes les données associées.
+            </p>
+        </div>
+        <form id="deleteForm" method="POST" action="">
+            <div style="display:flex; gap:1rem; justify-content:center;">
+                <button type="button" class="btn-hosp btn-hosp-neutral" onclick="closeDeleteModal()" style="flex:1; padding:0.75rem;">Annuler</button>
+                <button type="submit" class="btn-hosp btn-hosp-danger" style="flex:1; padding:0.75rem;">Oui, Supprimer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openIframeModal(title, url) {
+        document.getElementById('iframeModalTitle').innerHTML = '<i data-lucide="file-text" style="color:#0f4c2a;"></i> ' + title;
+        document.getElementById('iframeModalContent').src = url;
+        const modal = document.getElementById('iframeModal');
+        modal.style.display = 'flex';
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+    
+    function closeIframeModal() {
+        document.getElementById('iframeModal').style.display = 'none';
+        document.getElementById('iframeModalContent').src = '';
+    }
+
+    function openDeleteModal(reservationId, patientName, resDate) {
+        // Build the delete URL dynamically
+        const deleteUrl = "{{ url_for('admin_delete_reservation', reservation_id='00000') }}".replace('00000', reservationId);
+        document.getElementById('deleteForm').action = deleteUrl;
+        document.getElementById('delPatientName').textContent = patientName;
+        document.getElementById('delResDate').textContent = resDate;
+        
+        document.getElementById('deleteModal').style.display = 'flex';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+</script>
+
+{% endblock %}

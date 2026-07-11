@@ -1,0 +1,465 @@
+{% extends "hospital_base.html" %}
+{% set active_page = 'plannings' %}
+
+{% block title %}Gestion des Plannings — Espace Hôpital{% endblock %}
+
+{% block hosp_content %}
+<!-- Page Header -->
+<div class="hosp-page-header" style="margin: 0 -1.5rem 1.75rem; padding: 1.4rem 1.5rem;">
+    <h1>
+        <i data-lucide="calendar" style="width:28px;height:28px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Gestion des Plannings et Groupes
+    </h1>
+    <p>Gérez les horaires d'ouverture et les groupes de réservation de votre centre médical.</p>
+</div>
+
+<!-- Filters -->
+<div class="hosp-card" style="margin-bottom: 2rem; background: #f8fffe; border: 1px solid #d1f2d9;">
+    <form action="{{ url_for('admin_plannings_page') }}" method="GET" style="display:flex; align-items:flex-end; gap: 1rem; flex-wrap: wrap;">
+        <div class="hosp-form-group" style="margin-bottom:0; flex:1; max-width: 400px;">
+            <label>Centre Médical</label>
+            {% if centres|length > 1 %}
+                <select name="id_centre" onchange="this.form.submit()">
+                    {% for c in centres %}
+                        <option value="{{ c._id }}" {% if c._id|string == selected_centre_id %}selected{% endif %}>
+                            {{ c.nom_centre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <div style="padding: 0.65rem 1rem; border: 1px solid #e2e8f0; border-radius: 10px; background: #f1f5f9; color: #475569; font-weight: 600;">
+                    {{ centres[0].nom_centre }}
+                </div>
+                <input type="hidden" name="id_centre" value="{{ centres[0]._id }}">
+            {% endif %}
+        </div>
+        
+        <div class="hosp-form-group" style="margin-bottom:0; flex:1; max-width: 250px;">
+            <label>Date du Planning</label>
+            <input type="date" name="date" value="{{ selected_date }}" onchange="this.form.submit()" required>
+        </div>
+    </form>
+</div>
+
+{% if selected_centre_id %}
+<div class="hosp-grid-2">
+    <!-- TIME SLOTS MANAGEMENT -->
+    <div class="hosp-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+            <h2 style="font-size: 1.1rem; margin:0; display:flex; align-items:center; gap:0.5rem; color:#0f4c2a;">
+                <i data-lucide="clock" style="width:20px;height:20px;color:#198754;flex-shrink:0;"></i>
+                Créneaux Horaires
+            </h2>
+            <button onclick="openPlanningModal()" class="btn-hosp btn-hosp-primary btn-hosp-sm"><i data-lucide="plus" style="width:14px;height:14px;vertical-align:bottom;"></i> Ajouter</button>
+        </div>
+
+        {% if not plannings %}
+            <div class="empty-state" style="padding: 1.5rem 1rem;">
+                <p>Aucun créneau horaire configuré.</p>
+            </div>
+        {% else %}
+            <table class="hosp-table">
+                <thead>
+                    <tr>
+                        <th>Heure de début</th>
+                        <th>Heure de fin</th>
+                        <th>Statut</th>
+                        <th style="width: 80px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in plannings %}
+                    <tr id="planning-row-{{ p._id }}">
+                        <td><strong>{{ p.start_time }}</strong></td>
+                        <td><strong>{{ p.end_time }}</strong></td>
+                        <td>
+                            {% if p.is_active %}
+                                <span class="status-badge status-done">Actif</span>
+                            {% else %}
+                                <span class="status-badge status-waiting">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button onclick="deletePlanning('{{ p._id }}')" class="btn-hosp btn-hosp-danger btn-hosp-sm" style="padding: 0.3rem 0.5rem;">
+                                <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <!-- GROUPS MANAGEMENT -->
+    <div class="hosp-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+            <h2 style="font-size: 1.1rem; margin:0; display:flex; align-items:center; gap:0.5rem; color:#0f4c2a;">
+                <i data-lucide="users" style="width:20px;height:20px;color:#198754;flex-shrink:0;"></i>
+                Groupes de Réservation
+            </h2>
+            <button onclick="openGroupModal()" class="btn-hosp btn-hosp-primary btn-hosp-sm" {% if not plannings %}disabled title="Ajoutez d'abord un créneau"{% endif %}><i data-lucide="plus" style="width:14px;height:14px;vertical-align:bottom;"></i> Ajouter</button>
+        </div>
+
+        {% if not groupes %}
+            <div class="empty-state" style="padding: 1.5rem 1rem;">
+                <p>Aucun groupe configuré.</p>
+            </div>
+        {% else %}
+            <table class="hosp-table">
+                <thead>
+                    <tr>
+                        <th>Groupe</th>
+                        <th>Créneau associé</th>
+                        <th>Max Patients</th>
+                        <th style="width: 80px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for g in groupes %}
+                    <tr id="group-row-{{ g._id }}">
+                        <td>
+                            <code style="background:#f0f4f1;padding:0.2rem 0.5rem;border-radius:6px;">{{ g.nom_groupe }}</code>
+                        </td>
+                        <td><span style="font-size:0.85rem;">{{ planning_labels.get(g.id_planning|string, 'Inconnu') }}</span></td>
+                        <td><strong>{{ g.max_patients }}</strong></td>
+                        <td>
+                            <button onclick="deleteGroup('{{ g._id }}')" class="btn-hosp btn-hosp-danger btn-hosp-sm" style="padding: 0.3rem 0.5rem;">
+                                <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+
+<!-- CREATE PLANNING MODAL -->
+<div id="planning-modal-overlay" class="hosp-modal-overlay">
+    <div class="hosp-modal" style="max-width: 400px;">
+        <button class="hosp-modal-close" onclick="closePlanningModal()"><i data-lucide="x" style="width:20px;height:20px;"></i></button>
+        <h2><i data-lucide="calendar-plus" style="width:24px;height:24px;vertical-align:bottom;margin-right:8px;"></i> Ajouter un Créneau</h2>
+        <form action="{{ url_for('admin_create_planning') }}" method="POST">
+            <input type="hidden" name="id_centre" value="{{ selected_centre_id }}">
+            
+            <div class="hosp-form-group">
+                <label>Date du Planning</label>
+                <input type="date" name="planning_date" value="{{ selected_date }}" required>
+            </div>
+            
+            <div class="hosp-form-group">
+                <label>Heure de début</label>
+                <input type="time" name="start_time" required>
+            </div>
+            <div class="hosp-form-group">
+                <label>Heure de fin</label>
+                <input type="time" name="end_time" required>
+            </div>
+            
+            <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+                <button type="submit" class="btn-hosp btn-hosp-primary" style="flex:1;">Ajouter</button>
+                <button type="button" onclick="closePlanningModal()" class="btn-hosp btn-hosp-neutral">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- CREATE GROUP MODAL -->
+<div id="group-modal-overlay" class="hosp-modal-overlay">
+    <div class="hosp-modal" style="max-width: 400px;">
+        <button class="hosp-modal-close" onclick="closeGroupModal()"><i data-lucide="x" style="width:20px;height:20px;"></i></button>
+        <h2><i data-lucide="users" style="width:24px;height:24px;vertical-align:bottom;margin-right:8px;"></i> Ajouter un Groupe</h2>
+        <form action="{{ url_for('admin_create_group') }}" method="POST">
+            <input type="hidden" name="id_centre" value="{{ selected_centre_id }}">
+            <input type="hidden" name="planning_date" value="{{ selected_date }}">
+            
+            <div class="hosp-form-group">
+                <label>Nom du Groupe</label>
+                <input type="text" name="nom_groupe" placeholder="Ex: J1" required autocomplete="off">
+            </div>
+            <div class="hosp-form-group">
+                <label>Créneau Horaire Associé</label>
+                <select name="id_planning" required>
+                    {% if available_plannings %}
+                        {% for p in available_plannings %}
+                            <option value="{{ p._id }}">{{ p.start_time }} - {{ p.end_time }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option value="" disabled selected>Aucun créneau disponible</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="hosp-form-group">
+                <label>Nombre maximum de patients</label>
+                <input type="number" name="max_patients" value="10" min="1" required>
+            </div>
+            
+            <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+                <button type="submit" class="btn-hosp btn-hosp-primary" style="flex:1;">Ajouter</button>
+                <button type="button" onclick="closeGroupModal()" class="btn-hosp btn-hosp-neutral">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div id="delete-confirm-overlay" class="hosp-modal-overlay" style="
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.45); backdrop-filter:blur(4px);
+    z-index:3000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+">
+    <div id="delete-confirm-modal" style="
+        background:#fff;
+        border-radius:20px;
+        padding:2.25rem 2rem 1.75rem;
+        max-width:420px;
+        width:calc(100% - 2rem);
+        margin:1rem;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.12);
+        transform: scale(0.92);
+        opacity:0;
+        transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
+        position:relative;
+    ">
+        <!-- Warning Icon -->
+        <div style="text-align:center; margin-bottom:1.25rem;">
+            <div style="
+                width:64px; height:64px;
+                background:linear-gradient(135deg,#fdecea,#ffc5c5);
+                border-radius:50%;
+                display:inline-flex; align-items:center; justify-content:center;
+                box-shadow: 0 4px 16px rgba(214,40,40,0.2);
+            ">
+                <i data-lucide="alert-triangle" style="width:32px;height:32px;color:#D62828;"></i>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <h2 style="text-align:center; font-size:1.2rem; color:#1a1a2e; margin:0 0 0.6rem; font-weight:700;">
+            Supprimer cet élément ?
+        </h2>
+
+        <!-- Warning message -->
+        <p id="delete-warning-text" style="text-align:center; color:#666; font-size:0.9rem; line-height:1.55; margin:0 0 1.75rem;">
+            Cette action est <strong>irréversible</strong>. Êtes-vous sûr de vouloir supprimer cet élément ?
+        </p>
+
+        <!-- Separator -->
+        <div style="height:1px;background:#f0f0f0;margin-bottom:1.25rem;"></div>
+
+        <!-- Buttons -->
+        <div style="display:flex; gap:0.75rem;">
+            <button onclick="closeDeleteModal()" style="
+                flex:1;
+                padding:0.75rem 1rem;
+                border:1.5px solid #e0e0e0;
+                border-radius:10px;
+                background:#fff;
+                color:#555;
+                font-family:'Outfit',sans-serif;
+                font-size:0.92rem;
+                font-weight:600;
+                cursor:pointer;
+                transition:all 0.18s ease;
+            ">
+                Annuler
+            </button>
+            <button id="confirm-delete-btn" style="
+                flex:1;
+                padding:0.75rem 1rem;
+                border:none;
+                border-radius:10px;
+                background:linear-gradient(135deg,#D62828,#b71c1c);
+                color:#fff;
+                font-family:'Outfit',sans-serif;
+                font-size:0.92rem;
+                font-weight:700;
+                cursor:pointer;
+                transition:all 0.18s ease;
+                display:flex; align-items:center; justify-content:center; gap:0.4rem;
+                box-shadow: 0 4px 14px rgba(214,40,40,0.35);
+            ">
+                <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+                Supprimer
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast-notification" style="
+    position:fixed;
+    bottom:2rem; left:50%; transform:translateX(-50%) translateY(120px);
+    background:#fff;
+    border-radius:14px;
+    padding:0.9rem 1.4rem;
+    display:flex; align-items:center; gap:0.75rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+    z-index:4000;
+    min-width:280px; max-width:480px;
+    font-family:'Outfit',sans-serif;
+    font-size:0.92rem;
+    font-weight:500;
+    border-left:4px solid #198754;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+    opacity:0;
+    pointer-events:none;
+">
+    <div id="toast-icon" style="width:36px;height:36px;border-radius:50%;background:#edfaf3;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i id="toast-icon-svg" data-lucide="check-circle" style="width:20px;height:20px;color:#198754;"></i>
+    </div>
+    <span id="toast-message">Supprimé avec succès.</span>
+</div>
+
+{% block scripts %}
+<script>
+function openPlanningModal() { document.getElementById('planning-modal-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closePlanningModal() { document.getElementById('planning-modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function openGroupModal() { document.getElementById('group-modal-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeGroupModal() { document.getElementById('group-modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+document.querySelectorAll('.hosp-modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+        if(e.target === this) { closePlanningModal(); closeGroupModal(); }
+    });
+});
+
+let currentDeleteId = null;
+let currentDeleteType = null; // 'planning' or 'group'
+
+function openDeleteModal(id, type) {
+    currentDeleteId = id;
+    currentDeleteType = type;
+    
+    const warningText = document.getElementById('delete-warning-text');
+    if (type === 'planning') {
+        warningText.innerHTML = "Cette action est <strong>irréversible</strong>. La suppression de ce créneau supprimera également tous les groupes associés !";
+    } else {
+        warningText.innerHTML = "Cette action est <strong>irréversible</strong>. Êtes-vous sûr de vouloir supprimer ce groupe ?";
+    }
+    
+    const overlay = document.getElementById('delete-confirm-overlay');
+    const modal = document.getElementById('delete-confirm-modal');
+    
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    
+    // Slight delay to allow display:flex to apply before animating opacity/transform
+    requestAnimationFrame(() => {
+        modal.style.opacity = '1';
+        modal.style.transform = 'scale(1)';
+    });
+}
+
+function closeDeleteModal() {
+    const overlay = document.getElementById('delete-confirm-overlay');
+    const modal = document.getElementById('delete-confirm-modal');
+    
+    modal.style.opacity = '0';
+    modal.style.transform = 'scale(0.92)';
+    
+    setTimeout(() => {
+        overlay.style.display = 'none';
+        document.body.style.overflow = '';
+        currentDeleteId = null;
+        currentDeleteType = null;
+    }, 200); // Matches CSS transition duration
+}
+
+document.getElementById('confirm-delete-btn').addEventListener('click', function() {
+    if(!currentDeleteId) return;
+    
+    const btn = this;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Suppression...';
+    btn.style.opacity = '0.7';
+    btn.style.pointerEvents = 'none';
+    
+    const url = currentDeleteType === 'planning' 
+        ? `/admin/plannings/delete/${currentDeleteId}` 
+        : `/admin/groups/delete/${currentDeleteId}`;
+        
+    fetch(url, { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+        closeDeleteModal();
+        if(data.success) {
+            showToast(currentDeleteType === 'planning' ? "Créneau supprimé avec succès." : "Groupe supprimé avec succès.", 'success');
+            
+            // Remove row with animation
+            const rowId = currentDeleteType === 'planning' ? `planning-row-${currentDeleteId}` : `group-row-${currentDeleteId}`;
+            const row = document.getElementById(rowId);
+            if(row) {
+                row.style.transition = 'all 0.3s ease';
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-10px)';
+                setTimeout(() => row.remove(), 300);
+            }
+            
+            // If it's a planning, reload page after a short delay to update groups list properly
+            if (currentDeleteType === 'planning') {
+                setTimeout(() => window.location.reload(), 1000);
+            }
+        } else {
+            showToast("Erreur lors de la suppression.", 'error');
+        }
+    })
+    .catch(err => {
+        closeDeleteModal();
+        showToast("Erreur réseau.", 'error');
+    })
+    .finally(() => {
+        btn.innerHTML = originalText;
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+    });
+});
+
+function deletePlanning(id) {
+    openDeleteModal(id, 'planning');
+}
+
+function deleteGroup(id) {
+    openDeleteModal(id, 'group');
+}
+
+let toastTimeout;
+function showToast(message, type) {
+    const toast = document.getElementById('toast-notification');
+    const msgEl = document.getElementById('toast-message');
+    const iconDiv = document.getElementById('toast-icon');
+    const iconSvg = document.getElementById('toast-icon-svg');
+    
+    msgEl.textContent = message;
+    
+    if(type === 'success') {
+        toast.style.borderLeftColor = '#198754';
+        iconDiv.style.background = '#edfaf3';
+        iconSvg.style.fill = '#198754';
+        iconSvg.innerHTML = '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>';
+    } else {
+        toast.style.borderLeftColor = '#D62828';
+        iconDiv.style.background = '#fdecea';
+        iconSvg.style.fill = '#D62828';
+        iconSvg.innerHTML = '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>';
+    }
+    
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    toast.style.opacity = '1';
+    
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+        toast.style.transform = 'translateX(-50%) translateY(120px)';
+        toast.style.opacity = '0';
+    }, 4000);
+}
+</script>
+{% endblock %}
+{% endblock %}

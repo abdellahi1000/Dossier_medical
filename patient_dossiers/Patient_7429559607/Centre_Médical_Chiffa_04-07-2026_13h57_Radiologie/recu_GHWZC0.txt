@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - Centre Médical Chiffa ===
+Rendez-vous: #3 | Groupe: 202 | Appel: R1
+Patient: seyid Abdellahi (7429559607)
+Montant Paye: 1200.0 MRU (Mode: CNAM)
+Date: 04/07/2026 13:57
+Code Secret Patient: GHWZC0

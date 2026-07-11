@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+
+{% block title %}Mon Espace - Système de Gestion Médicale{% endblock %}
+
+{% block content %}
+
+<!-- ══ WELCOME HEADER ══ -->
+<div style="margin-bottom:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+    <div>
+        <h2 style="font-size:1.6rem;font-weight:800;color:var(--gris-fonce);margin-bottom:0.25rem;">
+            Réservation d'Examen <i data-lucide="calendar" style="width:24px;height:24px;vertical-align:bottom;margin-left:4px;"></i>
+        </h2>
+        <p style="color:#718096;font-size:0.92rem;">
+            Sélectionnez un centre, une catégorie et une date
+        </p>
+    </div>
+</div>
+
+<!-- ══ STEP 1: MEDICAL EXAM RESERVATION ══ -->
+<div class="card" style="margin-bottom:3rem; border-radius:16px; box-shadow: 0 10px 30px rgba(25,135,84,0.1); padding: 2rem;">
+    <h3 style="margin-bottom:2rem; color:var(--vert-principal); font-size:1.4rem; font-weight:800; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem;">
+        ÉTAPE 1 — RÉSERVATION D'EXAMEN MÉDICAL
+    </h3>
+    
+    <form action="{{ url_for('book_exam') }}" method="GET" id="reservation-form">
+        
+        <!-- 1. Medical Center -->
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="id_centre" style="font-weight:600; color:var(--gris-fonce); margin-bottom: 0.5rem; display: block;">1. Sélection du Centre Médical :</label>
+            <select id="id_centre" name="id_centre" class="form-control" style="width:100%; max-width:100%; font-size:1.1rem; border-radius:10px; padding:0.85rem; background-color: #f8fafc; border: 1px solid #cbd5e1;" onchange="initCalendar()" required>
+                <option value="" disabled selected>-- Choisissez un centre --</option>
+                {% for centre in centres %}
+                    <option value="{{ centre._id }}">{{ centre.nom_centre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- 2. Examination Category -->
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label for="exam_category" style="font-weight:600; color:var(--gris-fonce); margin-bottom: 0.5rem; display: block;">2. Catégorie d'Examen :</label>
+            <select id="exam_category" name="category" class="form-control" style="border-radius:10px; padding:0.85rem; background-color: #f8fafc; border: 1px solid #cbd5e1;" onchange="handleCategoryChange()" required>
+                <option value="" disabled selected>-- Choisissez une catégorie --</option>
+                {% for cat in examens_by_category.keys() %}
+                    <option value="{{ cat }}">{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- 3. Patient Information (Read-only) -->
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label style="font-weight:600; color:var(--gris-fonce); margin-bottom: 0.5rem; display: block;">3. Informations du Patient :</label>
+            <div style="background: #f0faf3; padding: 1.5rem; border-radius: 12px; border: 1px solid #d1f2d9;">
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
+                    <div>
+                        <label style="font-weight:600; color:#475569; font-size:0.85rem;">Nom Complet</label>
+                        <input type="text" class="form-control" value="{{ patient.prenom }} {{ patient.nom }}" readonly style="background:#e8f5e9; border:none; border-radius:8px; padding:0.6rem; color: #334155; font-weight: 500;">
+                    </div>
+                    <div>
+                        <label style="font-weight:600; color:#475569; font-size:0.85rem;">Numéro National (NNI)</label>
+                        <input type="text" class="form-control" value="{{ patient.numero_national }}" readonly style="background:#e8f5e9; border:none; border-radius:8px; padding:0.6rem; color: #334155; font-weight: 500;">
+                    </div>
+                    <div>
+                        <label style="font-weight:600; color:#475569; font-size:0.85rem;">Numéro de Téléphone</label>
+                        <input type="text" class="form-control" value="{{ patient.telephone }}" readonly style="background:#e8f5e9; border:none; border-radius:8px; padding:0.6rem; color: #334155; font-weight: 500;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Appointment Date Calendar -->
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label style="font-weight:600; color:var(--gris-fonce); margin-bottom: 0.5rem; display: block;">4. Calendrier des Rendez-vous :</label>
+            <input type="hidden" name="appointment_date" id="appointment_date" required>
+            
+            <div id="calendar-wrapper" style="border: 1px solid #cbd5e1; border-radius: 12px; background: #fff; overflow: hidden; display: none;">
+                <!-- Calendar Header (Month/Year & Navigation) -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: #f8fafc; border-bottom: 1px solid #cbd5e1;">
+                    <button type="button" id="cal-prev" onclick="shiftCalendar(-1)" style="background: none; border: none; cursor: pointer; color: #64748b; padding: 0.5rem; display: flex; align-items: center;"><i data-lucide="chevron-left"></i></button>
+                    <strong id="cal-month-year" style="font-size: 1.1rem; color: #334155; text-transform: capitalize;"></strong>
+                    <button type="button" id="cal-next" onclick="shiftCalendar(1)" style="background: none; border: none; cursor: pointer; color: #64748b; padding: 0.5rem; display: flex; align-items: center;"><i data-lucide="chevron-right"></i></button>
+                </div>
+                <!-- Date Cards Container -->
+                <div id="calendar-dates" style="display: flex; gap: 0.75rem; padding: 1.25rem 1.5rem; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;">
+                    <!-- Dates will be injected here via JS -->
+                </div>
+            </div>
+            <div id="calendar-placeholder" style="padding: 1.5rem; text-align: center; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; color: #64748b;">
+                Veuillez d'abord sélectionner un centre médical.
+            </div>
+        </div>
+
+        <!-- 5. Available Time Slots -->
+        <div class="form-group" style="margin-bottom: 2rem;">
+            <label style="font-weight:600; color:var(--gris-fonce); margin-bottom: 0.5rem; display: block;">5. Créneaux Horaires Disponibles :</label>
+            <input type="hidden" name="id_slot" id="id_slot_hidden" required>
+            <div id="slots-container" style="padding: 1.5rem; text-align: center; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; color: #64748b;">
+                Veuillez sélectionner une catégorie et une date.
+            </div>
+        </div>
+
+        <!-- 6. Navigation -->
+        <div style="display:flex; justify-content:flex-end; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
+            <button type="submit" class="btn btn-primary" id="btn-next" style="padding:0.85rem 2.5rem; font-size:1.15rem; font-weight:600; border-radius:10px; box-shadow: 0 4px 15px rgba(25,135,84,0.3); display: flex; align-items: center; gap: 0.5rem;" disabled>
+                Next 
+                <i data-lucide="arrow-right" style="width:20px;height:20px;"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentDateObj = new Date();
+    // Start calendar from today
+    currentDateObj.setHours(0,0,0,0);
+    let selectedDateStr = "";
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialization if needed
+    });
+
+    function initCalendar() {
+        document.getElementById('calendar-placeholder').style.display = 'none';
+        document.getElementById('calendar-wrapper').style.display = 'block';
+        
+        // Reset category and slot selections
+        document.getElementById('exam_category').value = "";
+        resetSlots();
+        
+        renderCalendar();
+    }
+    
+    function handleCategoryChange() {
+        if (selectedDateStr) {
+            fetchSlots(selectedDateStr);
+        } else {
+            document.getElementById('slots-container').innerHTML = `
+                <div style="padding: 1.5rem; text-align: center; color: #64748b;">
+                    Veuillez sélectionner une date.
+                </div>
+            `;
+        }
+    }
+
+    function renderCalendar() {
+        const container = document.getElementById('calendar-dates');
+        const monthYearLabel = document.getElementById('cal-month-year');
+        container.innerHTML = '';
+        
+        const formatter = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' });
+        monthYearLabel.textContent = formatter.format(currentDateObj);
+        
+        // Generate 14 days starting from currentDateObj
+        for (let i = 0; i < 14; i++) {
+            let d = new Date(currentDateObj);
+            d.setDate(d.getDate() + i);
+            
+            // Format YYYY-MM-DD safely considering local timezone offset
+            const offset = d.getTimezoneOffset();
+            const localDate = new Date(d.getTime() - (offset*60*1000));
+            const dateStr = localDate.toISOString().split('T')[0];
+            
+            const dayName = new Intl.DateTimeFormat('fr-FR', { weekday: 'short' }).format(d);
+            const dayNum = d.getDate();
+            const monthName = new Intl.DateTimeFormat('fr-FR', { month: 'short' }).format(d);
+            
+            const isSelected = (dateStr === selectedDateStr);
+            
+            const card = document.createElement('div');
+            card.className = `date-card ${isSelected ? 'selected' : ''}`;
+            card.onclick = () => selectDate(dateStr);
+            card.innerHTML = `
+                <div class="day-name">${dayName}</div>
+                <div class="day-num">${dayNum}</div>
+                <div class="month-name">${monthName}</div>
+            `;
+            container.appendChild(card);
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+    
+    function shiftCalendar(weeks) {
+        currentDateObj.setDate(currentDateObj.getDate() + (weeks * 7));
+        renderCalendar();
+    }
+    
+    function selectDate(dateStr) {
+        selectedDateStr = dateStr;
+        document.getElementById('appointment_date').value = dateStr;
+        renderCalendar(); // re-render to update selected class
+        
+        const category = document.getElementById('exam_category').value;
+        if (!category) {
+            document.getElementById('slots-container').innerHTML = `
+                <div style="padding: 1.5rem; text-align: center; color: #64748b;">
+                    Veuillez sélectionner une catégorie d'examen d'abord.
+                </div>
+            `;
+            return;
+        }
+        
+        fetchSlots(dateStr);
+    }
+    
+    function resetSlots() {
+        document.getElementById('id_slot_hidden').value = '';
+        document.getElementById('btn-next').disabled = true;
+        document.getElementById('slots-container').innerHTML = `
+            <div style="padding: 1.5rem; text-align: center; color: #64748b;">
+                Veuillez sélectionner une catégorie et une date.
+            </div>
+        `;
+    }
+
+    function fetchSlots(dateStr) {
+        const id_centre = document.getElementById('id_centre').value;
+        const category = document.getElementById('exam_category').value;
+        const slotsContainer = document.getElementById('slots-container');
+        const nextBtn = document.getElementById('btn-next');
+        
+        // Reset selections
+        document.getElementById('id_slot_hidden').value = '';
+        nextBtn.disabled = true;
+
+        if (!id_centre || !category || !dateStr) return;
+
+        slotsContainer.innerHTML = `
+            <div style="padding: 1.5rem; text-align: center; color: #64748b;">
+                <i>Chargement des créneaux...</i>
+            </div>
+        `;
+
+        fetch(`/api/slots?id_centre=${encodeURIComponent(id_centre)}&category=${encodeURIComponent(category)}&date=${encodeURIComponent(dateStr)}`)
+            .then(res => res.json())
+            .then(slots => {
+                if (!slots || slots.length === 0) {
+                    slotsContainer.innerHTML = `
+                        <div style="padding: 1.5rem; text-align: center; background: #fef2f2; border: 1px dashed #f87171; border-radius: 12px; color: #ef4444;">
+                            Aucun créneau disponible pour cette date et ce centre.
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '<div class="slots-grid">';
+                slots.forEach(slot => {
+                    if (slot.disponible) {
+                        html += `
+                            <div class="slot-card available" onclick="selectSlot('${slot.id}', this)">
+                                <i data-lucide="clock" class="slot-icon"></i>
+                                <span class="slot-time">${slot.label}</span>
+                                <div class="slot-group"><i data-lucide="users" style="width:14px;height:14px;vertical-align:middle;margin-right:2px;"></i> ${slot.group_number}</div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="slot-card disabled">
+                                <i data-lucide="clock" class="slot-icon"></i>
+                                <span class="slot-time">${slot.label}</span>
+                                <div class="slot-status">Complet</div>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+                slotsContainer.innerHTML = html;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            })
+            .catch(err => {
+                slotsContainer.innerHTML = `
+                    <div style="padding: 1.5rem; text-align: center; background: #fef2f2; border: 1px dashed #f87171; border-radius: 12px; color: #ef4444;">
+                        Erreur lors du chargement des créneaux.
+                    </div>
+                `;
+                console.error(err);
+            });
+    }
+    
+    function selectSlot(slotId, el) {
+        document.getElementById('id_slot_hidden').value = slotId;
+        document.getElementById('btn-next').disabled = false;
+        
+        // Remove selected class from all slots
+        document.querySelectorAll('.slot-card').forEach(card => {
+            card.classList.remove('selected');
+            // reset icon color
+            const icon = card.querySelector('.slot-icon');
+            if (icon) icon.style.color = '';
+        });
+        
+        // Add selected class to clicked slot
+        el.classList.add('selected');
+        const clickedIcon = el.querySelector('.slot-icon');
+        if (clickedIcon) clickedIcon.style.color = 'white';
+    }
+</script>
+<style>
+    /* Date Cards */
+    .date-card {
+        min-width: 85px;
+        padding: 1rem 0.5rem;
+        background: #f8fafc;
+        border: 2px solid transparent;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    .date-card:hover {
+        background: #f1f5f9;
+        transform: translateY(-2px);
+    }
+    .date-card.selected {
+        background: var(--vert-principal);
+        color: white;
+        border-color: var(--vert-principal);
+        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+    }
+    .date-card.selected .day-name, .date-card.selected .month-name {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    .date-card .day-name { font-size: 0.85rem; font-weight: 600; color: #64748b; text-transform: uppercase; }
+    .date-card .day-num { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+    .date-card .month-name { font-size: 0.85rem; font-weight: 500; color: #64748b; text-transform: capitalize; }
+    
+    /* Slots Grid */
+    .slots-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 1rem;
+        text-align: left;
+    }
+    .slot-card {
+        padding: 1.25rem 1rem;
+        border-radius: 12px;
+        border: 1px solid #cbd5e1;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s ease;
+    }
+    .slot-card.available {
+        cursor: pointer;
+    }
+    .slot-card.available:hover {
+        border-color: var(--vert-principal);
+        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.1);
+        transform: translateY(-2px);
+    }
+    .slot-card.available.selected {
+        background: var(--vert-principal);
+        color: white;
+        border-color: var(--vert-principal);
+        box-shadow: 0 6px 16px rgba(25, 135, 84, 0.2);
+    }
+    .slot-card.available.selected .slot-time, .slot-card.available.selected .slot-group {
+        color: white;
+    }
+    .slot-card.disabled {
+        background: #f1f5f9;
+        border-color: #e2e8f0;
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    .slot-icon { width: 22px; height: 22px; margin-bottom: 0.2rem; color: #64748b; }
+    .slot-time { font-size: 1.15rem; font-weight: 700; color: #334155; }
+    .slot-group { font-size: 0.85rem; font-weight: 500; color: #64748b; background: #f1f5f9; padding: 0.2rem 0.6rem; border-radius: 20px; }
+    .slot-card.available.selected .slot-group { background: rgba(255,255,255,0.2); color: white; }
+    .slot-status { font-size: 0.85rem; font-weight: 700; color: #ef4444; margin-top: 0.2rem; }
+</style>
+{% endblock %}

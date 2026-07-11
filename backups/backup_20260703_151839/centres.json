@@ -1,0 +1,18 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47ab218c380979f08c8398"
+    },
+    "nom_centre": "Centre M\u00e9dical Chiffa",
+    "adresse": "Avenue Gamal Abdel Nasser, Nouakchott",
+    "telephone": "2222-3333"
+  },
+  {
+    "_id": {
+      "$oid": "6a47ab218c380979f08c8399"
+    },
+    "nom_centre": "Centre M\u00e9dical El Amal",
+    "adresse": "Tevragh Zeina, Nouakchott",
+    "telephone": "4444-5555"
+  }
+]

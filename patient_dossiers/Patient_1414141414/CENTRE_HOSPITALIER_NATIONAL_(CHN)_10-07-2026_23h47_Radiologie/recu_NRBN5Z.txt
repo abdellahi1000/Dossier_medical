@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - CENTRE HOSPITALIER NATIONAL (CHN) ===
+Rendez-vous: #7 | Groupe: G1 | Appel: R1
+Patient: abdou Ahmed (1414141414)
+Montant Paye: 2700.0 MRU (Mode: CNAM)
+Date: 10/07/2026 23:47
+Code Secret Patient: NRBN5Z

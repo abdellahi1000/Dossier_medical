@@ -1,0 +1,16 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47c9eceefb015ce5ab8826"
+    },
+    "id_reservation": {
+      "$oid": "6a47c9eceefb015ce5ab8825"
+    },
+    "montant": 1300.0,
+    "mode_paiement": "CNAM",
+    "date_paiement": {
+      "$date": "2026-07-03T14:40:44.638Z"
+    },
+    "statut_paiement": "Valid\u00e9"
+  }
+]

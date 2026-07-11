@@ -1,0 +1,19 @@
+[
+  {
+    "_id": {
+      "$oid": "6a47d29728ca95e2e84867c8"
+    },
+    "id_reservation": {
+      "$oid": "6a47c9eceefb015ce5ab8825"
+    },
+    "id_medecin": "med_ahmed",
+    "date_resultat": {
+      "$date": "2026-07-03T15:18:06.741Z"
+    },
+    "statut_resultat": "Valid\u00e9 par Administration",
+    "commentaire": "Observations de laboratoire : VIH n\u00e9gatif, FLH normal. Les clich\u00e9s originaux ont \u00e9t\u00e9 scann\u00e9s et conserv\u00e9s s\u00e9par\u00e9ment.",
+    "images": [
+      "c:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_9876543210\\Centre_M\u00e9dical_Chiffa_03-07-2026_14h40_Analyse_Sanguine\\Resultats_Analyse_Sanguine\\image_Radiographie_Thorax_XNRFQ9.png"
+    ]
+  }
+]

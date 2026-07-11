@@ -1,0 +1,521 @@
+{% extends "hospital_base.html" %}
+{% set active_page = 'doctors' %}
+
+{% block title %}Gestion des Médecins — Espace Hôpital{% endblock %}
+
+{% block hosp_content %}
+<!-- Page Header -->
+<div class="hosp-page-header" style="margin: 0 -1.5rem 1.75rem; padding: 1.4rem 1.5rem;">
+    <h1>
+        <i data-lucide="users" style="width:28px;height:28px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Gestion des Comptes Médecins
+    </h1>
+    <p>Créez, gérez et supervisez les comptes des médecins rattachés à votre établissement médical.</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="stat-grid">
+    <div class="stat-card" id="stat-total-doctors">
+        <div class="stat-icon">
+            <i data-lucide="users" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Médecins enregistrés</p>
+            <h3 id="doctors-count">{{ medecins|length }}</h3>
+        </div>
+    </div>
+    <div class="stat-card yellow">
+        <div class="stat-icon">
+            <i data-lucide="stethoscope" style="width:24px;height:24px;"></i>
+        </div>
+        <div class="stat-info">
+            <p>Spécialités</p>
+            <h3>{{ specialties_count }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- Doctors Management Table -->
+<div class="hosp-card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+            <h2 style="margin-bottom:0.25rem;">
+                <i data-lucide="list" style="width:18px;height:18px;color:#198754;flex-shrink:0;"></i>
+                Liste des Médecins
+            </h2>
+            <p class="section-desc" style="margin:0;">Gérez les comptes, spécialités et centres médicaux de vos médecins.</p>
+        </div>
+        <button onclick="openDoctorModal()" class="btn-hosp btn-hosp-primary btn-hosp-lg">
+            <i data-lucide="plus" style="width:16px;height:16px;"></i>
+            Nouveau Médecin
+        </button>
+    </div>
+
+    {% if medecins|length == 0 %}
+        <div class="empty-state" id="doctors-table-empty">
+            <i data-lucide="users" style="width:48px;height:48px;color:#198754;"></i>
+            <p>Aucun médecin enregistré. Cliquez sur « Nouveau Médecin » pour créer le premier compte.</p>
+        </div>
+    {% else %}
+        <div style="overflow-x:auto;" id="doctors-table-wrap">
+            <table class="hosp-table" id="doctors-table">
+                <thead>
+                    <tr>
+                        <th>Médecin</th>
+                        <th>N° NNI</th>
+                        <th>Spécialité</th>
+                        <th>Centre Médical</th>
+                        <th>Date d'inscription</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="doctors-tbody">
+                    {% for med in medecins %}
+                    <tr id="doctor-row-{{ loop.index }}" data-doctor-id="{{ med._id|string }}">
+                        <td>
+                            <div style="display:flex;align-items:center;gap:0.75rem;">
+                                <div style="width:38px;height:38px;background:linear-gradient(135deg,#edfaf3,#c3e6cb);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                    <i data-lucide="user" style="width:20px;height:20px;color:#198754;"></i>
+                                </div>
+                                <strong>Dr. {{ med.prenom }} {{ med.nom }}</strong>
+                            </div>
+                        </td>
+                        <td>
+                            <code style="background:#f0f4f1;padding:0.2rem 0.5rem;border-radius:6px;font-size:0.82rem;">{{ med.numero_nni or '—' }}</code>
+                        </td>
+                        <td>
+                            <span class="status-badge status-done">{{ med.specialite or '—' }}</span>
+                        </td>
+                        <td>
+                            <span style="font-size:0.85rem;">{{ med.centre_medical or '—' }}</span>
+                        </td>
+                        <td>
+                            <span style="font-size:0.82rem;color:#888;">
+                                {{ med.date_inscription.strftime('%d/%m/%Y') if med.date_inscription else 'N/A' }}
+                            </span>
+                        </td>
+                        <td>
+                            <button
+                                class="btn-hosp btn-hosp-danger btn-hosp-sm delete-doctor-btn"
+                                data-id="{{ med._id|string }}"
+                                data-name="Dr. {{ med.prenom }} {{ med.nom }}"
+                                data-url="{{ url_for('admin_delete_doctor', doctor_id=med._id|string) }}"
+                                data-row="doctor-row-{{ loop.index }}">
+                                <i data-lucide="trash-2" style="width:13px;height:13px;"></i>
+                                Supprimer
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     CREATE DOCTOR MODAL
+═══════════════════════════════════════════ -->
+<div id="doctor-modal-overlay" class="hosp-modal-overlay">
+    <div class="hosp-modal">
+        <button class="hosp-modal-close" onclick="closeDoctorModal()"><i data-lucide="x" style="width:20px;height:20px;"></i></button>
+        <h2>
+            <i data-lucide="plus" style="width:24px;height:24px;"></i>
+            Créer un Compte Médecin
+        </h2>
+
+        <form action="{{ url_for('admin_create_doctor') }}" method="POST" autocomplete="off">
+            <div class="hosp-grid-2">
+                <div class="hosp-form-group">
+                    <label>Nom</label>
+                    <input type="text" name="nom_med" placeholder="Nom du médecin" required autocomplete="off">
+                </div>
+                <div class="hosp-form-group">
+                    <label>Prénom</label>
+                    <input type="text" name="prenom_med" placeholder="Prénom du médecin" required autocomplete="off">
+                </div>
+            </div>
+            <div class="hosp-form-group">
+                <label>Numéro NNI</label>
+                <input type="text" name="numero_nni" placeholder="Ex: 1234567890" required autocomplete="off" minlength="10" maxlength="10">
+            </div>
+            <div class="hosp-grid-2">
+                <div class="hosp-form-group">
+                    <label>Spécialité</label>
+                    <select name="specialite" class="form-control" style="background: white; border: 1px solid #cbd5e1;" required>
+                        <option value="">Sélectionner la spécialité</option>
+                        <option value="Analyse Sanguine">Analyse Sanguine</option>
+                        <option value="Radiologie / Cardiologie">Radiologie / Cardiologie</option>
+                    </select>
+                </div>
+                <div class="hosp-form-group">
+                    <label>Centre Médical</label>
+                    <input type="text" name="centre_medical_med" value="Hôpital Central" readonly style="background-color: #f0f4f1; cursor: not-allowed; color: #555;">
+                </div>
+            </div>
+            <div class="hosp-form-group">
+                <label>Mot de passe provisoire</label>
+                <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
+                <p style="font-size:0.78rem;color:#888;margin-top:0.3rem;">Le médecin devra changer ce mot de passe lors de sa première connexion.</p>
+            </div>
+            <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+                <button type="submit" class="btn-hosp btn-hosp-primary btn-hosp-lg" style="flex:1;justify-content:center;">
+                    <i data-lucide="check" style="width:16px;height:16px;"></i>
+                    Créer le compte médecin
+                </button>
+                <button type="button" onclick="closeDoctorModal()" class="btn-hosp btn-hosp-neutral" style="padding:0.7rem 1.25rem;">
+                    Annuler
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     DELETE CONFIRMATION MODAL (custom, no browser confirm)
+═══════════════════════════════════════════ -->
+<div id="delete-confirm-overlay" style="
+    display:none; position:fixed; inset:0;
+    background:rgba(10,30,20,0.55);
+    z-index:3000;
+    backdrop-filter:blur(5px);
+    align-items:center;
+    justify-content:center;
+    animation: fadeInOverlay 0.2s ease;
+">
+    <div id="delete-confirm-modal" style="
+        background:#fff;
+        border-radius:20px;
+        padding:2.25rem 2rem 1.75rem;
+        max-width:420px;
+        width:calc(100% - 2rem);
+        margin:1rem;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.12);
+        transform: scale(0.92);
+        opacity:0;
+        transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
+        position:relative;
+    ">
+        <!-- Warning Icon -->
+        <div style="text-align:center; margin-bottom:1.25rem;">
+            <div style="
+                width:64px; height:64px;
+                background:linear-gradient(135deg,#fdecea,#ffc5c5);
+                border-radius:50%;
+                display:inline-flex; align-items:center; justify-content:center;
+                box-shadow: 0 4px 16px rgba(214,40,40,0.2);
+            ">
+                <i data-lucide="alert-triangle" style="width:32px;height:32px;color:#D62828;"></i>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <h2 style="text-align:center; font-size:1.2rem; color:#1a1a2e; margin:0 0 0.6rem; font-weight:700;">
+            Supprimer ce médecin ?
+        </h2>
+
+        <!-- Doctor name -->
+        <p id="delete-doctor-name" style="text-align:center; font-size:1rem; font-weight:600; color:#D62828; margin:0 0 0.6rem;">
+            Dr. Nom Prénom
+        </p>
+
+        <!-- Warning message -->
+        <p style="text-align:center; color:#666; font-size:0.9rem; line-height:1.55; margin:0 0 1.75rem;">
+            Cette action est <strong>irréversible</strong>. Le compte de ce médecin sera définitivement supprimé du système.
+        </p>
+
+        <!-- Separator -->
+        <div style="height:1px;background:#f0f0f0;margin-bottom:1.25rem;"></div>
+
+        <!-- Buttons -->
+        <div style="display:flex; gap:0.75rem;">
+            <button id="cancel-delete-btn" style="
+                flex:1;
+                padding:0.75rem 1rem;
+                border:1.5px solid #e0e0e0;
+                border-radius:10px;
+                background:#fff;
+                color:#555;
+                font-family:'Outfit',sans-serif;
+                font-size:0.92rem;
+                font-weight:600;
+                cursor:pointer;
+                transition:all 0.18s ease;
+            ">
+                Annuler
+            </button>
+            <button id="confirm-delete-btn" style="
+                flex:1;
+                padding:0.75rem 1rem;
+                border:none;
+                border-radius:10px;
+                background:linear-gradient(135deg,#D62828,#b71c1c);
+                color:#fff;
+                font-family:'Outfit',sans-serif;
+                font-size:0.92rem;
+                font-weight:700;
+                cursor:pointer;
+                transition:all 0.18s ease;
+                display:flex; align-items:center; justify-content:center; gap:0.4rem;
+                box-shadow: 0 4px 14px rgba(214,40,40,0.35);
+            ">
+                <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+                Supprimer
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     TOAST NOTIFICATION
+═══════════════════════════════════════════ -->
+<div id="toast-notification" style="
+    position:fixed;
+    bottom:2rem; left:50%; transform:translateX(-50%) translateY(120px);
+    background:#fff;
+    border-radius:14px;
+    padding:0.9rem 1.4rem;
+    display:flex; align-items:center; gap:0.75rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+    z-index:4000;
+    min-width:280px; max-width:480px;
+    font-family:'Outfit',sans-serif;
+    font-size:0.92rem;
+    font-weight:500;
+    border-left:4px solid #198754;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.25s ease;
+    opacity:0;
+    pointer-events:none;
+">
+    <div id="toast-icon" style="width:36px;height:36px;border-radius:50%;background:#edfaf3;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i id="toast-icon-svg" data-lucide="check-circle" style="width:20px;height:20px;color:#198754;"></i>
+    </div>
+    <span id="toast-message">Médecin supprimé avec succès.</span>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     STYLES
+═══════════════════════════════════════════ -->
+<style>
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.delete-doctor-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(214,40,40,0.3);
+}
+#cancel-delete-btn:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
+}
+#confirm-delete-btn:hover {
+    background: linear-gradient(135deg,#b71c1c,#8b0000);
+    box-shadow: 0 6px 20px rgba(214,40,40,0.45);
+}
+#confirm-delete-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+</style>
+
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+{% block scripts %}
+<script>
+/* ────────────────────────────────────────────
+   CREATE DOCTOR MODAL
+──────────────────────────────────────────── */
+function openDoctorModal() {
+    document.getElementById('doctor-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeDoctorModal() {
+    document.getElementById('doctor-modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+document.getElementById('doctor-modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeDoctorModal();
+});
+
+/* ────────────────────────────────────────────
+   DELETE CONFIRMATION MODAL
+──────────────────────────────────────────── */
+const deleteOverlay = document.getElementById('delete-confirm-overlay');
+const deleteModal   = document.getElementById('delete-confirm-modal');
+const deleteDoctorNameEl = document.getElementById('delete-doctor-name');
+const confirmBtn    = document.getElementById('confirm-delete-btn');
+const cancelBtn     = document.getElementById('cancel-delete-btn');
+
+let pendingDeleteUrl = null;
+let pendingDeleteRow = null;
+
+function openDeleteModal(name, url, rowId) {
+    pendingDeleteUrl = url;
+    pendingDeleteRow = rowId;
+    deleteDoctorNameEl.textContent = name;
+
+    deleteOverlay.style.display = 'flex';
+    // trigger animation
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            deleteModal.style.transform = 'scale(1)';
+            deleteModal.style.opacity   = '1';
+        });
+    });
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal() {
+    deleteModal.style.transform = 'scale(0.92)';
+    deleteModal.style.opacity   = '0';
+    setTimeout(() => {
+        deleteOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+        pendingDeleteUrl = null;
+        pendingDeleteRow = null;
+    }, 220);
+}
+
+cancelBtn.addEventListener('click', closeDeleteModal);
+deleteOverlay.addEventListener('click', function(e) {
+    if (e.target === this) closeDeleteModal();
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteModal();
+        closeDoctorModal();
+    }
+});
+
+/* ────────────────────────────────────────────
+   ATTACH DELETE BUTTONS
+──────────────────────────────────────────── */
+document.querySelectorAll('.delete-doctor-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        const name  = this.dataset.name;
+        const url   = this.dataset.url;
+        const rowId = this.dataset.row;
+        openDeleteModal(name, url, rowId);
+    });
+});
+
+/* ────────────────────────────────────────────
+   TOAST NOTIFICATION
+──────────────────────────────────────────── */
+const toast        = document.getElementById('toast-notification');
+const toastMsg     = document.getElementById('toast-message');
+const toastIcon    = document.getElementById('toast-icon');
+const toastIconSvg = document.getElementById('toast-icon-svg');
+let toastTimer;
+
+function showToast(message, type) {
+    clearTimeout(toastTimer);
+
+    if (type === 'success') {
+        toast.style.borderLeftColor = '#198754';
+        toastIcon.style.background  = '#edfaf3';
+        toastIconSvg.style.fill     = '#198754';
+        toastIconSvg.innerHTML      = '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>';
+    } else {
+        toast.style.borderLeftColor = '#D62828';
+        toastIcon.style.background  = '#fdecea';
+        toastIconSvg.style.fill     = '#D62828';
+        toastIconSvg.innerHTML      = '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>';
+    }
+
+    toastMsg.textContent = message;
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    toast.style.opacity   = '1';
+    toast.style.pointerEvents = 'auto';
+
+    toastTimer = setTimeout(() => {
+        toast.style.transform = 'translateX(-50%) translateY(120px)';
+        toast.style.opacity   = '0';
+        toast.style.pointerEvents = 'none';
+    }, 4000);
+}
+
+/* ────────────────────────────────────────────
+   CONFIRM DELETE — AJAX
+──────────────────────────────────────────── */
+confirmBtn.addEventListener('click', function() {
+    if (!pendingDeleteUrl) return;
+
+    // Disable button to prevent double-click
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<i data-lucide="loader-2" style="width:16px;height:16px;animation:spin 0.8s linear infinite;"></i> Suppression...';
+    lucide.createIcons();
+
+    fetch(pendingDeleteUrl, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        closeDeleteModal();
+
+        if (data.success) {
+            // Remove the row from the table
+            if (pendingDeleteRow) {
+                const row = document.getElementById(pendingDeleteRow);
+                if (row) {
+                    row.style.transition = 'all 0.35s ease';
+                    row.style.opacity    = '0';
+                    row.style.transform  = 'translateX(30px)';
+                    setTimeout(() => {
+                        row.remove();
+                        // Update counter
+                        const countEl = document.getElementById('doctors-count');
+                        if (countEl) {
+                            const current = parseInt(countEl.textContent) || 0;
+                            countEl.textContent = Math.max(0, current - 1);
+                        }
+                        // Show empty state if no more rows
+                        const tbody = document.getElementById('doctors-tbody');
+                        if (tbody && tbody.children.length === 0) {
+                            const wrap = document.getElementById('doctors-table-wrap');
+                            if (wrap) {
+                                wrap.innerHTML = '<div class="empty-state" style="padding:2.5rem 2rem;text-align:center;color:#9aac9e;"><p>Aucun médecin enregistré.</p></div>';
+                            }
+                        }
+                    }, 350);
+                }
+            }
+            showToast('Leçon supprimée avec succès.', 'success');
+        } else {
+            showToast(data.message || 'Impossible de supprimer ce médecin. Veuillez réessayer.', 'error');
+        }
+    })
+    .catch(function() {
+        closeDeleteModal();
+        showToast('Impossible de supprimer ce médecin. Veuillez réessayer.', 'error');
+    })
+    .finally(function() {
+        // Reset confirm button
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<i data-lucide="trash-2" style="width:16px;height:16px;"></i> Supprimer';
+        lucide.createIcons();
+    });
+});
+
+/* ────────────────────────────────────────────
+   SPIN ANIMATION
+──────────────────────────────────────────── */
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+</script>
+{% endblock %}
+{% endblock %}
