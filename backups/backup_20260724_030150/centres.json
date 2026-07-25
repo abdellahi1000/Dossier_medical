@@ -1,0 +1,74 @@
+[
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "nom_centre": "CENTRE M\u00c9DICAL CHIFFA",
+    "adresse": "Avenue Gamal Abdel Nasser, Nouakchott",
+    "telephone": "2222-3333"
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "nom_centre": "CENTRE M\u00c9DICAL EL AMAL",
+    "adresse": "Tevragh Zeina, Nouakchott",
+    "telephone": "4444-5555"
+  },
+  {
+    "_id": {
+      "$oid": "6a521f3122b79bc08cffc708"
+    },
+    "nom_centre": "CENTRE CLINIQUE CHIVA",
+    "adresse": "123 Rue Test",
+    "telephone": "12345678"
+  },
+  {
+    "_id": {
+      "$oid": "6a54df13d88c9d5a304de0dc"
+    },
+    "nom_centre": "CENTRE ZAYID",
+    "adresse": "\u2014",
+    "telephone": "\u2014",
+    "director_signature_image_path": null,
+    "director_signature_updated_at": null
+  },
+  {
+    "_id": {
+      "$oid": "6a5d6798d10cdfba58d9dd8d"
+    },
+    "nom_centre": "CENTRE EL MENARE",
+    "adresse": "\u2014",
+    "telephone": "\u2014"
+  },
+  {
+    "_id": {
+      "$oid": "6a60270b9826109df04a57a1"
+    },
+    "nom_centre": "CENTRE EL AWNNE",
+    "adresse": "\u2014",
+    "telephone": "36315846",
+    "stamp_image_path": "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\hospital_assets\\6a60270b9826109df04a57a1\\stamp.png",
+    "stamp_type": "circulaire",
+    "stamp_updated_at": {
+      "$date": "2026-07-24T01:35:40.682Z"
+    },
+    "logo_image_path": "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\hospital_assets\\6a60270b9826109df04a57a1\\logo.png",
+    "logo_updated_at": {
+      "$date": "2026-07-23T15:38:25.539Z"
+    },
+    "date_creation": {
+      "$date": "2026-07-23T15:39:24.536Z"
+    },
+    "description": "",
+    "email": "ahmedseyid000@gmail.com",
+    "nom_centre_ar": "Ahmed Seyid",
+    "nom_centre_en": "CENTRE EL AWNNE",
+    "nom_centre_fr": "CENTRE EL AWNNE",
+    "website": "",
+    "stamp_address": "Abdellahiseyid10@gmail.com",
+    "stamp_org_name": "CENTRE EL AWNNE",
+    "stamp_phone": "36315846",
+    "stamp_postal_code": "669244"
+  }
+]

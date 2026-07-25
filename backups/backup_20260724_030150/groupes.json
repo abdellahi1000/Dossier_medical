@@ -1,0 +1,134 @@
+[
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f228d"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "id_planning": {
+      "$oid": "6a521ea1ca9fb79e465f2289"
+    },
+    "nom_groupe": "J1",
+    "max_patients": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f228e"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "id_planning": {
+      "$oid": "6a521ea1ca9fb79e465f228a"
+    },
+    "nom_groupe": "J2",
+    "max_patients": 15
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f228f"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "id_planning": {
+      "$oid": "6a521ea1ca9fb79e465f228b"
+    },
+    "nom_groupe": "J3",
+    "max_patients": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2290"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "id_planning": {
+      "$oid": "6a521ea1ca9fb79e465f228c"
+    },
+    "nom_groupe": "J4",
+    "max_patients": 15
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2295"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "id_planning": {
+      "$oid": "6a521ea1ca9fb79e465f2291"
+    },
+    "nom_groupe": "J1",
+    "max_patients": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2296"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "id_planning": {
+      "$oid": "6a521ea1ca9fb79e465f2292"
+    },
+    "nom_groupe": "J2",
+    "max_patients": 15
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2297"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "id_planning": {
+      "$oid": "6a521ea1ca9fb79e465f2293"
+    },
+    "nom_groupe": "J3",
+    "max_patients": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2298"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "id_planning": {
+      "$oid": "6a521ea1ca9fb79e465f2294"
+    },
+    "nom_groupe": "J4",
+    "max_patients": 15
+  },
+  {
+    "_id": {
+      "$oid": "6a54eb19d88c9d5a304de0e8"
+    },
+    "id_centre": {
+      "$oid": "6a54df13d88c9d5a304de0dc"
+    },
+    "id_planning": {
+      "$oid": "6a54eaf7d88c9d5a304de0e6"
+    },
+    "date": "2026-07-13",
+    "nom_groupe": "F2",
+    "max_patients": 10
+  },
+  {
+    "_id": {
+      "$oid": "6a6175f3f9ef528c4e6986bb"
+    },
+    "id_centre": {
+      "$oid": "6a60270b9826109df04a57a1"
+    },
+    "id_planning": {
+      "$oid": "6a6175e4f9ef528c4e6986b9"
+    },
+    "date": "2026-07-23",
+    "nom_groupe": "d7",
+    "max_patients": 5
+  }
+]

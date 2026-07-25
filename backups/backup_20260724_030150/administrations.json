@@ -1,0 +1,73 @@
+[
+  {
+    "_id": "admin_sidy",
+    "nom": "Sidy",
+    "prenom": "Diallo",
+    "password": "scrypt:32768:8:1$OP4DiRj1fxgAmyKh$01f12fae25f5b1fa87f8d2bdddcd37d249028a0cdbef0666455859431755d7573c68b118b824d340556276490c7d68900a0e7b3456be0c0ec5b96c38e63f2e9d"
+  },
+  {
+    "_id": {
+      "$oid": "6a521f3122b79bc08cffc707"
+    },
+    "nom": "Admin",
+    "prenom": "Hospital",
+    "identifiant_administratif": "",
+    "centre_medical": "CENTRE CLINIQUE CHIVA",
+    "date_inscription": {
+      "$date": "2026-07-11T10:47:12.709Z"
+    },
+    "password": "scrypt:32768:8:1$NC7boFGU453K8ckO$13b34c5edb5d81c4c0871f90d3b0abcf3190858ef7306067312841bfa1d5aed9f88a3ca2982be68946f30f84b31618a711e92d8dbcb80af0360aed861b5ff82d"
+  },
+  {
+    "_id": {
+      "$oid": "6a521fa622b79bc08cffc70b"
+    },
+    "nom": "Admin",
+    "prenom": "Hospital",
+    "identifiant_administratif": "7878787878",
+    "centre_medical": "CENTRE CLINIQUE CHIVA",
+    "date_inscription": {
+      "$date": "2026-07-11T10:49:10.580Z"
+    },
+    "password": "scrypt:32768:8:1$fOQG1pxo12mkPERC$3c4d526ac4b7555aed698f274ac6ff70174558cb75519e92ef7ad9ad03961b1043844b73a271d30fb127eb0c61ec8aca764a9fa9d8f1af60e3930503bbbc0dbb"
+  },
+  {
+    "_id": {
+      "$oid": "6a54df13d88c9d5a304de0db"
+    },
+    "nom": "dd",
+    "prenom": "d",
+    "identifiant_administratif": "6666666666",
+    "centre_medical": "CENTRE ZAYID",
+    "date_inscription": {
+      "$date": "2026-07-13T12:50:26.708Z"
+    },
+    "password": "scrypt:32768:8:1$0HNy5kduFKvLyi6s$3e8ef22aaf2fce4a48969b3362f5a20f69316750a4101a5996d616dba52684a3afecdebf088e784395852703c40b706e81d63b9441cd69e65c34095910c613f1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5d6798d10cdfba58d9dd8c"
+    },
+    "nom": "k0",
+    "prenom": "Ahmed",
+    "identifiant_administratif": "0987654321",
+    "centre_medical": "CENTRE EL MENARE",
+    "date_inscription": {
+      "$date": "2026-07-20T00:11:04.149Z"
+    },
+    "password": "scrypt:32768:8:1$eSM4raBCbLe1vM2I$deb8b9b6b46a1ec7fae2b22902d81d9cdf5f92532a71039ed1f895a617d3f1e2aa27e90e38c100a571c539373a1141ddc366acfd08401c7c22a47995e3c4cd24"
+  },
+  {
+    "_id": {
+      "$oid": "6a60270b9826109df04a57a0"
+    },
+    "nom": "Seyid",
+    "prenom": "Ahmed",
+    "identifiant_administratif": "123456789",
+    "centre_medical": "CENTRE EL AWNNE",
+    "date_inscription": {
+      "$date": "2026-07-22T02:12:27.040Z"
+    },
+    "password": "scrypt:32768:8:1$zJCgq7U5HFG5FBh1$30812adfa45b1631b602533ce495292e55fc374651d20745a2b8a426e702de6ac53df45045ed8b64916f211569a5c1727b61dae0f82411052ab0ebe196fb74bb"
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "_id": {
+      "$oid": "6a54eb83d88c9d5a304de0ef"
+    },
+    "id_reservation": {
+      "$oid": "6a54eb83d88c9d5a304de0ec"
+    },
+    "date_generation": {
+      "$date": "2026-07-13T13:43:31.799Z"
+    },
+    "numero_group": "F2",
+    "numero_de_rendez_vous": 1,
+    "code_secret": "SEV7GT"
+  },
+  {
+    "_id": {
+      "$oid": "6a61769ff9ef528c4e6986c2"
+    },
+    "id_reservation": {
+      "$oid": "6a61769ff9ef528c4e6986bf"
+    },
+    "date_generation": {
+      "$date": "2026-07-23T02:04:15.277Z"
+    },
+    "numero_group": "d7",
+    "numero_de_rendez_vous": 1,
+    "code_secret": "COWC41"
+  },
+  {
+    "_id": {
+      "$oid": "6a618d7ab203495af8f44438"
+    },
+    "id_reservation": {
+      "$oid": "6a618d7ab203495af8f44435"
+    },
+    "date_generation": {
+      "$date": "2026-07-23T03:41:46.560Z"
+    },
+    "numero_group": "d7",
+    "numero_de_rendez_vous": 2,
+    "code_secret": "EM9Y11"
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "_id": {
+      "$oid": "6a617473f9ef528c4e6986b0"
+    },
+    "nom": "a",
+    "prenom": "aa",
+    "numero_nni": "1234512345",
+    "specialite": "Analyse Sanguine",
+    "centre_medical": "CENTRE EL AWNNE",
+    "date_inscription": {
+      "$date": "2026-07-23T01:54:59.535Z"
+    },
+    "password": "scrypt:32768:8:1$MqJvtdZBNb81KXEq$84d14ad65c2654c624afb15838290d2fc99ef1629aa864acf28bce64b6141d5b576c30ad8b82fa23d2fd99a0473b7f26f2112fb9b907385053dac83e9816281d"
+  },
+  {
+    "_id": {
+      "$oid": "6a61749df9ef528c4e6986b2"
+    },
+    "nom": "b",
+    "prenom": "bb",
+    "numero_nni": "1234561234",
+    "specialite": "Radiologie",
+    "centre_medical": "CENTRE EL AWNNE",
+    "date_inscription": {
+      "$date": "2026-07-23T01:55:41.393Z"
+    },
+    "password": "scrypt:32768:8:1$GQXn8HN2wndkwS1H$aad58f17e1eb0b4d0672050ff4720fbcf434096b76953d090d5fb6e3da0a5f703492105d7a88e1e379ef7590ef6d8e87da3bf6067b142ed5ca5d8feab8f3bd95",
+    "signature_image_path": "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\doctor_signatures\\6a61749df9ef528c4e6986b2\\signature.png",
+    "signature_updated_at": {
+      "$date": "2026-07-24T01:37:05.526Z"
+    }
+  }
+]

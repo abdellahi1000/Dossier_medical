@@ -1,0 +1,528 @@
+{% extends "hospital_base.html" %}
+{% set active_page = 'settings' %}
+
+{% block title %}Paramètres de l'Hôpital — Espace Hôpital{% endblock %}
+
+{% block hosp_content %}
+<!-- Page Header -->
+<div class="hosp-page-header" style="margin: 0 -1.5rem 1.75rem; padding: 1.4rem 1.5rem;">
+    <h1>
+        <i data-lucide="settings" style="width:28px;height:28px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
+        Paramètres de l'Hôpital
+    </h1>
+    <p>Identité de l'établissement, cachet officiel, habillage des rapports, signatures, sécurité et sauvegarde.</p>
+</div>
+
+<!-- 1. Hospital Information -->
+<div class="hosp-card">
+    <h2><i data-lucide="building-2" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Informations de l'Hôpital</h2>
+    <p class="section-desc">Nom, coordonnées et logo de l'établissement.</p>
+
+    <div style="display:flex; gap:1.5rem; align-items:flex-start; flex-wrap:wrap; margin-bottom:1.25rem;">
+        <div style="width:110px; height:110px; border:1px solid #e2e8f0; border-radius:10px; background:#fafcfb; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+            {% if centre.get('logo_image_path') %}
+                <img src="{{ url_for('admin_settings_serve_asset', asset_name='logo') }}" alt="Logo" style="max-width:100%; max-height:100%;">
+            {% else %}
+                <span style="font-size:0.75rem; color:#999; font-style:italic; text-align:center; padding:0.5rem;">Aucun logo</span>
+            {% endif %}
+        </div>
+        <div style="flex:1; min-width:240px;">
+            <form action="{{ url_for('admin_settings_upload_logo') }}" method="POST" enctype="multipart/form-data" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.5rem;">
+                <input type="file" name="logo_image" accept="image/png, image/jpeg" class="form-control" style="flex:1; min-width:180px; padding:0.4rem;" required>
+                <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary"><i data-lucide="upload" style="width:14px;height:14px;vertical-align:bottom;"></i> Importer / Changer</button>
+            </form>
+            {% if centre.get('logo_image_path') %}
+            <form action="{{ url_for('admin_settings_remove_logo') }}" method="POST" style="margin:0;">
+                <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-danger"><i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:bottom;"></i> Supprimer le Logo</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <form action="{{ url_for('admin_settings_update_info') }}" method="POST">
+        <div class="hosp-grid-2" style="gap:1rem;">
+            <div class="hosp-form-group">
+                <label>Nom de l'Hôpital (Arabe)</label>
+                <input type="text" name="nom_centre_ar" class="form-control" value="{{ centre.get('nom_centre_ar', '') }}" dir="rtl">
+            </div>
+            <div class="hosp-form-group">
+                <label>Nom de l'Hôpital (Français)</label>
+                <input type="text" name="nom_centre_fr" class="form-control" value="{{ centre.get('nom_centre_fr', centre.get('nom_centre', '')) }}">
+            </div>
+            <div class="hosp-form-group">
+                <label>Nom de l'Hôpital (Anglais)</label>
+                <input type="text" name="nom_centre_en" class="form-control" value="{{ centre.get('nom_centre_en', '') }}">
+            </div>
+            <div class="hosp-form-group">
+                <label>Téléphone</label>
+                <input type="text" name="telephone" class="form-control" value="{{ centre.get('telephone', '') }}">
+            </div>
+            <div class="hosp-form-group">
+                <label>Adresse</label>
+                <input type="text" name="adresse" class="form-control" value="{{ centre.get('adresse', '') }}">
+            </div>
+            <div class="hosp-form-group">
+                <label>Adresse Email</label>
+                <input type="email" name="email" class="form-control" value="{{ centre.get('email', '') }}">
+            </div>
+            <div class="hosp-form-group">
+                <label>Site Web (optionnel)</label>
+                <input type="text" name="website" class="form-control" value="{{ centre.get('website', '') }}">
+            </div>
+            <div class="hosp-form-group">
+                <label>Date de Création</label>
+                <input type="text" class="form-control" value="{{ centre.date_creation.strftime('%d/%m/%Y') if centre.get('date_creation') else 'Non définie' }}" readonly style="background:#f0f4f1;">
+            </div>
+            <div class="hosp-form-group" style="grid-column: span 2;">
+                <label>Description</label>
+                <textarea name="description" class="form-control" rows="3">{{ centre.get('description', '') }}</textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn-hosp btn-hosp-primary" style="margin-top:1rem;"><i data-lucide="save" style="width:14px;height:14px;vertical-align:bottom;"></i> Enregistrer les Informations</button>
+    </form>
+</div>
+
+<!-- 2. Official Hospital Stamp -->
+{% set active_stamp_type = centre.get('stamp_type', 'circulaire') %}
+<div class="hosp-card">
+    <h2><i data-lucide="stamp" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Cachet Officiel</h2>
+    <p class="section-desc">Un seul cachet officiel peut être actif à la fois. Choisissez son type — l'aperçu et le formulaire correspondants s'affichent ci-dessous et remplacent automatiquement tout cachet existant.</p>
+
+    <div style="display:flex; gap:1.5rem; align-items:flex-start; flex-wrap:wrap; margin-bottom:1.25rem;">
+        <div>
+            <p style="font-size:0.75rem; color:#888; margin-bottom:0.4rem;">Cachet officiel actif</p>
+            <div style="width:130px; height:130px; border:1px solid #e2e8f0; border-radius:{{ '50%' if active_stamp_type == 'circulaire' else '10px' }}; background:#fafcfb; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                {% if centre.get('stamp_image_path') %}
+                    <img src="{{ url_for('admin_settings_serve_asset', asset_name='stamp') }}" alt="Cachet" style="max-width:100%; max-height:100%;">
+                {% else %}
+                    <span style="font-size:0.75rem; color:#999; font-style:italic; text-align:center; padding:0.5rem;">Aucun cachet</span>
+                {% endif %}
+            </div>
+        </div>
+        <div>
+            <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Type de Cachet Officiel</label>
+            <div style="display:flex; gap:1.5rem;">
+                <label style="font-weight:400; display:flex; align-items:center; gap:0.4rem;">
+                    <input type="radio" name="stamp_type_selector" value="circulaire" onchange="toggleStampPanels(this.value)" {{ 'checked' if active_stamp_type == 'circulaire' else '' }}> Circulaire
+                </label>
+                <label style="font-weight:400; display:flex; align-items:center; gap:0.4rem;">
+                    <input type="radio" name="stamp_type_selector" value="rectangulaire" onchange="toggleStampPanels(this.value)" {{ 'checked' if active_stamp_type == 'rectangulaire' else '' }}> Rectangulaire
+                </label>
+            </div>
+            <p style="font-size:0.78rem; color:#888; margin-top:0.5rem;">Sélectionner un type et générer son cachet remplace immédiatement le cachet officiel actif, quel que soit son type précédent.</p>
+        </div>
+    </div>
+
+    <!-- ═══ CIRCULAR PANEL ═══ -->
+    <div id="stamp-panel-circulaire" style="display:{{ 'block' if active_stamp_type == 'circulaire' else 'none' }};">
+        <hr style="margin:0 0 1.25rem 0; border:none; border-top:1px solid #e2e8f0;">
+        <h3 style="font-size:1rem; margin-bottom:0.25rem;">Générer un Cachet Circulaire Professionnel</h3>
+        <p class="section-desc">Le cachet sera généré automatiquement à partir du logo de l'hôpital (centré) et des informations ci-dessous, disposées entre les deux cercles. L'aperçu se met à jour en direct.</p>
+
+        <div style="display:flex; gap:1.75rem; flex-wrap:wrap; align-items:flex-start;">
+            <div style="flex:1; min-width:260px;">
+                <form action="{{ url_for('admin_settings_generate_stamp') }}" method="POST">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                        <div class="hosp-form-group">
+                            <label>Nom de l'hôpital (autour du cachet)</label>
+                            <input type="text" name="stamp_org_name" id="c_org_name" class="form-control" value="" placeholder="Ex: CENTRE HOSPITALIER EL AMEL" oninput="renderCircularPreview()">
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Adresse</label>
+                            <input type="text" name="stamp_address" id="c_address" class="form-control" value="" placeholder="Ex: Rue 42-015, Quartier" oninput="renderCircularPreview()">
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Code Postal</label>
+                            <input type="text" name="stamp_postal_code" id="c_postal" class="form-control" value="" placeholder="Ex: BP 200" oninput="renderCircularPreview()">
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Téléphone</label>
+                            <input type="text" name="stamp_phone" id="c_phone" class="form-control" value="" placeholder="Ex: 45 25 30 10" oninput="renderCircularPreview()">
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Email (optionnel)</label>
+                            <input type="text" name="stamp_email" id="c_email" class="form-control" value="" placeholder="Ex: contact@hopital.mr" oninput="renderCircularPreview()">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary" style="margin-top:0.75rem;"><i data-lucide="sparkles" style="width:14px;height:14px;vertical-align:bottom;"></i> Générer le Cachet Circulaire</button>
+                </form>
+
+                <details style="margin-top:1.25rem;">
+                    <summary style="cursor:pointer; font-size:0.82rem; color:#666;">Importer une image de cachet circulaire à la place</summary>
+                    <form action="{{ url_for('admin_settings_upload_stamp') }}" method="POST" enctype="multipart/form-data" style="margin-top:0.75rem;">
+                        <input type="hidden" name="stamp_type" value="circulaire">
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                            <input type="file" name="stamp_image" accept="image/png, image/jpeg" class="form-control" style="flex:1; min-width:200px; padding:0.4rem;" required>
+                            <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary"><i data-lucide="upload" style="width:14px;height:14px;vertical-align:bottom;"></i> Importer</button>
+                        </div>
+                    </form>
+                </details>
+            </div>
+
+            <div style="flex-shrink:0; text-align:center;">
+                <p style="font-size:0.75rem; color:#888; margin-bottom:0.4rem;">Aperçu en direct</p>
+                <canvas id="circular-preview-canvas" width="220" height="220" style="border-radius:50%;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ RECTANGULAR PANEL ═══ -->
+    <div id="stamp-panel-rectangulaire" style="display:{{ 'block' if active_stamp_type == 'rectangulaire' else 'none' }};">
+        <hr style="margin:0 0 1.25rem 0; border:none; border-top:1px solid #e2e8f0;">
+        <h3 style="font-size:1rem; margin-bottom:0.25rem;">Générer un Cachet Rectangulaire Professionnel</h3>
+        <p class="section-desc">Cachet textuel uniquement (sans logo), au format des tampons médicaux officiels classiques. L'aperçu se met à jour en direct.</p>
+
+        <div style="display:flex; gap:1.75rem; flex-wrap:wrap; align-items:flex-start;">
+            <div style="flex:1; min-width:260px;">
+                <form action="{{ url_for('admin_settings_generate_rectangular_stamp') }}" method="POST">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                        <div class="hosp-form-group">
+                            <label>Nom du Médecin ou de l'Hôpital</label>
+                            <input type="text" name="stamp_doctor_name" id="r_doctor_name" class="form-control" value="" placeholder="Ex: DOCTEUR DENAULT ARTHUR" oninput="renderRectangularPreview()">
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Spécialité Médicale (optionnel)</label>
+                            <select name="stamp_specialty" id="r_specialty" class="form-control" onchange="renderRectangularPreview()">
+                                <option value="">-- Aucune --</option>
+                                {% for cat in exam_categories %}
+                                <option value="{{ cat }}">{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Nom de l'Hôpital</label>
+                            <input type="text" name="stamp_org_name" id="r_org_name" class="form-control" value="" placeholder="Ex: HÔPITAL MARIE CLAIRE" oninput="renderRectangularPreview()">
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Adresse</label>
+                            <input type="text" name="stamp_address" id="r_address" class="form-control" value="" placeholder="Ex: 38, rue Bourgard" oninput="renderRectangularPreview()">
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Code Postal</label>
+                            <input type="text" name="stamp_postal_code" id="r_postal" class="form-control" value="" placeholder="Ex: 67000 Strasbourg" oninput="renderRectangularPreview()">
+                        </div>
+                        <div class="hosp-form-group">
+                            <label>Téléphone</label>
+                            <input type="text" name="stamp_phone" id="r_phone" class="form-control" value="" placeholder="Ex: 45 25 30 10" oninput="renderRectangularPreview()">
+                        </div>
+                        <div class="hosp-form-group" style="grid-column: span 2;">
+                            <label>Numéro d'Enregistrement (optionnel)</label>
+                            <input type="text" name="stamp_registration_number" id="r_registration" class="form-control" value="" placeholder="Ex: RPPS 10004025143 / FINESS 421054873" oninput="renderRectangularPreview()">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary" style="margin-top:0.75rem;"><i data-lucide="sparkles" style="width:14px;height:14px;vertical-align:bottom;"></i> Générer le Cachet Rectangulaire</button>
+                </form>
+
+                <details style="margin-top:1.25rem;">
+                    <summary style="cursor:pointer; font-size:0.82rem; color:#666;">Importer une image de cachet rectangulaire à la place</summary>
+                    <form action="{{ url_for('admin_settings_upload_stamp') }}" method="POST" enctype="multipart/form-data" style="margin-top:0.75rem;">
+                        <input type="hidden" name="stamp_type" value="rectangulaire">
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                            <input type="file" name="stamp_image" accept="image/png, image/jpeg" class="form-control" style="flex:1; min-width:200px; padding:0.4rem;" required>
+                            <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary"><i data-lucide="upload" style="width:14px;height:14px;vertical-align:bottom;"></i> Importer</button>
+                        </div>
+                    </form>
+                </details>
+            </div>
+
+            <div style="flex-shrink:0; text-align:center;">
+                <p style="font-size:0.75rem; color:#888; margin-bottom:0.4rem;">Aperçu en direct</p>
+                <div id="rectangular-preview-box" style="width:280px; min-height:140px; border:2px solid #111; border-radius:4px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.15rem; padding:0.75rem; background:#fff; font-family:Arial,sans-serif; color:#111;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleStampPanels(type) {
+        document.getElementById('stamp-panel-circulaire').style.display = (type === 'circulaire') ? 'block' : 'none';
+        document.getElementById('stamp-panel-rectangulaire').style.display = (type === 'rectangulaire') ? 'block' : 'none';
+    }
+
+    const circularLogoUrl = {{ (url_for('admin_settings_serve_asset', asset_name='logo') if centre.get('logo_image_path') else None) | tojson }};
+    let circularLogoImg = null;
+    if (circularLogoUrl) {
+        circularLogoImg = new Image();
+        circularLogoImg.onload = renderCircularPreview;
+        circularLogoImg.src = circularLogoUrl;
+    }
+
+    function drawCurvedText(ctx, text, cx, cy, radius, centerDeg, fontPx, flip) {
+        if (!text) return;
+        ctx.font = `bold ${fontPx}px Arial`;
+        const tracking = fontPx * 0.28;
+        const widths = [...text].map(ch => ctx.measureText(ch).width);
+        const totalWidth = widths.reduce((a, b) => a + b, 0) + tracking * Math.max(widths.length - 1, 0);
+        const startDeg = centerDeg - (totalWidth / 2 / radius) * (180 / Math.PI);
+        let cursor = 0;
+        for (let i = 0; i < text.length; i++) {
+            const w = widths[i];
+            const rawCenter = cursor + w / 2;
+            const charCenter = flip ? (totalWidth - rawCenter) : rawCenter;
+            const deg = startDeg + (charCenter / radius) * (180 / Math.PI);
+            const rad = deg * Math.PI / 180;
+            const x = cx + radius * Math.sin(rad);
+            const y = cy - radius * Math.cos(rad);
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate((flip ? (rad + Math.PI) : rad));
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#10408c';
+            ctx.fillText(text[i], 0, 0);
+            ctx.restore();
+            cursor += w + tracking;
+        }
+    }
+
+    function renderCircularPreview() {
+        const canvas = document.getElementById('circular-preview-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        const cx = size / 2, cy = size / 2;
+        const outerR = size / 2 - 8;
+        const innerR = outerR - 26;
+        ctx.clearRect(0, 0, size, size);
+
+        ctx.strokeStyle = '#10408c';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(cx, cy, outerR, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(cx, cy, innerR, 0, Math.PI * 2); ctx.stroke();
+
+        const orgName = (document.getElementById('c_org_name').value || '').toUpperCase();
+        const address = document.getElementById('c_address').value || '';
+        const postal = document.getElementById('c_postal').value || '';
+        const phone = document.getElementById('c_phone').value || '';
+        const email = document.getElementById('c_email').value || '';
+        const bottomLine = [address, postal, phone, email].filter(Boolean).join('  •  ').toUpperCase();
+
+        const textRadius = (outerR + innerR) / 2;
+        drawCurvedText(ctx, orgName, cx, cy, textRadius, 0, 13, false);
+        drawCurvedText(ctx, bottomLine, cx, cy, textRadius, 180, 10, true);
+
+        if (circularLogoImg && circularLogoImg.complete && circularLogoImg.naturalWidth) {
+            const logoR = innerR * 0.72;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(cx, cy, logoR, 0, Math.PI * 2);
+            ctx.clip();
+            ctx.drawImage(circularLogoImg, cx - logoR, cy - logoR, logoR * 2, logoR * 2);
+            ctx.restore();
+        }
+    }
+
+    function renderRectangularPreview() {
+        const box = document.getElementById('rectangular-preview-box');
+        if (!box) return;
+        const doctorName = (document.getElementById('r_doctor_name').value || '').toUpperCase();
+        const specialty = document.getElementById('r_specialty').value || '';
+        const orgName = (document.getElementById('r_org_name').value || '').toUpperCase();
+        const address = (document.getElementById('r_address').value || '').toUpperCase();
+        const postal = document.getElementById('r_postal').value || '';
+        const phone = document.getElementById('r_phone').value || '';
+        const registration = document.getElementById('r_registration').value || '';
+        const contact = [postal, phone].filter(Boolean).join('  •  ');
+
+        let html = '';
+        if (doctorName) html += `<div style="font-weight:700;font-size:1.05rem;">${doctorName}</div>`;
+        if (specialty) html += `<div style="font-size:0.85rem;">${specialty.toUpperCase()}</div>`;
+        if (orgName && orgName !== doctorName) html += `<div style="font-size:0.85rem;">${orgName}</div>`;
+        if (address) html += `<div style="font-size:0.85rem;">${address}</div>`;
+        if (contact) html += `<div style="font-size:0.85rem;">${contact}</div>`;
+        if (registration) html += `<div style="font-size:0.85rem;">${registration}</div>`;
+        box.innerHTML = html || '<span style="color:#999;font-style:italic;font-size:0.8rem;">Aperçu du cachet</span>';
+    }
+
+    renderCircularPreview();
+    renderRectangularPreview();
+</script>
+
+<!-- 3. Medical Report Branding -->
+<div class="hosp-card">
+    <h2><i data-lucide="file-text" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Habillage des Rapports Médicaux</h2>
+    <p class="section-desc">Choisissez les éléments affichés automatiquement dans les rapports, reçus et fiches CNAM générés.</p>
+
+    <form action="{{ url_for('admin_settings_update_branding') }}" method="POST">
+        <div class="hosp-grid-2" style="gap:0.75rem;">
+            {% for key, label in [('logo','Logo de l\'hôpital'), ('stamp','Cachet officiel'), ('signature','Signature du médecin'), ('qr','QR Code'), ('header','En-tête'), ('footer','Pied de page')] %}
+            <label style="font-weight:400; display:flex; align-items:center; gap:0.5rem; background:#fafcfb; border:1px solid #e2e8f0; border-radius:8px; padding:0.6rem 0.85rem;">
+                <input type="checkbox" name="report_show_{{ key }}" {{ 'checked' if centre.get('report_show_' ~ key, True) else '' }}>
+                {{ label }}
+            </label>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn-hosp btn-hosp-primary" style="margin-top:1rem;"><i data-lucide="save" style="width:14px;height:14px;vertical-align:bottom;"></i> Enregistrer l'Habillage</button>
+    </form>
+</div>
+
+<!-- 4. Signature Management -->
+<div class="hosp-card">
+    <h2><i data-lucide="pen-tool" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Gestion des Signatures</h2>
+    <p class="section-desc">Signature du directeur, signatures des médecins, et signature par défaut. Toutes les signatures sont des images manuscrites, jamais du texte.</p>
+
+    <!-- Director Signature -->
+    <div style="margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px dashed #e2e8f0;">
+        <h3 style="font-size:1rem; margin-bottom:0.25rem;">Director Signature</h3>
+        <p class="section-desc">Une seule signature officielle du directeur peut être active à la fois. Elle est appliquée automatiquement à chaque validation de résultat, sans nouvel import — pour la remplacer, supprimez-la d'abord.</p>
+        <div style="display:flex; gap:1.5rem; align-items:flex-start; flex-wrap:wrap;">
+            <div style="width:110px; height:70px; border:1px solid #e2e8f0; border-radius:8px; background:#fafcfb; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                {% if centre.get('director_signature_image_path') %}
+                    <img src="{{ url_for('admin_settings_serve_asset', asset_name='director_signature') }}" alt="Signature Directeur" style="max-width:100%; max-height:100%;">
+                {% else %}
+                    <span style="font-size:0.7rem; color:#999; font-style:italic;">Aucune signature</span>
+                {% endif %}
+            </div>
+            {% if centre.get('director_signature_image_path') %}
+            <form action="{{ url_for('admin_settings_remove_director_signature') }}" method="POST" style="flex:1; min-width:240px;">
+                <p style="font-size:0.82rem; color:#146C43; font-weight:600; margin-bottom:0.5rem;"><i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:bottom;"></i> Signature active — utilisée automatiquement à chaque validation.</p>
+                <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-danger"><i data-lucide="trash-2" style="width:14px;height:14px;vertical-align:bottom;"></i> Supprimer la signature</button>
+            </form>
+            {% else %}
+            <form action="{{ url_for('admin_settings_upload_director_signature') }}" method="POST" enctype="multipart/form-data" style="flex:1; min-width:240px;">
+                <label style="font-weight:600; display:block; margin-bottom:0.4rem;">Importer la Signature du Directeur de l'Hôpital</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <input type="file" name="director_signature_image" accept="image/png, image/jpeg" class="form-control" style="flex:1; min-width:180px; padding:0.4rem;" required>
+                    <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary"><i data-lucide="upload" style="width:14px;height:14px;vertical-align:bottom;"></i> Importer</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Doctors' signatures -->
+    <div style="margin-bottom:1.5rem; padding-bottom:1.5rem; border-bottom:1px dashed #e2e8f0;">
+        <label style="font-weight:600; display:block; margin-bottom:0.6rem;">Signatures des Médecins</label>
+        {% if medecins|length == 0 %}
+            <p style="color:#888; font-style:italic;">Aucun médecin enregistré.</p>
+        {% else %}
+        <div style="display:flex; flex-direction:column; gap:0.6rem;">
+            {% for m in medecins %}
+            <div style="display:flex; align-items:center; gap:1rem; background:#fafcfb; border:1px solid #e2e8f0; border-radius:8px; padding:0.6rem 0.85rem; flex-wrap:wrap;">
+                <div style="width:70px; height:44px; border:1px solid #e2e8f0; border-radius:6px; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                    {% if m.get('signature_image_path') %}
+                        <span style="font-size:0.65rem; color:#2E9E4D;">✓ Importée</span>
+                    {% else %}
+                        <span style="font-size:0.65rem; color:#999; font-style:italic;">Aucune</span>
+                    {% endif %}
+                </div>
+                <strong style="min-width:160px;">Dr. {{ m.prenom }} {{ m.nom }}</strong>
+                <span style="font-size:0.8rem; color:#666;">{{ m.specialite }}</span>
+                <form action="{{ url_for('admin_upload_doctor_signature', medecin_id=m._id) }}" method="POST" enctype="multipart/form-data" style="display:flex; gap:0.4rem; margin-left:auto;">
+                    <input type="file" name="signature_image" accept="image/png, image/jpeg" style="font-size:0.8rem; max-width:160px;" required>
+                    <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary">Importer</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Default signature -->
+    <form action="{{ url_for('admin_settings_update_default_signature') }}" method="POST">
+        <div class="hosp-form-group">
+            <label>Signature par Défaut (utilisée si le médecin n'a pas encore importé la sienne)</label>
+            <select name="default_signature_medecin_id" class="form-control">
+                <option value="">-- Aucune --</option>
+                {% for m in medecins %}
+                <option value="{{ m._id }}" {{ 'selected' if centre.get('default_signature_medecin_id')|string == m._id|string else '' }}>Dr. {{ m.prenom }} {{ m.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn-hosp btn-hosp-sm btn-hosp-primary" style="margin-top:0.75rem;">Enregistrer</button>
+    </form>
+</div>
+
+<!-- 5. Security Settings -->
+<div class="hosp-card">
+    <h2><i data-lucide="lock" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Sécurité</h2>
+    <p class="section-desc">Modifier le mot de passe administrateur et gérer les informations du compte.</p>
+
+    <form action="{{ url_for('admin_settings_update_password') }}" method="POST" style="max-width:420px; margin-bottom:1.5rem;">
+        <div class="hosp-form-group">
+            <label>Mot de Passe Actuel</label>
+            <div style="position:relative;">
+                <input type="password" name="current_password" id="pw-current" class="form-control" style="padding-right:2.6rem;" required>
+                <button type="button" onclick="toggleAdminPwVisibility('pw-current', this)" tabindex="-1" title="Afficher/Masquer" style="position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; padding:0; cursor:pointer; opacity:0.55; display:flex; align-items:center;">
+                    <i data-lucide="eye" style="width:16px;height:16px;"></i>
+                </button>
+            </div>
+        </div>
+        <div class="hosp-form-group">
+            <label>Nouveau Mot de Passe</label>
+            <div style="position:relative;">
+                <input type="password" name="new_password" id="pw-new" class="form-control" style="padding-right:2.6rem;" minlength="8" required>
+                <button type="button" onclick="toggleAdminPwVisibility('pw-new', this)" tabindex="-1" title="Afficher/Masquer" style="position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; padding:0; cursor:pointer; opacity:0.55; display:flex; align-items:center;">
+                    <i data-lucide="eye" style="width:16px;height:16px;"></i>
+                </button>
+            </div>
+        </div>
+        <div class="hosp-form-group">
+            <label>Confirmer le Nouveau Mot de Passe</label>
+            <div style="position:relative;">
+                <input type="password" name="confirm_password" id="pw-confirm" class="form-control" style="padding-right:2.6rem;" minlength="8" required>
+                <button type="button" onclick="toggleAdminPwVisibility('pw-confirm', this)" tabindex="-1" title="Afficher/Masquer" style="position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; padding:0; cursor:pointer; opacity:0.55; display:flex; align-items:center;">
+                    <i data-lucide="eye" style="width:16px;height:16px;"></i>
+                </button>
+            </div>
+        </div>
+        <button type="submit" class="btn-hosp btn-hosp-primary"><i data-lucide="key" style="width:14px;height:14px;vertical-align:bottom;"></i> Mettre à Jour le Mot de Passe</button>
+    </form>
+
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:1rem 1.25rem; display:flex; align-items:center; justify-content:space-between; max-width:420px; opacity:0.7;">
+        <div>
+            <strong>Authentification à Deux Facteurs (2FA)</strong>
+            <div style="font-size:0.8rem; color:#888;">Bientôt disponible</div>
+        </div>
+        <label style="position:relative; display:inline-block; width:44px; height:24px;">
+            <input type="checkbox" disabled style="opacity:0; width:0; height:0;">
+            <span style="position:absolute; inset:0; background:#cbd5e1; border-radius:24px; cursor:not-allowed;"></span>
+        </label>
+    </div>
+</div>
+
+<!-- 6. Backup Settings -->
+<div class="hosp-card">
+    <h2><i data-lucide="database" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Sauvegarde</h2>
+    <p class="section-desc">Créez une sauvegarde des données du système. La restauration s'effectue manuellement par un administrateur technique, hors de cette interface.</p>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1.25rem;">
+        <div>
+            <strong>Dernière Sauvegarde :</strong>
+            {% if last_backup %}
+                <span style="color:#198754;">{{ last_backup.replace('backup_', '').replace('_', ' à ') }}</span>
+            {% else %}
+                <span style="color:#999; font-style:italic;">Aucune sauvegarde effectuée</span>
+            {% endif %}
+        </div>
+        <a href="{{ url_for('admin_settings_create_backup') }}" class="btn-hosp btn-hosp-primary">
+            <i data-lucide="download" style="width:14px;height:14px;vertical-align:bottom;"></i> Créer une Sauvegarde
+        </a>
+    </div>
+
+    {% if backups|length > 0 %}
+    <div>
+        <strong style="display:block; margin-bottom:0.5rem;">Sauvegardes Disponibles :</strong>
+        <ul style="list-style:none; padding:0; margin:0;">
+            {% for b in backups %}
+            <li style="padding:0.5rem 0; border-bottom:1px solid #f1f5f9; font-size:0.9rem; color:#475569;">
+                <i data-lucide="archive" style="width:14px;height:14px;vertical-align:bottom;margin-right:6px;"></i>{{ b }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleAdminPwVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        btn.innerHTML = `<i data-lucide="${isHidden ? 'eye-off' : 'eye'}" style="width:16px;height:16px;"></i>`;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+</script>
+{% endblock %}

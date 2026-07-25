@@ -1,0 +1,71 @@
+[
+  {
+    "_id": {
+      "$oid": "6a61769ff9ef528c4e6986bf"
+    },
+    "id_patient": {
+      "$oid": "6a6174e1f9ef528c4e6986b5"
+    },
+    "id_centre": {
+      "$oid": "6a60270b9826109df04a57a1"
+    },
+    "examens_ids": [
+      {
+        "$oid": "6a521ea1ca9fb79e465f2287"
+      },
+      {
+        "$oid": "6a521ea1ca9fb79e465f2288"
+      }
+    ],
+    "id_slot": {
+      "$oid": "6a6175e4f9ef528c4e6986b9"
+    },
+    "date_reservation": {
+      "$date": "2026-07-23T02:04:15.263Z"
+    },
+    "montant_total": 2700.0,
+    "code_secret": "COWC41",
+    "numero_appel": 1,
+    "lettre": "R",
+    "numero_group": "d7",
+    "numero_de_rendez_vous": 1,
+    "statut": "Sign\u00e9 par M\u00e9decin",
+    "id_medecin_assigne": {
+      "$oid": "6a61749df9ef528c4e6986b2"
+    },
+    "nom_medecin_assigne": "Dr. bb b"
+  },
+  {
+    "_id": {
+      "$oid": "6a618d7ab203495af8f44435"
+    },
+    "id_patient": {
+      "$oid": "6a6174e1f9ef528c4e6986b5"
+    },
+    "id_centre": {
+      "$oid": "6a60270b9826109df04a57a1"
+    },
+    "examens_ids": [
+      {
+        "$oid": "6a521ea1ca9fb79e465f2287"
+      }
+    ],
+    "id_slot": {
+      "$oid": "6a6175e4f9ef528c4e6986b9"
+    },
+    "date_reservation": {
+      "$date": "2026-07-23T03:41:46.543Z"
+    },
+    "montant_total": 1200.0,
+    "code_secret": "EM9Y11",
+    "numero_appel": 2,
+    "lettre": "R",
+    "numero_group": "d7",
+    "numero_de_rendez_vous": 2,
+    "statut": "Termin\u00e9",
+    "id_medecin_assigne": {
+      "$oid": "6a61749df9ef528c4e6986b2"
+    },
+    "nom_medecin_assigne": "Dr. bb b"
+  }
+]

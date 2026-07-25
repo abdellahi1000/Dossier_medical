@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - CENTRE EL AWNNE ===
+Rendez-vous: #1 | Groupe: d7 | Appel: R1
+Patient: tru tkp (7429559607)
+Montant Paye: 2700.0 MRU (Mode: CNAM)
+Date: 23/07/2026 02:04
+Code Secret Patient: COWC41

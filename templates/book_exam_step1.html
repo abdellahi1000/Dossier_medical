@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Mon Espace - Système de Gestion Médicale{% endblock %}
+{% block title %}Mon Espace - KHIDMATY – Gestion des Dossiers Médicaux{% endblock %}
 
 {% block content %}
 
@@ -40,7 +40,7 @@
             <label for="exam_category" style="font-weight:600; color:var(--gris-fonce); margin-bottom: 0.5rem; display: block;">2. Catégorie d'Examen :</label>
             <select id="exam_category" name="category" class="form-control" style="border-radius:10px; padding:0.85rem; background-color: #f8fafc; border: 1px solid #cbd5e1;" onchange="handleCategoryChange()" required>
                 <option value="" disabled selected>-- Choisissez une catégorie --</option>
-                {% for cat in examens_by_category.keys() %}
+                {% for cat in examens_by_category %}
                     <option value="{{ cat }}">{{ cat }}</option>
                 {% endfor %}
             </select>

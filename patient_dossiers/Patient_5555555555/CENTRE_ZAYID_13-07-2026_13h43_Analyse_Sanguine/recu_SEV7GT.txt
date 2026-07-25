@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - CENTRE ZAYID ===
+Rendez-vous: #1 | Groupe: F2 | Appel: A1
+Patient: w www (5555555555)
+Montant Paye: 1300.0 MRU (Mode: CNAM)
+Date: 13/07/2026 13:43
+Code Secret Patient: SEV7GT

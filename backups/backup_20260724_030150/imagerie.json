@@ -1,0 +1,23 @@
+[
+  {
+    "_id": {
+      "$oid": "6a6219d37b50cd0042c65726"
+    },
+    "id_reservation": {
+      "$oid": "6a61769ff9ef528c4e6986bf"
+    },
+    "id_patient": {
+      "$oid": "6a6174e1f9ef528c4e6986b5"
+    },
+    "id_medecin": {
+      "$oid": "6a61749df9ef528c4e6986b2"
+    },
+    "type_imagerie": "Radiographie",
+    "description": "",
+    "date_examen": "2026-07-23",
+    "file_path": "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_7429559607\\CENTRE_EL_AWNNE_23-07-2026_02h04_Radiologie\\Resultats_Radiologie\\Screenshot_2026-01-29_005311.png",
+    "date_import": {
+      "$date": "2026-07-23T13:40:35.579Z"
+    }
+  }
+]

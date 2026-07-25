@@ -1,0 +1,54 @@
+[
+  {
+    "_id": {
+      "$oid": "6a52211922b79bc08cffc718"
+    },
+    "nom": "Abdellahi",
+    "prenom": "Seyid",
+    "numero_national": "7455299607",
+    "telephone": "48287378",
+    "date_inscription": {
+      "$date": "2026-07-11T10:55:20.712Z"
+    },
+    "password": "scrypt:32768:8:1$jJRv6O4Q3vUz34ta$8183cd94fcfc39acbedef161da132ece34a9d8ba53dbb549f6d7f1d40cfbb219989e47ac97cf1fa8ed095175592136ce8f6a13aaaa50a826f771b5f822e5d55d"
+  },
+  {
+    "_id": {
+      "$oid": "6a54dec5d88c9d5a304de0d6"
+    },
+    "nom": "www",
+    "prenom": "w",
+    "numero_national": "5555555555",
+    "telephone": "48287378",
+    "date_inscription": {
+      "$date": "2026-07-13T12:49:09.439Z"
+    },
+    "password": "scrypt:32768:8:1$z1wVSfpTf6CK0I53$e36a406851a1ea6d38e191e20fdf75955efc2d09dc7e4d0f241d6c1a9901c0ac73f6c8703e636c4ed52c0e03924188545c51c310ddc3136d7eefd3990b47b4cc"
+  },
+  {
+    "_id": {
+      "$oid": "6a5d6721d10cdfba58d9dd89"
+    },
+    "nom": "Seyid",
+    "prenom": "Ahmed",
+    "numero_national": "1234567890",
+    "telephone": "48287378",
+    "date_inscription": {
+      "$date": "2026-07-20T00:09:05.116Z"
+    },
+    "password": "scrypt:32768:8:1$b6Mhs5SRV8Ax18P6$304291a05e532a7f107d2f0abb927e44d5dd80040bb1895db33f48782d8248e735b30ebe136a4b4c41b67eeb284ebb87b0e6c52c4f767eb560176b35c03f4d91"
+  },
+  {
+    "_id": {
+      "$oid": "6a6174e1f9ef528c4e6986b5"
+    },
+    "nom": "tkp",
+    "prenom": "tru",
+    "numero_national": "7429559607",
+    "telephone": "48287378",
+    "date_inscription": {
+      "$date": "2026-07-23T01:56:49.526Z"
+    },
+    "password": "scrypt:32768:8:1$uum5lOT4tKZmzzQr$a07085138761c26826b1fe1eff8fea797b8a3de92cb2b2622c9be8abb18707ac4780fc9c7d1c7f46c5ad366a392d3f0dd988fe86a627a93add95e4e03a3b4ba0"
+  }
+]

@@ -1,3 +1,8 @@
+# MongoDB live data files (must never be committed/checked out — corrupts the running DB)
+db_data/
+__pycache__/
+*.pyc
+
 # Logs
 logs
 *.log

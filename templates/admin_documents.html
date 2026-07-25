@@ -79,7 +79,7 @@
                         <td>{{ res.paiement.mode_paiement }}</td>
                         <td><span class="status-badge {% if res.statut == 'Terminé' %}status-active{% else %}status-pending{% endif %}">{{ res.statut }}</span></td>
                         <td>
-                            <a href="{{ url_for('download_receipt', reservation_id=res._id) }}" target="_blank" class="btn-hosp btn-hosp-sm btn-hosp-info"><i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu</a>
+                            <button type="button" onclick="openPdfModal('{{ url_for('download_receipt', reservation_id=res._id) }}', 'Reçu Numérique')" class="btn-hosp btn-hosp-sm btn-hosp-info"><i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -141,14 +141,14 @@
                                 <div style="color:#146C43;font-weight:600;margin-bottom:0.25rem;">
                                     <i data-lucide="stethoscope" style="width:14px;height:14px;vertical-align:bottom;"></i> Dr. {{ res.medecin.nom }}
                                 </div>
-                                {% if res.medecin_signature %}
-                                <code style="font-size:0.7rem;color:#888;word-break:break-all;display:block;">{{ res.medecin_signature.signature_hash[:20] }}...</code>
+                                {% if res.medecin_sig_image %}
+                                <img src="{{ res.medecin_sig_image }}" alt="Signature manuscrite" style="max-height:32px;max-width:110px;display:block;margin-top:0.15rem;">
                                 {% endif %}
                                 <div style="color:#198754;font-weight:600;margin-top:0.4rem;">
                                     <i data-lucide="building" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ res.admin_signature.signataire_nom if res.admin_signature else 'Admin' }}
                                 </div>
-                                {% if res.admin_signature %}
-                                <code style="font-size:0.7rem;color:#888;word-break:break-all;display:block;">{{ res.admin_signature.signature_hash[:20] }}...</code>
+                                {% if res.admin_sig_image %}
+                                <img src="{{ res.admin_sig_image }}" alt="Cachet / signature administrative" style="max-height:32px;max-width:110px;display:block;margin-top:0.15rem;">
                                 {% endif %}
                             </div>
                         </td>
@@ -167,22 +167,22 @@
                         <td>
                             <div style="display:flex;flex-direction:column;gap:0.4rem;">
                                 <div style="display:flex;gap:0.4rem;">
-                                    <a href="{{ url_for('download_result', reservation_id=res._id) }}" target="_blank" class="btn-hosp btn-hosp-sm btn-hosp-primary" style="flex:1;text-align:center;">
+                                    <button type="button" onclick="openPdfModal('{{ url_for('download_result', reservation_id=res._id) }}', 'Rapport Médical Signé')" class="btn-hosp btn-hosp-sm btn-hosp-primary" style="flex:1;text-align:center;">
                                         <i data-lucide="download" style="width:14px;height:14px;vertical-align:bottom;"></i> PDF
-                                    </a>
-                                    {% if res.resultat and res.resultat.images %}
-                                    <button class="btn-hosp btn-hosp-sm btn-hosp-secondary" style="background:#e2e8f0;color:#334155;cursor:not-allowed;" title="Dossier d'images archivé">
+                                    </button>
+                                    {% if res.image_urls %}
+                                    <button type="button" class="btn-hosp btn-hosp-sm btn-hosp-secondary" style="background:#e2e8f0;color:#334155;" title="Voir les clichés" onclick="openClichesModal({{ res.image_urls|tojson }}, '{{ res.numero_de_rendez_vous }}')">
                                         <i data-lucide="folder-open" style="width:14px;height:14px;vertical-align:bottom;"></i> Clichés
                                     </button>
                                     {% endif %}
                                 </div>
-                                <a href="{{ url_for('download_receipt', reservation_id=res._id) }}" target="_blank" class="btn-hosp btn-hosp-sm btn-hosp-info">
+                                <button type="button" onclick="openPdfModal('{{ url_for('download_receipt', reservation_id=res._id) }}', 'Reçu Numérique')" class="btn-hosp btn-hosp-sm btn-hosp-info">
                                     <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu
-                                </a>
+                                </button>
                                 {% if res.paiement and res.paiement.mode_paiement == 'CNAM' %}
-                                    <a href="{{ url_for('download_cnam', reservation_id=res._id) }}" target="_blank" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd;color:#1565c0;">
+                                    <button type="button" onclick="openPdfModal('{{ url_for('fiche_cnam', reservation_id=res._id) }}', 'Fiche CNAM')" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd;color:#1565c0;">
                                         <i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> CNAM
-                                    </a>
+                                    </button>
                                 {% endif %}
                             </div>
                         </td>
@@ -193,4 +193,37 @@
         </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openClichesModal(urls, ticketNumber) {
+        const modal = document.getElementById('pdf-viewer-modal');
+        const iframe = document.getElementById('pdf-iframe');
+        const titleEl = document.getElementById('pdf-viewer-title');
+        const dlBtn = document.getElementById('pdf-download-btn');
+
+        titleEl.textContent = `Clichés d'Imagerie — RDV #${ticketNumber}`;
+        dlBtn.href = urls[0] || '#';
+
+        const gallery = urls.map((u, i) => `
+            <div style="margin-bottom:1.5rem;text-align:center;">
+                <p style="font-weight:600;color:#334155;margin-bottom:0.5rem;">Cliché ${i + 1}</p>
+                <img src="${u}" style="max-width:100%;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            </div>`).join('');
+
+        iframe.removeAttribute('src');
+        iframe.srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+            <body style="font-family:Arial,sans-serif;padding:1.5rem;background:#f8fafc;margin:0;overflow-y:auto;">
+                ${gallery || '<p style="color:#888;">Aucun cliché disponible.</p>'}
+            </body></html>`;
+
+        modal.style.display = 'block';
+        void modal.offsetWidth;
+        modal.style.opacity = '1';
+        document.body.style.overflow = 'hidden';
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+</script>
 {% endblock %}

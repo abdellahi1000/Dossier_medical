@@ -1,0 +1,97 @@
+[
+  {
+    "_id": {
+      "$oid": "6a61769ff9ef528c4e6986c1"
+    },
+    "id_reservation": {
+      "$oid": "6a61769ff9ef528c4e6986bf"
+    },
+    "numero_cnam": "7429559607",
+    "date_expiration": "2028-12-31",
+    "type_couverture": "Remboursement Partiel (90%)",
+    "statut": "Valid\u00e9",
+    "ayant_droit": "7429559607",
+    "relation": "B\u00e9n\u00e9ficiaire principal",
+    "cni_files": [
+      "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_7429559607\\CENTRE_EL_AWNNE_23-07-2026_02h04_Radiologie\\cni_recto_verso_COWC41.jpeg"
+    ],
+    "analyses": [
+      {
+        "type": "Radiologie",
+        "prestation": "8",
+        "notes": "tryu"
+      }
+    ],
+    "id_medecin_editeur": {
+      "$oid": "6a61749df9ef528c4e6986b2"
+    },
+    "medecin_updated_at": {
+      "$date": "2026-07-23T03:44:37.224Z"
+    },
+    "observations_medecin": "tfgyuhijo",
+    "prescriptions": [
+      {
+        "medicament": "5",
+        "quantite": "989",
+        "duree": "58",
+        "notes": "5899"
+      }
+    ],
+    "updated_at": {
+      "$date": "2026-07-23T03:44:37.224Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a618d7ab203495af8f44437"
+    },
+    "id_reservation": {
+      "$oid": "6a618d7ab203495af8f44435"
+    },
+    "numero_cnam": "7429559607",
+    "date_expiration": "2028-12-31",
+    "type_couverture": "Remboursement Partiel (90%)",
+    "statut": "Valid\u00e9",
+    "ayant_droit": "7429559607",
+    "relation": "B\u00e9n\u00e9ficiaire principal",
+    "cni_files": [
+      "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_7429559607\\CENTRE_EL_AWNNE_23-07-2026_03h41_Radiologie\\cni_recto_verso_EM9Y11.jpeg"
+    ],
+    "date_soins": {
+      "$date": "2026-07-23T03:41:46.543Z"
+    },
+    "prescriptions": [
+      {
+        "medicament": "45t6y",
+        "quantite": "6844",
+        "duree": "20-25-2000",
+        "notes": "6952"
+      }
+    ],
+    "analyses": [
+      {
+        "type": "Radiologie",
+        "prestation": "et6yuio",
+        "notes": "6y78uio"
+      }
+    ],
+    "observations_medecin": "rtyuiok",
+    "medecin_updated_at": {
+      "$date": "2026-07-23T14:15:55.333Z"
+    },
+    "id_medecin_editeur": {
+      "$oid": "6a61749df9ef528c4e6986b2"
+    },
+    "date_entree": null,
+    "date_sortie": null,
+    "montant_facture": null,
+    "montant_rembourse_cnam": null,
+    "notes_admin": "",
+    "valide_administration": false,
+    "admin_updated_at": null,
+    "id_admin_validateur": null,
+    "updated_at": {
+      "$date": "2026-07-23T14:15:55.333Z"
+    }
+  }
+]

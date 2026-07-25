@@ -6,276 +6,249 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .lucide { width: 1.25em; height: 1.25em; stroke-width: 2px; vertical-align: middle; }
+        .lucide { width: 1em; height: 1em; stroke-width: 2px; vertical-align: middle; }
+        * { box-sizing: border-box; }
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #333;
-            line-height: 1.5;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #1B7F3A;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            color: #1B7F3A;
-            margin: 0 0 5px 0;
-            font-size: 24px;
-        }
-        .header p {
+            color: #2b2b2b;
             margin: 0;
-            color: #666;
-            font-size: 14px;
+            padding: 24px;
+            background: #eef1f4;
+            display: flex;
+            justify-content: center;
         }
-        .section {
-            margin-bottom: 20px;
-        }
-        .section-title {
-            font-weight: bold;
-            font-size: 14px;
-            text-transform: uppercase;
-            color: #2E9E4D;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .grid-item {
-            font-size: 14px;
-        }
-        .grid-item strong {
-            display: block;
-            color: #666;
-            font-size: 11px;
-            text-transform: uppercase;
-        }
-        .appointment-box {
-            background-color: #D9F2D9;
-            border: 1px solid #2E9E4D;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .appointment-box h2 {
-            margin: 0 0 10px 0;
-            color: #1B7F3A;
-            font-size: 18px;
-        }
-        .codes-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .code-item {
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 8px;
-        }
-        .code-item span {
-            display: block;
-            font-size: 10px;
-            color: #888;
-            text-transform: uppercase;
-        }
-        .code-item strong {
-            font-size: 16px;
-            color: #333;
-        }
-        .exams-table {
+        .receipt {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
+            max-width: 1100px;
+            min-height: 560px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
         }
-        .exams-table th, .exams-table td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-            font-size: 13px;
+
+        /* Header */
+        .r-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid #1B7F3A;
+            padding-bottom: 18px;
+            margin-bottom: 26px;
         }
-        .exams-table th {
-            background-color: #f9f9f9;
-            color: #555;
-            font-weight: bold;
+        .r-header-left { display: flex; align-items: center; gap: 16px; }
+        .r-logo-box {
+            width: 54px; height: 54px; border-radius: 8px;
+            background: #f2f4f3; border: 1px dashed #d8dedb;
+            display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;
         }
-        .total-box {
-            text-align: right;
-            margin-top: 15px;
-            font-size: 16px;
-            font-weight: bold;
+        .r-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+        .r-header-left .r-hname { font-size: 22px; font-weight: 800; color: #1B7F3A; line-height: 1.25; }
+        .r-header-left .r-hsub { font-size: 13px; color: #888; margin-top: 2px; }
+
+        .r-header-right { display: flex; align-items: flex-start; gap: 16px; }
+        .r-header-meta { text-align: right; font-size: 13px; color: #666; padding-top: 2px; }
+        .r-header-meta .r-ticket { font-size: 26px; font-weight: 800; color: #1B7F3A; line-height: 1.3; }
+        .r-qr-mini { display: flex; flex-direction: column; align-items: center; }
+        .r-qr-mini img { width: 62px; height: 62px; }
+        .r-qr-mini span { font-size: 8.5px; color: #999; margin-top: 4px; text-align: center; max-width: 80px; line-height: 1.3; }
+
+        /* Body */
+        .r-body {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 28px;
+            align-items: stretch;
         }
-        .total-box span {
-            color: #1B7F3A;
+
+        .r-panel {
+            background: #fafcfb;
+            border: 1px solid #e7ede9;
+            border-radius: 10px;
+            padding: 22px 24px;
+            display: flex;
+            flex-direction: column;
         }
-        .footer {
-            margin-top: 30px;
-            border-top: 1px dashed #ccc;
-            padding-top: 15px;
-            text-align: center;
-            font-size: 12px;
-            color: #777;
+
+        .r-col-title {
+            font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 0.6px;
+            color: #2E9E4D; border-bottom: 2px solid #e2f0e6; padding-bottom: 10px; margin-bottom: 18px;
+        }
+
+        /* Patient panel */
+        .r-patient-fields { flex: 1; }
+        .r-field { margin-bottom: 18px; }
+        .r-field label { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.3px; color: #8a8a8a; margin-bottom: 3px; }
+        .r-field span { font-size: 15px; font-weight: 700; color: #262626; }
+
+        .r-codes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+        .r-code-item {
+            background: #fff; border: 1px solid #cdeed6; border-radius: 10px;
+            padding: 16px 10px; min-height: 84px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+        }
+        .r-code-item span {
+            display: block; width: 100%; text-align: center;
+            font-size: 10.5px; font-weight: 700; color: #6f9c7c; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .r-code-item strong {
+            display: block; width: 100%; text-align: center;
+            font-size: 19px; font-weight: 800; color: #1B7F3A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* Exams + totals panel */
+        table.r-exams { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 8px; }
+        table.r-exams th, table.r-exams td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #edf2ee; }
+        table.r-exams th { color: #7a8a7f; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.3px; font-weight: 700; }
+        table.r-exams td.r-price { text-align: right; font-weight: 600; white-space: nowrap; }
+
+        .r-totals { margin-top: auto; border-top: 2px dashed #d7e3da; padding-top: 20px; }
+        .r-mode-badge {
+            display: inline-block; background: #e3f2fd; color: #1565c0; font-size: 12px; font-weight: 700;
+            padding: 5px 14px; border-radius: 14px; margin-bottom: 16px;
+        }
+        .r-total-line {
+            display: grid; grid-template-columns: 1fr auto; column-gap: 16px;
+            padding: 7px 0; font-size: 14.5px; align-items: baseline;
+        }
+        .r-total-line span:first-child { text-align: left; color: #555; }
+        .r-total-line span:last-child { text-align: right; white-space: nowrap; font-weight: 700; }
+        .r-total-line.r-grand { font-weight: 800; font-size: 21px; color: #1B7F3A; padding: 10px 0; }
+        .r-total-line.r-grand span:first-child { color: #1B7F3A; }
+
+        .r-footer {
+            margin-top: 26px; padding-top: 20px; border-top: 1px solid #eee;
+            display: flex; justify-content: center;
         }
         .print-btn {
-            background-color: #1B7F3A;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            display: block;
-            margin: 20px auto 0 auto;
-            transition: 0.2s;
+            background-color: #1B7F3A; color: white; border: none; padding: 12px 28px; border-radius: 6px;
+            font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
         }
-        .print-btn:hover {
-            background-color: #2E9E4D;
-        }
+        .print-btn:hover { background-color: #2E9E4D; }
+        .r-generated-by { text-align: center; font-size: 11px; color: #aaa; margin-top: 10px; }
+
         @media print {
-            .print-btn {
-                display: none;
-            }
-            body {
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                max-width: 100%;
-            }
+            @page { size: landscape; margin: 8mm; }
+            body { background: #fff; padding: 0; }
+            .receipt { box-shadow: none; border: none; max-width: 100%; min-height: 0; }
+            .no-print { display: none !important; }
+        }
+
+        @media (max-width: 720px) {
+            .r-body { grid-template-columns: 1fr; }
+            .r-header { flex-wrap: wrap; gap: 16px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1><i data-lucide="building-2" style="width:28px;height:28px;margin-right:6px;"></i> Reçu Numérique de Rendez-vous</h1>
-        <p>Généré automatiquement par le Système de Gestion Médicale</p>
-    </div>
-
-    <!-- Appointment Code Box -->
-    <div class="appointment-box">
-        <h2>Rendez-vous Confirmé</h2>
-        <div class="codes-grid">
-            <div class="code-item">
-                <span>N° Groupe</span>
-                <strong>{{ reservation.numero_group }}</strong>
+    <div class="receipt">
+        <div class="r-header">
+            <div class="r-header-left">
+                <div class="r-logo-box">
+                    {% if hospital_logo %}
+                        <img src="{{ hospital_logo }}" alt="Logo">
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="r-hname">{{ centre.nom_centre if centre and centre.get('nom_centre') else '—' }}</div>
+                    <div class="r-hsub">Reçu Numérique de Rendez-vous</div>
+                </div>
             </div>
-            <div class="code-item">
-                <span>Code Secret</span>
-                <strong><code>{{ reservation.code_secret }}</code></strong>
-            </div>
-            <div class="code-item">
-                <span>N° Appel</span>
-                <strong style="color: #1B7F3A;">{{ reservation.lettre }}{{ reservation.numero_appel }}</strong>
-            </div>
-        </div>
-        <p style="font-size: 12px; color: #555; margin: 10px 0 0 0;">
-            Présentez ce reçu à l'administration dès votre arrivée.
-        </p>
-    </div>
-
-    <!-- Patient Info -->
-    <div class="section">
-        <div class="section-title">Informations Patient</div>
-        <div class="grid">
-            <div class="grid-item">
-                <strong>Nom Complet</strong>
-                {{ patient.prenom }} {{ patient.nom }}
-            </div>
-            <div class="grid-item">
-                <strong>Numéro National d'Identité</strong>
-                {{ patient.numero_national }}
-            </div>
-            <div class="grid-item" style="grid-column: span 2;">
-                <strong>Téléphone</strong>
-                {{ patient.telephone }}
+            <div class="r-header-right">
+                <div class="r-header-meta">
+                    <div class="r-ticket">#{{ reservation.numero_de_rendez_vous }}</div>
+                    {{ reservation.date_reservation.strftime('%d/%m/%Y %H:%M') }}
+                </div>
+                {% if qr_code_data %}
+                <div class="r-qr-mini">
+                    <img src="{{ qr_code_data }}" alt="QR Code">
+                    <span>Vérification d'authenticité</span>
+                </div>
+                {% endif %}
             </div>
         </div>
-    </div>
 
-    <!-- Center Info -->
-    <div class="section">
-        <div class="section-title">Centre de Santé</div>
-        <div class="grid">
-            <div class="grid-item" style="grid-column: span 2;">
-                <strong>Centre Médical</strong>
-                {{ centre.nom_centre }}
+        <div class="r-body">
+            <!-- Patient + Ticket codes -->
+            <div class="r-panel">
+                <div class="r-col-title">Patient</div>
+                <div class="r-patient-fields">
+                    <div class="r-field">
+                        <label>Nom Complet</label>
+                        <span>{{ patient.prenom }} {{ patient.nom }}</span>
+                    </div>
+                    <div class="r-field">
+                        <label>N° National d'Identité</label>
+                        <span>{{ patient.numero_national }}</span>
+                    </div>
+                    <div class="r-field">
+                        <label>Téléphone</label>
+                        <span>{{ patient.telephone }}</span>
+                    </div>
+                    {% if reservation.nom_medecin_assigne %}
+                    <div class="r-field">
+                        <label>Médecin Assigné</label>
+                        <span>{{ reservation.nom_medecin_assigne }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="r-codes">
+                    <div class="r-code-item"><span>Groupe</span><strong>{{ reservation.numero_group }}</strong></div>
+                    <div class="r-code-item"><span>Code</span><strong>{{ reservation.code_secret }}</strong></div>
+                    <div class="r-code-item"><span>Appel</span><strong>{{ reservation.lettre }}{{ reservation.numero_appel }}</strong></div>
+                </div>
             </div>
-            <div class="grid-item" style="grid-column: span 2;">
-                <strong>Adresse</strong>
-                {{ centre.adresse }}
+
+            <!-- Exams + Totals -->
+            <div class="r-panel">
+                <div class="r-col-title">Examens Réservés</div>
+                <table class="r-exams">
+                    <thead>
+                        <tr><th>Examen</th><th>Catégorie</th><th class="r-price">Prix</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for ex in exams %}
+                        <tr>
+                            <td>{{ ex.type_examen }}</td>
+                            <td>{{ ex.categorie }}</td>
+                            <td class="r-price">{{ ex.prix }} MRU</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="r-totals">
+                    <div class="r-mode-badge">
+                        {% if mode_paiement == 'CNAM' %}Prise en charge : CNAM{% else %}Mode de paiement : {{ mode_paiement }}{% endif %}
+                    </div>
+                    <div class="r-total-line r-grand">
+                        <span>Montant Total</span><span>{{ reservation.montant_total }} MRU</span>
+                    </div>
+                    {% if mode_paiement == 'CNAM' and paiement %}
+                    <div class="r-total-line">
+                        <span>Remboursement CNAM ({{ (cnam_rate * 100)|round|int }}%)</span><span>{{ paiement.cnam_amount }} MRU</span>
+                    </div>
+                    <div class="r-total-line">
+                        <span>Montant payé par le patient ({{ (100 - cnam_rate * 100)|round|int }}%)</span><span>{{ paiement.patient_amount }} MRU</span>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-            <div class="grid-item">
-                <strong>Date & Heure</strong>
-                {{ reservation.date_reservation.strftime('%d/%m/%Y %H:%M') }}
-            </div>
-            <div class="grid-item">
-                <strong>N° de Ticket</strong>
-                #{{ reservation.numero_de_rendez_vous }}
-            </div>
-            {% if reservation.nom_medecin_assigne %}
-            <div class="grid-item" style="grid-column: span 2; background-color:#e8f4f8; padding:8px; border-radius:4px; margin-top:5px;">
-                <strong style="color:#0284c7;">Médecin Assigné</strong>
-                {{ reservation.nom_medecin_assigne }}
-            </div>
-            {% endif %}
         </div>
-    </div>
 
-    <!-- Exam Info -->
-    <div class="section">
-        <div class="section-title">Examens Réservez</div>
-        <table class="exams-table">
-            <thead>
-                <tr>
-                    <th>Examen</th>
-                    <th>Catégorie</th>
-                    <th style="text-align: right;">Prix</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ex in exams %}
-                    <tr>
-                        <td>{{ ex.type_examen }}</td>
-                        <td>{{ ex.categorie }}</td>
-                        <td style="text-align: right;">{{ ex.prix }} MRU</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="total-box">
-            Montant Total: <span>{{ reservation.montant_total }} MRU</span>
+        <div class="r-footer no-print">
+            <button class="print-btn" onclick="window.print()"><i data-lucide="printer"></i> Imprimer ce reçu</button>
         </div>
-        <div style="font-size: 12px; margin-top: 5px; color: #666;">
-            Mode de Prise en Charge: <strong>{{ mode_paiement }}</strong>
-            {% if mode_paiement == 'CNAM' %}
-                (N° Carte: {{ patient.nni }})
-                <br/>Couverture CNAM: {{ reservation.cnam.cnam_amount if reservation.cnam else reservation.montant_total * 0.9 | round(2) }} MRU
-                <br/>À payer (patient): {{ reservation.cnam.patient_amount if reservation.cnam else reservation.montant_total * 0.1 | round(2) }} MRU
-            {% endif %}</div>
+        <div class="r-generated-by no-print">Généré automatiquement par KHIDMATY – Gestion des Dossiers Médicaux</div>
     </div>
-
-    <div class="footer">
-        <p>Merci de votre confiance. Pour toute modification, contactez le centre médical.</p>
-        <p style="font-size: 10px; color: #aaa;">Date d'impression: 03/07/2026</p>
-    </div>
-
-    <button class="print-btn" onclick="window.print()"><i data-lucide="printer"></i> Imprimer ce reçu</button>
 
 <script>
-    lucide.createIcons();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 </script>
 </body>
 </html>

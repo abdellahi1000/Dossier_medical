@@ -90,8 +90,8 @@
             margin-bottom: 25px;
         }
         .signatures-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
             margin-top: 30px;
             page-break-inside: avoid;
@@ -201,14 +201,29 @@
 </head>
 <body>
 
+    {% if is_preview %}
+    <div class="no-print" style="background:#fff3cd; border-bottom:2px solid #ffc107; color:#856404; text-align:center; padding:8px; font-size:13px; font-weight:600;">
+        Aperçu avant validation — document identique à ce que le patient recevra après co-signature
+    </div>
+    {% endif %}
+
+    {% if show_header|default(True) %}
     <div class="header">
-        <div class="header-logo"><i data-lucide="building-2" style="width:32px;height:32px;margin-right:8px;"></i> DOSSIER MÉDICAL</div>
+        <div class="header-logo">
+            {% if hospital_logo %}
+                <img src="{{ hospital_logo }}" alt="Logo" style="height:32px; margin-right:8px; vertical-align:middle;">
+            {% else %}
+                <i data-lucide="building-2" style="width:32px;height:32px;margin-right:8px;"></i>
+            {% endif %}
+            DOSSIER MÉDICAL
+        </div>
         <div class="header-info">
             <strong>{{ centre.nom_centre }}</strong><br>
             {{ centre.adresse }}<br>
             Tél: {{ centre.telephone }}
         </div>
     </div>
+    {% endif %}
 
     <div class="title">
         <h1>Rapport d'Examen Clinique</h1>
@@ -338,27 +353,23 @@
         </p>
         
         <div class="signatures-section">
-            <!-- Doctor Signature -->
-            <div class="signature-card">
-                <h3><i data-lucide="pen-tool"></i> Signature du Praticien</h3>
-                <div class="signature-meta">
-                    <strong>Médecin Signataire :</strong> Dr. {{ medecin.prenom }} {{ medecin.nom }} (Spéc. {{ medecin.specialite }})
-                </div>
-                <div class="signature-meta">
-                    <strong>Date de signature :</strong> {{ medecin_signature.date_signature.strftime('%d/%m/%Y %H:%M:%S') }}
-                </div>
-                <div class="signature-meta">
-                    <strong>Méthode d'Authentification :</strong> {{ medecin_signature.type_signature }}
-                </div>
-                <div class="signature-meta">
-                    <strong>Empreinte Cryptographique (SHA-256) :</strong>
-                    <span class="signature-hash">{{ medecin_signature.signature_hash }}</span>
-                </div>
-            </div>
-
-            <!-- Admin Signature -->
+            <!-- Admin Signature (Hospital Stamp) — placed above the doctor's signature -->
             <div class="signature-card admin">
                 <h3><i data-lucide="building"></i> Visa de l'Administration</h3>
+                {% if hospital_stamp or hospital_director_signature %}
+                <div style="display:flex; gap:20px; align-items:flex-end; flex-wrap:wrap; margin-bottom:8px;">
+                    {% if hospital_stamp %}
+                    <img src="{{ hospital_stamp }}" alt="Cachet Officiel" style="max-height:130px; display:block;">
+                    {% endif %}
+                    {% if hospital_director_signature %}
+                    <div>
+                        <img src="{{ hospital_director_signature }}" alt="Signature du Directeur" style="max-height:70px; display:block;">
+                        <span style="font-size:10px; color:#666;">Signature du Directeur</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% if admin_signature %}
                 <div class="signature-meta">
                     <strong>Co-signataire :</strong> {{ admin_signature.signataire_nom }} (Administration de la santé)
                 </div>
@@ -371,6 +382,30 @@
                 <div class="signature-meta">
                     <strong>Empreinte Cryptographique (SHA-256) :</strong>
                     <span class="signature-hash">{{ admin_signature.signature_hash }}</span>
+                </div>
+                {% else %}
+                <div class="signature-meta" style="font-style:italic; color:#999;">En attente de co-signature administrative.</div>
+                {% endif %}
+            </div>
+
+            <!-- Doctor Signature -->
+            <div class="signature-card">
+                <h3><i data-lucide="pen-tool"></i> Signature du Praticien</h3>
+                {% if medecin_signature_image %}
+                <img src="{{ medecin_signature_image }}" alt="Signature manuscrite" style="max-height:70px; margin-bottom:8px; display:block;">
+                {% endif %}
+                <div class="signature-meta">
+                    <strong>Médecin Signataire :</strong> Dr. {{ medecin.prenom }} {{ medecin.nom }} (Spéc. {{ medecin.specialite }})
+                </div>
+                <div class="signature-meta">
+                    <strong>Date de signature :</strong> {{ medecin_signature.date_signature.strftime('%d/%m/%Y %H:%M:%S') }}
+                </div>
+                <div class="signature-meta">
+                    <strong>Méthode d'Authentification :</strong> {{ medecin_signature.type_signature }}
+                </div>
+                <div class="signature-meta">
+                    <strong>Empreinte Cryptographique (SHA-256) :</strong>
+                    <span class="signature-hash">{{ medecin_signature.signature_hash }}</span>
                 </div>
             </div>
         </div>
@@ -397,10 +432,12 @@
     </div>
     {% endif %}
 
+    {% if show_footer|default(True) %}
     <div class="footer">
         <p>Ce document est confidentiel et protégé par le secret médical. Les signatures ci-dessus font foi devant les autorités compétentes.</p>
         <p style="font-size: 10px; color: #bbb;"><i data-lucide="shield-check"></i> Scellement numérique du dossier médical • ID: {{ result._id }}</p>
     </div>
+    {% endif %}
 
     <button class="print-btn" onclick="window.print()"><i data-lucide="printer"></i> Imprimer le Résultat</button>
 

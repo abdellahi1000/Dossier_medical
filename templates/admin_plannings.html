@@ -53,7 +53,7 @@
             <button onclick="openPlanningModal()" class="btn-hosp btn-hosp-primary btn-hosp-sm"><i data-lucide="plus" style="width:14px;height:14px;vertical-align:bottom;"></i> Ajouter</button>
         </div>
 
-        {% if not plannings %}
+        {% if not all_plannings %}
             <div class="empty-state" style="padding: 1.5rem 1rem;">
                 <p>Aucun créneau horaire configuré.</p>
             </div>
@@ -61,15 +61,17 @@
             <table class="hosp-table">
                 <thead>
                     <tr>
+                        <th>Date</th>
                         <th>Heure de début</th>
                         <th>Heure de fin</th>
                         <th>Statut</th>
-                        <th style="width: 80px;">Actions</th>
+                        <th style="width: 110px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for p in plannings %}
+                    {% for p in all_plannings %}
                     <tr id="planning-row-{{ p._id }}">
+                        <td>{{ p.date }}</td>
                         <td><strong>{{ p.start_time }}</strong></td>
                         <td><strong>{{ p.end_time }}</strong></td>
                         <td>
@@ -79,8 +81,11 @@
                                 <span class="status-badge status-waiting">Inactif</span>
                             {% endif %}
                         </td>
-                        <td>
-                            <button onclick="deletePlanning('{{ p._id }}')" class="btn-hosp btn-hosp-danger btn-hosp-sm" style="padding: 0.3rem 0.5rem;">
+                        <td style="display:flex; gap:0.4rem;">
+                            <button onclick="openEditPlanningModal('{{ p._id }}', '{{ p.date }}', '{{ p.start_time }}', '{{ p.end_time }}')" class="btn-hosp btn-hosp-sm" style="padding: 0.3rem 0.5rem; background:#e2e8f0; color:#334155;" title="Modifier">
+                                <i data-lucide="pencil" style="width:16px;height:16px;"></i>
+                            </button>
+                            <button onclick="deletePlanning('{{ p._id }}')" class="btn-hosp btn-hosp-danger btn-hosp-sm" style="padding: 0.3rem 0.5rem;" title="Supprimer">
                                 <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
                             </button>
                         </td>
@@ -98,10 +103,10 @@
                 <i data-lucide="users" style="width:20px;height:20px;color:#198754;flex-shrink:0;"></i>
                 Groupes de Réservation
             </h2>
-            <button onclick="openGroupModal()" class="btn-hosp btn-hosp-primary btn-hosp-sm" {% if not plannings %}disabled title="Ajoutez d'abord un créneau"{% endif %}><i data-lucide="plus" style="width:14px;height:14px;vertical-align:bottom;"></i> Ajouter</button>
+            <button onclick="openGroupModal()" class="btn-hosp btn-hosp-primary btn-hosp-sm" {% if not available_plannings_for_group %}disabled title="Ajoutez d'abord un créneau"{% endif %}><i data-lucide="plus" style="width:14px;height:14px;vertical-align:bottom;"></i> Ajouter</button>
         </div>
 
-        {% if not groupes %}
+        {% if not all_groupes %}
             <div class="empty-state" style="padding: 1.5rem 1rem;">
                 <p>Aucun groupe configuré.</p>
             </div>
@@ -116,7 +121,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for g in groupes %}
+                    {% for g in all_groupes %}
                     <tr id="group-row-{{ g._id }}">
                         <td>
                             <code style="background:#f0f4f1;padding:0.2rem 0.5rem;border-radius:6px;">{{ g.nom_groupe }}</code>
@@ -168,6 +173,33 @@
     </div>
 </div>
 
+<!-- EDIT PLANNING MODAL -->
+<div id="edit-planning-modal-overlay" class="hosp-modal-overlay">
+    <div class="hosp-modal" style="max-width: 400px;">
+        <button class="hosp-modal-close" onclick="closeEditPlanningModal()"><i data-lucide="x" style="width:20px;height:20px;"></i></button>
+        <h2><i data-lucide="calendar-cog" style="width:24px;height:24px;vertical-align:bottom;margin-right:8px;"></i> Modifier le Créneau</h2>
+        <form id="edit-planning-form" method="POST">
+            <div class="hosp-form-group">
+                <label>Date du Planning</label>
+                <input type="date" name="planning_date" id="edit-planning-date" required>
+            </div>
+            <div class="hosp-form-group">
+                <label>Heure de début</label>
+                <input type="time" name="start_time" id="edit-planning-start" required>
+            </div>
+            <div class="hosp-form-group">
+                <label>Heure de fin</label>
+                <input type="time" name="end_time" id="edit-planning-end" required>
+            </div>
+
+            <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+                <button type="submit" class="btn-hosp btn-hosp-primary" style="flex:1;">Enregistrer</button>
+                <button type="button" onclick="closeEditPlanningModal()" class="btn-hosp btn-hosp-neutral">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- CREATE GROUP MODAL -->
 <div id="group-modal-overlay" class="hosp-modal-overlay">
     <div class="hosp-modal" style="max-width: 400px;">
@@ -175,21 +207,21 @@
         <h2><i data-lucide="users" style="width:24px;height:24px;vertical-align:bottom;margin-right:8px;"></i> Ajouter un Groupe</h2>
         <form action="{{ url_for('admin_create_group') }}" method="POST">
             <input type="hidden" name="id_centre" value="{{ selected_centre_id }}">
-            <input type="hidden" name="planning_date" value="{{ selected_date }}">
-            
+
             <div class="hosp-form-group">
                 <label>Nom du Groupe</label>
                 <input type="text" name="nom_groupe" placeholder="Ex: J1" required autocomplete="off">
             </div>
             <div class="hosp-form-group">
-                <label>Créneau Horaire Associé</label>
+                <label>Créneau Horaire Principal</label>
                 <select name="id_planning" required>
-                    {% if available_plannings %}
-                        {% for p in available_plannings %}
-                            <option value="{{ p._id }}">{{ p.start_time }} - {{ p.end_time }}</option>
+                    {% if available_plannings_for_group %}
+                        <option value="" disabled selected>-- Sélectionnez un créneau --</option>
+                        {% for p in available_plannings_for_group %}
+                            <option value="{{ p._id }}">{{ p.date }} | {{ p.start_time }} → {{ p.end_time }}</option>
                         {% endfor %}
                     {% else %}
-                        <option value="" disabled selected>Aucun créneau disponible</option>
+                        <option value="" disabled selected>Aucun créneau disponible — ajoutez-en un dans Gestion des Plannings</option>
                     {% endif %}
                 </select>
             </div>
@@ -325,9 +357,19 @@ function closePlanningModal() { document.getElementById('planning-modal-overlay'
 function openGroupModal() { document.getElementById('group-modal-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeGroupModal() { document.getElementById('group-modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
 
+function openEditPlanningModal(id, date, startTime, endTime) {
+    document.getElementById('edit-planning-form').action = `/admin/plannings/update/${id}`;
+    document.getElementById('edit-planning-date').value = date;
+    document.getElementById('edit-planning-start').value = startTime;
+    document.getElementById('edit-planning-end').value = endTime;
+    document.getElementById('edit-planning-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeEditPlanningModal() { document.getElementById('edit-planning-modal-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
 document.querySelectorAll('.hosp-modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', function(e) {
-        if(e.target === this) { closePlanningModal(); closeGroupModal(); }
+        if(e.target === this) { closePlanningModal(); closeGroupModal(); closeEditPlanningModal(); }
     });
 });
 

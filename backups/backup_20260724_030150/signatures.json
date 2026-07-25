@@ -1,0 +1,44 @@
+[
+  {
+    "_id": {
+      "$oid": "6a62222d05d5be01e6d9797c"
+    },
+    "id_resultat": {
+      "$oid": "6a62222d0e8f2b8172f0ceaf"
+    },
+    "type_signature": "Signature \u00c9lectronique Standard (Certificat Serveur)",
+    "date_signature": {
+      "$date": "2026-07-23T14:16:13.807Z"
+    },
+    "signature_hash": "b9b160a7d1174b8fb6b675d10c09074a9c81aaedd9568408c1c34bcf4e21420d",
+    "signataire_nom": "Dr. bb b"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c0d2e083f7b8e4e285ee"
+    },
+    "id_resultat": {
+      "$oid": "6a62222d0e8f2b8172f0ceaf"
+    },
+    "type_signature": "Cachet Officiel Num\u00e9rique (Certificat Centralis\u00e9)",
+    "date_signature": {
+      "$date": "2026-07-24T01:33:06.307Z"
+    },
+    "signature_hash": "0edfceca4facf1fd5c714fd1179fe6ca087a83944302eca5409a79c5665c79a8",
+    "signataire_nom": "Admin. Ahmed Seyid"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c1e2e083f7b8e4e285f5"
+    },
+    "id_resultat": {
+      "$oid": "6a62c1e20e8f2b8172f0ceb1"
+    },
+    "type_signature": "Signature \u00c9lectronique Standard (Certificat Serveur)",
+    "date_signature": {
+      "$date": "2026-07-24T01:37:38.039Z"
+    },
+    "signature_hash": "d699d294d3670571652cb7eea0034a2f4e36fe11785ec6c2e897a32885a017cf",
+    "signataire_nom": "Dr. bb b"
+  }
+]

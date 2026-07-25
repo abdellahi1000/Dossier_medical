@@ -1,0 +1,38 @@
+[
+  {
+    "_id": {
+      "$oid": "6a61769ff9ef528c4e6986c0"
+    },
+    "id_reservation": {
+      "$oid": "6a61769ff9ef528c4e6986bf"
+    },
+    "montant_total": 2700.0,
+    "mode_paiement": "CNAM",
+    "cnam_amount": 2430.0,
+    "patient_amount": 270.0,
+    "date_paiement": {
+      "$date": "2026-07-23T02:04:15.265Z"
+    },
+    "statut_paiement": "Valid\u00e9",
+    "payment_address": "PAY-TZQN0GYHJF",
+    "payment_proof_path": null
+  },
+  {
+    "_id": {
+      "$oid": "6a618d7ab203495af8f44436"
+    },
+    "id_reservation": {
+      "$oid": "6a618d7ab203495af8f44435"
+    },
+    "montant_total": 1200.0,
+    "mode_paiement": "CNAM",
+    "cnam_amount": 1080.0,
+    "patient_amount": 120.0,
+    "date_paiement": {
+      "$date": "2026-07-23T03:41:46.545Z"
+    },
+    "statut_paiement": "Valid\u00e9",
+    "payment_address": "PAY-W1UR2NC16L",
+    "payment_proof_path": null
+  }
+]

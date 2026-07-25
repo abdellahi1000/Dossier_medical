@@ -424,11 +424,12 @@
             </a>
         </li>
         <li>
-            <a href="{{ url_for('admin_audit') }}" class="{{ 'active' if active_page == 'audit' else '' }}" title="Journal d'Audit &amp; Traçabilité">
-                <i data-lucide="history"></i>
-                Journal d'Audit
+            <a href="{{ url_for('admin_hospital_settings') }}" class="{{ 'active' if active_page == 'settings' else '' }}" title="Paramètres de l'Hôpital">
+                <i data-lucide="settings"></i>
+                Paramètres de l'Hôpital
             </a>
         </li>
+
     </ul>
 </nav>
 

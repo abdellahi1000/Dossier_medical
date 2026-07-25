@@ -1,0 +1,2606 @@
+[
+  {
+    "_id": {
+      "$oid": "6a521f3122b79bc08cffc709"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:47:13.082Z"
+    },
+    "user_id": "6a521f3122b79bc08cffc707",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Inscription",
+    "details": "Nouvel administrateur inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a521f6122b79bc08cffc70a"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:48:01.148Z"
+    },
+    "user_id": "6a521f3122b79bc08cffc707",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a521fa622b79bc08cffc70c"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:49:10.954Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Inscription",
+    "details": "Nouvel administrateur inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a521fab22b79bc08cffc70d"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:49:15.841Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a521fb922b79bc08cffc70e"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:49:29.689Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a521fd422b79bc08cffc70f"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:49:56.973Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Suppression M\u00e9decin",
+    "details": "Le compte du Dr. Mohamed Ahmed a \u00e9t\u00e9 supprim\u00e9",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a521fd722b79bc08cffc710"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:49:59.560Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Suppression M\u00e9decin",
+    "details": "Le compte du Dr. Kane Mariam a \u00e9t\u00e9 supprim\u00e9",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a52202222b79bc08cffc712"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:51:14.453Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Cr\u00e9ation M\u00e9decin",
+    "details": "Le compte du Dr. Ahmed Kan a \u00e9t\u00e9 cr\u00e9\u00e9 par l'h\u00f4pital",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a52207f22b79bc08cffc714"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:52:47.350Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Cr\u00e9ation M\u00e9decin",
+    "details": "Le compte du Dr. Ali casi a \u00e9t\u00e9 cr\u00e9\u00e9 par l'h\u00f4pital",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a52208c22b79bc08cffc715"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:53:00.252Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Suppression M\u00e9decin",
+    "details": "Le compte du Dr. Ahmed Kan a \u00e9t\u00e9 supprim\u00e9",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5220b922b79bc08cffc716"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:53:45.346Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "Suppression M\u00e9decin",
+    "details": "Le compte du Dr. Ali casi a \u00e9t\u00e9 supprim\u00e9",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5220ed22b79bc08cffc717"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:54:37.717Z"
+    },
+    "user_id": "6a521fa622b79bc08cffc70b",
+    "user_name": "Hospital Admin",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a52211922b79bc08cffc719"
+    },
+    "timestamp": {
+      "$date": "2026-07-11T10:55:21.119Z"
+    },
+    "user_id": "6a52211922b79bc08cffc718",
+    "user_name": "Seyid Abdellahi",
+    "role": "patient",
+    "action": "Inscription",
+    "details": "Nouveau patient inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54de66d88c9d5a304de0d3"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:47:34.596Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 1111111111",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54de6ed88c9d5a304de0d4"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:47:42.436Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 1111111111",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54de78d88c9d5a304de0d5"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:47:52.252Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 22222222",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54dec5d88c9d5a304de0d7"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:49:09.908Z"
+    },
+    "user_id": "6a54dec5d88c9d5a304de0d6",
+    "user_name": "w www",
+    "role": "patient",
+    "action": "Inscription",
+    "details": "Nouveau patient inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54ded6d88c9d5a304de0d8"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:49:26.040Z"
+    },
+    "user_id": "6a54dec5d88c9d5a304de0d6",
+    "user_name": "w www",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54dee6d88c9d5a304de0d9"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:49:42.775Z"
+    },
+    "user_id": "6a54dec5d88c9d5a304de0d6",
+    "user_name": "w www",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54deead88c9d5a304de0da"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:49:46.694Z"
+    },
+    "user_id": "6a54dec5d88c9d5a304de0d6",
+    "user_name": "w www",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54df13d88c9d5a304de0dd"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:50:27.149Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "Inscription",
+    "details": "Nouvel administrateur inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54df22d88c9d5a304de0de"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:50:42.282Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "Suppression M\u00e9decin",
+    "details": "Le compte du Dr. Mohamed Ahmed a \u00e9t\u00e9 supprim\u00e9",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54df25d88c9d5a304de0df"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:50:45.184Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "Suppression M\u00e9decin",
+    "details": "Le compte du Dr. Kane Mariam a \u00e9t\u00e9 supprim\u00e9",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54df28d88c9d5a304de0e0"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:50:48.827Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54df35d88c9d5a304de0e1"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:51:01.703Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54df3bd88c9d5a304de0e2"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T12:51:07.730Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54ea8dd88c9d5a304de0e3"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T13:39:25.838Z"
+    },
+    "user_id": "6a54dec5d88c9d5a304de0d6",
+    "user_name": "w www",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54eaccd88c9d5a304de0e4"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T13:40:28.961Z"
+    },
+    "user_id": "6a54dec5d88c9d5a304de0d6",
+    "user_name": "w www",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54ead5d88c9d5a304de0e5"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T13:40:37.228Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54eaf7d88c9d5a304de0e7"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T13:41:11.789Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "Cr\u00e9ation Planning",
+    "details": "Cr\u00e9neau 04:05-10:15 le 2026-07-13 cr\u00e9\u00e9 pour le centre",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54eb19d88c9d5a304de0e9"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T13:41:45.830Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "Cr\u00e9ation Groupe",
+    "details": "Groupe F2 le 2026-07-13 cr\u00e9\u00e9 pour le centre",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54eb20d88c9d5a304de0ea"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T13:41:52.782Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "d dd",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54eb2bd88c9d5a304de0eb"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T13:42:03.683Z"
+    },
+    "user_id": "6a54dec5d88c9d5a304de0d6",
+    "user_name": "w www",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a54eb83d88c9d5a304de0f1"
+    },
+    "timestamp": {
+      "$date": "2026-07-13T13:43:31.849Z"
+    },
+    "user_id": "6a54dec5d88c9d5a304de0d6",
+    "user_name": "w www",
+    "role": "patient",
+    "action": "Reservation",
+    "details": "Patient #5555555555 a reserve le ticket #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5d6721d10cdfba58d9dd8a"
+    },
+    "timestamp": {
+      "$date": "2026-07-20T00:09:05.406Z"
+    },
+    "user_id": "6a5d6721d10cdfba58d9dd89",
+    "user_name": "Ahmed Seyid",
+    "role": "patient",
+    "action": "Inscription",
+    "details": "Nouveau patient inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5d6747d10cdfba58d9dd8b"
+    },
+    "timestamp": {
+      "$date": "2026-07-20T00:09:43.726Z"
+    },
+    "user_id": "6a5d6721d10cdfba58d9dd89",
+    "user_name": "Ahmed Seyid",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5d6798d10cdfba58d9dd8e"
+    },
+    "timestamp": {
+      "$date": "2026-07-20T00:11:04.537Z"
+    },
+    "user_id": "6a5d6798d10cdfba58d9dd8c",
+    "user_name": "Ahmed k0",
+    "role": "admin",
+    "action": "Inscription",
+    "details": "Nouvel administrateur inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5d67acd10cdfba58d9dd8f"
+    },
+    "timestamp": {
+      "$date": "2026-07-20T00:11:24.793Z"
+    },
+    "user_id": "6a5d6798d10cdfba58d9dd8c",
+    "user_name": "Ahmed k0",
+    "role": "admin",
+    "action": "Suppression",
+    "details": "R\u00e9servation #1 supprim\u00e9e par l'admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5d67afd10cdfba58d9dd90"
+    },
+    "timestamp": {
+      "$date": "2026-07-20T00:11:27.318Z"
+    },
+    "user_id": "6a5d6798d10cdfba58d9dd8c",
+    "user_name": "Ahmed k0",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a5d67c5d10cdfba58d9dd91"
+    },
+    "timestamp": {
+      "$date": "2026-07-20T00:11:49.043Z"
+    },
+    "user_id": "6a5d6798d10cdfba58d9dd8c",
+    "user_name": "Ahmed k0",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6024639826109df04a579a"
+    },
+    "timestamp": {
+      "$date": "2026-07-22T02:01:07.974Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 0987654321",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6026899826109df04a579b"
+    },
+    "timestamp": {
+      "$date": "2026-07-22T02:10:17.206Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 0987654321",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6026919826109df04a579c"
+    },
+    "timestamp": {
+      "$date": "2026-07-22T02:10:25.777Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 0987654321",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a60269b9826109df04a579d"
+    },
+    "timestamp": {
+      "$date": "2026-07-22T02:10:35.504Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 48287378",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6026aa9826109df04a579e"
+    },
+    "timestamp": {
+      "$date": "2026-07-22T02:10:50.158Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 0987654321",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6026cb9826109df04a579f"
+    },
+    "timestamp": {
+      "$date": "2026-07-22T02:11:23.199Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 0987654321",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a60270b9826109df04a57a2"
+    },
+    "timestamp": {
+      "$date": "2026-07-22T02:12:27.424Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Inscription",
+    "details": "Nouvel administrateur inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a602b921c719eb9f9d37a78"
+    },
+    "timestamp": {
+      "$date": "2026-07-22T02:31:46.095Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6173ecf9ef528c4e6986af"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T01:52:44.175Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617473f9ef528c4e6986b1"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T01:54:59.725Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Cr\u00e9ation M\u00e9decin",
+    "details": "Le compte du Dr. aa a a \u00e9t\u00e9 cr\u00e9\u00e9 par l'h\u00f4pital",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61749df9ef528c4e6986b3"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T01:55:41.539Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Cr\u00e9ation M\u00e9decin",
+    "details": "Le compte du Dr. bb b a \u00e9t\u00e9 cr\u00e9\u00e9 par l'h\u00f4pital",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6174a5f9ef528c4e6986b4"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T01:55:49.111Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6174e1f9ef528c4e6986b6"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T01:56:49.682Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Inscription",
+    "details": "Nouveau patient inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6175bcf9ef528c4e6986b7"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:00:28.399Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6175ccf9ef528c4e6986b8"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:00:44.207Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6175e4f9ef528c4e6986ba"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:01:08.751Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Cr\u00e9ation Planning",
+    "details": "Cr\u00e9neau 09:15-11:00 le 2026-07-23 cr\u00e9\u00e9 pour le centre",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6175f3f9ef528c4e6986bc"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:01:23.882Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Cr\u00e9ation Groupe",
+    "details": "Groupe d7 le 2026-07-23 cr\u00e9\u00e9 pour le centre",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6175fcf9ef528c4e6986bd"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:01:32.922Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617612f9ef528c4e6986be"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:01:54.922Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61769ff9ef528c4e6986c4"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:04:15.284Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Reservation",
+    "details": "Patient #7429559607 a reserve le ticket #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6176b8f9ef528c4e6986c5"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:04:40.482Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation des documents CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617d0f73b03e499037cc79"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:31:43.518Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617d1673b03e499037cc7a"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:31:50.526Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation des documents CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617d1e73b03e499037cc7b"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:31:58.517Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617d6073b03e499037cc7c"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:33:04.319Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation des documents CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617d6873b03e499037cc7d"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:33:12.022Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617e8173b03e499037cc7e"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:37:53.534Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617ec673b03e499037cc7f"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:39:02.198Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a617f9473b03e499037cc80"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:42:28.487Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6181a473b03e499037cc81"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:51:16.656Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6181da73b03e499037cc82"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:52:10.456Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6181f073b03e499037cc83"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:52:32.440Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Consultation Document",
+    "details": "Consultation des documents CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6182e3b8c93ef4006878a5"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:56:35.302Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618309b8c93ef4006878a6"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:57:13.518Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618314b8c93ef4006878a7"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:57:24.045Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618319b8c93ef4006878a8"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T02:57:29.052Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6183d8b8c93ef4006878a9"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:00:40.741Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618408b8c93ef4006878aa"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:01:28.073Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618551b8c93ef4006878ab"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:06:57.374Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618590b8c93ef4006878ac"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:08:00.302Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618611b8c93ef4006878ad"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:10:09.207Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618640b8c93ef4006878ae"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:10:56.979Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61871eb8c93ef4006878af"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:14:38.798Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61873cb8c93ef4006878b0"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:15:08.036Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618777b8c93ef4006878b1"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:16:07.459Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618784b8c93ef4006878b2"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:16:20.395Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61890b3550a90ea598ec7a"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:22:51.894Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: admin_sidy",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61892befef7fae66f82a82"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:23:23.489Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: admin_sidy",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61893fbecc1cf6a0f0d65e"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:23:43.022Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: admin_sidy",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61894f9d84e82f4cad9242"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:23:59.855Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: admin_sidy",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61896f3471ca1c560fa1f2"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:24:31.158Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Diallo Sidy",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a61896f3471ca1c560fa1f4"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:24:31.219Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Diallo Sidy",
+    "role": "admin",
+    "action": "Validation Reception",
+    "details": "Recu de reservation #1 valide par l'admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618c1ee2e334ce6295e0fd"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:35:58.935Z"
+    },
+    "user_id": "6a618c1ee2e334ce6295e0fc",
+    "user_name": "Identity Test",
+    "role": "patient",
+    "action": "Inscription",
+    "details": "Nouveau patient inscrit avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618c1fe2e334ce6295e0fe"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:35:59.033Z"
+    },
+    "user_id": "6a618c1ee2e334ce6295e0fc",
+    "user_name": "Identity Test",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618c2b1011049c64ba2089"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:36:11.719Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Diallo Sidy",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618c2b1011049c64ba208b"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:36:11.822Z"
+    },
+    "user_id": "6a618c1ee2e334ce6295e0fc",
+    "user_name": "Identity Test",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618c3c5ab68d421430be2a"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:36:28.869Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Diallo Sidy",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618c3d5ab68d421430be2b"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:36:29.002Z"
+    },
+    "user_id": "6a618c1ee2e334ce6295e0fc",
+    "user_name": "Identity Test",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618d39b203495af8f44433"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:40:40.999Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618d47b203495af8f44434"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:40:55.539Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618d7ab203495af8f4443a"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:41:46.570Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Reservation",
+    "details": "Patient #7429559607 a reserve le ticket #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618d8ab203495af8f4443b"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:42:02.698Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618d93b203495af8f4443c"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:42:11.290Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618db1b203495af8f4443d"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:42:41.420Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618dbdb203495af8f4443e"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:42:53.645Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618dcfb203495af8f44440"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:43:11.819Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Validation Reception",
+    "details": "Recu de reservation #2 valide par l'admin",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618dddb203495af8f44441"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:43:25.612Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618de8b203495af8f44442"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:43:36.918Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Connexion",
+    "details": "M\u00e9decin connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618dfab203495af8f44443"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:43:54.673Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618e25b203495af8f44444"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:44:37.227Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Mise \u00e0 jour Fiche CNAM",
+    "details": "Le m\u00e9decin a mis \u00e0 jour la fiche CNAM de la r\u00e9servation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a618e25b203495af8f44445"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T03:44:37.285Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6192456575e21b4f6506ed"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T04:02:13.343Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6197c10f4f7613206d1a10"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T04:25:37.787Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6197cd562cce23820bc6c9"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T04:25:49.429Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6198819d345a7d8b6deed9"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T04:28:49.050Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6217367b50cd0042c6571d"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:29:26.810Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 7429559607",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62176a7b50cd0042c6571e"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:30:18.282Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 7429559607",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6217737b50cd0042c6571f"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:30:27.044Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 7429559607",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62177f7b50cd0042c65720"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:30:39.682Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62184d7b50cd0042c65721"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:34:05.896Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62186d7b50cd0042c65722"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:34:37.655Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6218777b50cd0042c65723"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:34:47.443Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62188a7b50cd0042c65724"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:35:06.625Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Connexion",
+    "details": "M\u00e9decin connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6218ee7b50cd0042c65725"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T13:36:46.574Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a622086953c5a628ca4f7f4"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:09:10.206Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62209d29aed94c4e2eb3b3"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:09:33.629Z"
+    },
+    "user_id": "6a617473f9ef528c4e6986b0",
+    "user_name": "aa a",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6221f105d5be01e6d97979"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:15:13.904Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62221b05d5be01e6d9797a"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:15:55.335Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Mise \u00e0 jour Fiche CNAM",
+    "details": "Le m\u00e9decin a mis \u00e0 jour la fiche CNAM de la r\u00e9servation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62221b05d5be01e6d9797b"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:15:55.394Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62222d05d5be01e6d9797d"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:16:13.821Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62224705d5be01e6d9797e"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:16:39.814Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62253c42b9aa991bb2e8e5"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:29:16.664Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62253c42b9aa991bb2e8e6"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:29:16.811Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Diallo Sidy",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62253c42b9aa991bb2e8e9"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:29:16.834Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Diallo Sidy",
+    "role": "admin",
+    "action": "Co-signature Administration",
+    "details": "Visa final et cachet apposes sur le rapport #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a622b6d06ba8454c1393e49"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:55:41.850Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a622b7906ba8454c1393e4a"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:55:53.780Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a622b8c06ba8454c1393e4b"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T14:56:12.709Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62330f0341c66fd311c544"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T15:28:15.287Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Diallo Sidy",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62331b51b0a177563ebb86"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T15:28:27.427Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Diallo Sidy",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a623565cd404094ea2a1c6a"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T15:38:13.578Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Param\u00e8tres H\u00f4pital",
+    "details": "Cachet officiel (circulaire) mis \u00e0 jour",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a623571cd404094ea2a1c6b"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T15:38:25.541Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Param\u00e8tres H\u00f4pital",
+    "details": "Logo de l'h\u00f4pital mis \u00e0 jour",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6235accd404094ea2a1c6c"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T15:39:24.538Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Param\u00e8tres H\u00f4pital",
+    "details": "Informations de l'h\u00f4pital mises \u00e0 jour",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a6235e4cd404094ea2a1c6d"
+    },
+    "timestamp": {
+      "$date": "2026-07-23T15:40:20.199Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Param\u00e8tres H\u00f4pital",
+    "details": "Signature du Dr. bb b import\u00e9e par l'administration",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c07dfbd53b8c105fa172"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:31:41.990Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "dd",
+    "role": "admin",
+    "action": "Param\u00e8tres H\u00f4pital",
+    "details": "Cachet officiel circulaire g\u00e9n\u00e9r\u00e9 automatiquement",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c0d2e083f7b8e4e285f0"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:33:06.310Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Co-signature Administration",
+    "details": "Visa final et cachet apposes sur le rapport #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c16ce083f7b8e4e285f1"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:35:40.685Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Param\u00e8tres H\u00f4pital",
+    "details": "Cachet officiel circulaire g\u00e9n\u00e9r\u00e9 automatiquement",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c191e083f7b8e4e285f2"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:36:17.815Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c19ce083f7b8e4e285f3"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:36:28.534Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Connexion",
+    "details": "M\u00e9decin connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c1c1e083f7b8e4e285f4"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:37:05.527Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Import Signature",
+    "details": "Le m\u00e9decin a import\u00e9/mis \u00e0 jour sa signature manuscrite",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c1e2e083f7b8e4e285f6"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:37:38.049Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "Signature Resultat Medecin",
+    "details": "Resultat imm\u00e9diat signe pour #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c1f1e083f7b8e4e285f7"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:37:53.210Z"
+    },
+    "user_id": "6a61749df9ef528c4e6986b2",
+    "user_name": "bb b",
+    "role": "medecin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c200e083f7b8e4e285f8"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:38:08.085Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c20de083f7b8e4e285f9"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:38:21.294Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c33eba7dba8192d5666c"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:43:26.924Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c49223ce486b6f3c4690"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:49:06.167Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c60623ce486b6f3c4691"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:55:18.576Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c60e23ce486b6f3c4692"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T01:55:26.866Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62cc4f7a4759e8882d6b91"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:22:07.438Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Sidy",
+    "role": "admin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62ccc6844f683943dde692"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:24:06.775Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62ccd5844f683943dde693"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:24:21.444Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62cce0844f683943dde694"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:24:32.955Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62cd1a844f683943dde695"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:25:30.871Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Consultation Document",
+    "details": "Consultation des documents CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62cd45844f683943dde696"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:26:13.323Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62cd50844f683943dde697"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:26:24.754Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62cfadca41dce63417ab85"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:36:29.122Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Consultation Document",
+    "details": "Consultation du recu de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62cfb8ca41dce63417ab86"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:36:40.424Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Consultation Document",
+    "details": "Consultation des documents CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d025a433a073b8d3c37b"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:38:29.586Z"
+    },
+    "user_id": "admin_sidy",
+    "user_name": "Sidy",
+    "role": "admin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #1",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d0b7ca41dce63417ab87"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:40:55.625Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d0ffca41dce63417ab88"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:42:07.091Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d108ca41dce63417ab89"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:42:16.176Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 7429559607",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d14cca41dce63417ab8a"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:43:24.947Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 7429559607",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d159ca41dce63417ab8b"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:43:37.340Z"
+    },
+    "user_id": "anonymous",
+    "user_name": "Visiteur anonyme",
+    "role": "Visiteur",
+    "action": "Echec Connexion",
+    "details": "Tentative infructueuse, ID: 7429559607",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d163ca41dce63417ab8c"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:43:47.392Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d1cdca41dce63417ab8d"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:45:33.424Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d1e3ca41dce63417ab8e"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:45:55.624Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d22bca41dce63417ab8f"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:47:07.685Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d232ca41dce63417ab90"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:47:14.800Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Connexion",
+    "details": "Patient connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d238ca41dce63417ab91"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:47:20.191Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d4911280110c8226f859"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:57:21.224Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "dd",
+    "role": "admin",
+    "action": "Param\u00e8tres H\u00f4pital",
+    "details": "Signature du directeur import\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d4911280110c8226f85a"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:57:21.244Z"
+    },
+    "user_id": "6a54df13d88c9d5a304de0db",
+    "user_name": "dd",
+    "role": "admin",
+    "action": "Param\u00e8tres H\u00f4pital",
+    "details": "Signature du directeur supprim\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d4be132dee1f6303f1b9"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:58:06.569Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Seyid",
+    "role": "admin",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d4e382b0c5e1082c6f73"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:58:43.631Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Fiche CNAM",
+    "details": "Consultation de la fiche CNAM de reservation #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d4e982b0c5e1082c6f74"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:58:49.662Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d50082b0c5e1082c6f75"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:59:12.798Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "Consultation Document",
+    "details": "Consultation du rapport medical final #2",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d50b82b0c5e1082c6f76"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:59:23.482Z"
+    },
+    "user_id": "6a6174e1f9ef528c4e6986b5",
+    "user_name": "tru tkp",
+    "role": "patient",
+    "action": "D\u00e9connexion",
+    "details": "Session utilisateur ferm\u00e9e",
+    "ip_address": "127.0.0.1"
+  },
+  {
+    "_id": {
+      "$oid": "6a62d52e82b0c5e1082c6f77"
+    },
+    "timestamp": {
+      "$date": "2026-07-24T02:59:58.089Z"
+    },
+    "user_id": "6a60270b9826109df04a57a0",
+    "user_name": "Ahmed Seyid",
+    "role": "admin",
+    "action": "Connexion",
+    "details": "Administrateur connect\u00e9 avec succ\u00e8s",
+    "ip_address": "127.0.0.1"
+  }
+]

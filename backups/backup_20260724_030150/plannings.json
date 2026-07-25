@@ -1,0 +1,114 @@
+[
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2289"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "start_time": "08:00",
+    "end_time": "09:00",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f228a"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "start_time": "09:00",
+    "end_time": "10:00",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f228b"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "start_time": "10:30",
+    "end_time": "11:30",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f228c"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2283"
+    },
+    "start_time": "14:00",
+    "end_time": "15:00",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2291"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "start_time": "08:00",
+    "end_time": "09:00",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2292"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "start_time": "09:00",
+    "end_time": "10:00",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2293"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "start_time": "10:30",
+    "end_time": "11:30",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a521ea1ca9fb79e465f2294"
+    },
+    "id_centre": {
+      "$oid": "6a521ea1ca9fb79e465f2284"
+    },
+    "start_time": "14:00",
+    "end_time": "15:00",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a54eaf7d88c9d5a304de0e6"
+    },
+    "id_centre": {
+      "$oid": "6a54df13d88c9d5a304de0dc"
+    },
+    "date": "2026-07-13",
+    "start_time": "04:05",
+    "end_time": "10:15",
+    "is_active": true
+  },
+  {
+    "_id": {
+      "$oid": "6a6175e4f9ef528c4e6986b9"
+    },
+    "id_centre": {
+      "$oid": "6a60270b9826109df04a57a1"
+    },
+    "date": "2026-07-23",
+    "start_time": "09:15",
+    "end_time": "11:00",
+    "is_active": true
+  }
+]

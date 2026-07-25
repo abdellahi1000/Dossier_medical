@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Mon Profil - KHIDMATY – Gestion des Dossiers Médicaux{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <h2><i data-lucide="user" style="width:24px;height:24px;vertical-align:bottom;margin-right:6px;"></i> Mon Profil</h2>
+    <p style="color: #666;">Dr. {{ medecin.prenom }} {{ medecin.nom }} — Spécialité : <strong>{{ medecin.specialite }}</strong></p>
+</div>
+
+<!-- Search by Secret Code -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <label style="font-weight:600; display:block; margin-bottom:0.5rem;">Rechercher par Code Secret</label>
+    <div style="display:flex; gap:0.5rem;">
+        <input type="text" id="search-code" class="form-control" placeholder="Ex: COWC41" oninput="searchByCode()" autocomplete="off">
+        <button type="button" class="btn btn-primary" onclick="searchByCode()" style="flex-shrink:0;">
+            <i data-lucide="search" style="width:16px;height:16px;vertical-align:bottom;"></i>
+        </button>
+    </div>
+    <div id="search-results" style="display:none; margin-top: 1rem; border-top: 1px solid #f1f5f9; padding-top: 0.75rem;"></div>
+</div>
+
+<!-- Patients en attente de validation par l'administration (accordion) -->
+<div class="card" style="margin-bottom: 1.25rem; padding: 0; overflow: hidden;">
+    <button type="button" onclick="toggleAccordion('pending-panel')" style="width:100%; background:none; border:none; cursor:pointer; padding: 1.25rem 1.5rem; display:flex; justify-content:space-between; align-items:center; text-align:left;">
+        <span style="display:flex; align-items:center; font-weight:700; font-size:1.05rem; color: var(--gris-fonce, #333);">
+            <span style="display:inline-block; width:14px; height:14px; border-radius:50%; background:#ffc107; margin-right:0.6rem;"></span>
+            Patients en Attente de Validation par l'Administration
+            <span class="badge badge-warning" style="margin-left:0.6rem;">{{ pending_admin_validation|length }}</span>
+        </span>
+        <span id="pending-panel-arrow" style="font-size:0.85rem; color:#888;">▶</span>
+    </button>
+    <div id="pending-panel" style="display:none; padding: 0 1.5rem 1.25rem 1.5rem;">
+        {% if pending_admin_validation|length == 0 %}
+            <p style="color: #888; font-style: italic; text-align: center; padding: 1rem 0;">Aucun dossier en attente de validation administrative.</p>
+        {% else %}
+            <ul style="list-style:none; padding:0; margin:0;">
+                {% for res in pending_admin_validation %}
+                <li data-code="{{ res.code_secret }}" data-name="{{ res.patient.prenom }} {{ res.patient.nom }}" data-status="pending"
+                    style="display:flex; justify-content:space-between; align-items:center; padding: 0.85rem 0; border-bottom: 1px solid #f1f5f9;">
+                    <div style="display:flex; align-items:center;">
+                        <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#ffc107; margin-right:0.6rem; flex-shrink:0;"></span>
+                        <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong>
+                        <span style="font-size: 0.85rem; color: #666;">&nbsp;— N° National: {{ res.patient.numero_national }} — Code: {{ res.code_secret }} — RDV #{{ res.numero_de_rendez_vous }}</span>
+                    </div>
+                    <span class="badge badge-warning">{{ res.resultat.statut_resultat }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Patients validés par l'administration (accordion) -->
+<div class="card" style="margin-bottom: 1.25rem; padding: 0; overflow: hidden;">
+    <button type="button" onclick="toggleAccordion('validated-panel')" style="width:100%; background:none; border:none; cursor:pointer; padding: 1.25rem 1.5rem; display:flex; justify-content:space-between; align-items:center; text-align:left;">
+        <span style="display:flex; align-items:center; font-weight:700; font-size:1.05rem; color: var(--gris-fonce, #333);">
+            <span style="display:inline-block; width:14px; height:14px; border-radius:50%; background:#28a745; margin-right:0.6rem;"></span>
+            Patients Validés par l'Administration
+            <span class="badge badge-success" style="margin-left:0.6rem;">{{ validated_by_admin|length }}</span>
+        </span>
+        <span id="validated-panel-arrow" style="font-size:0.85rem; color:#888;">▶</span>
+    </button>
+    <div id="validated-panel" style="display:none; padding: 0 1.5rem 1.25rem 1.5rem;">
+        {% if validated_by_admin|length == 0 %}
+            <p style="color: #888; font-style: italic; text-align: center; padding: 1rem 0;">Aucun dossier validé par l'administration pour le moment.</p>
+        {% else %}
+            <ul style="list-style:none; padding:0; margin:0;">
+                {% for res in validated_by_admin %}
+                <li data-code="{{ res.code_secret }}" data-name="{{ res.patient.prenom }} {{ res.patient.nom }}" data-status="validated"
+                    style="display:flex; justify-content:space-between; align-items:center; padding: 0.85rem 0; border-bottom: 1px solid #f1f5f9;">
+                    <div style="display:flex; align-items:center;">
+                        <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:#28a745; margin-right:0.6rem; flex-shrink:0;"></span>
+                        <strong>{{ res.patient.prenom }} {{ res.patient.nom }}</strong>
+                        <span style="font-size: 0.85rem; color: #666;">&nbsp;— N° National: {{ res.patient.numero_national }} — Code: {{ res.code_secret }} — RDV #{{ res.numero_de_rendez_vous }}</span>
+                    </div>
+                    <span class="badge badge-success">Validé</span>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleAccordion(panelId) {
+        const panel = document.getElementById(panelId);
+        const arrow = document.getElementById(panelId + '-arrow');
+        const isOpen = panel.style.display === 'block';
+        panel.style.display = isOpen ? 'none' : 'block';
+        arrow.textContent = isOpen ? '▶' : '▼';
+    }
+
+    function searchByCode() {
+        const query = document.getElementById('search-code').value.trim().toLowerCase();
+        const resultsEl = document.getElementById('search-results');
+
+        if (!query) {
+            resultsEl.style.display = 'none';
+            resultsEl.innerHTML = '';
+            return;
+        }
+
+        const items = document.querySelectorAll('[data-code]');
+        const matches = [];
+        items.forEach(item => {
+            const code = (item.getAttribute('data-code') || '').toLowerCase();
+            if (code.includes(query)) {
+                matches.push({
+                    name: item.getAttribute('data-name'),
+                    status: item.getAttribute('data-status'),
+                    code: item.getAttribute('data-code')
+                });
+            }
+        });
+
+        if (matches.length === 0) {
+            resultsEl.innerHTML = '<p style="color:#888; font-style:italic; margin:0;">Aucun patient trouvé pour ce code.</p>';
+        } else {
+            resultsEl.innerHTML = matches.map(m => {
+                const dotColor = m.status === 'pending' ? '#ffc107' : '#28a745';
+                const label = m.status === 'pending'
+                    ? "En attente de validation par l'administration"
+                    : "Validé par l'administration";
+                const safeName = m.name.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                return `<div style="display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0;">
+                    <span style="width:12px; height:12px; border-radius:50%; background:${dotColor}; flex-shrink:0; display:inline-block;"></span>
+                    <strong>${safeName}</strong>
+                    <span style="font-size:0.82rem; color:#666;">Code: ${m.code} — ${label}</span>
+                </div>`;
+            }).join('');
+        }
+
+        resultsEl.style.display = 'block';
+    }
+</script>
+{% endblock %}

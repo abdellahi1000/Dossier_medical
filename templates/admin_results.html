@@ -35,6 +35,64 @@
     </div>
 </div>
 
+<style>
+    .flash-list { display:flex; flex-direction:column; gap:0.6rem; }
+    .flash-row {
+        display:flex; align-items:center; gap:1rem;
+        background:#fff; border:1px solid #e2e8f0; border-radius:12px;
+        padding:0.85rem 1.1rem;
+        box-shadow:0 1px 4px rgba(0,0,0,0.04);
+        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+        animation: flashRowIn 0.35s ease backwards;
+    }
+    .flash-row:hover { box-shadow:0 4px 14px rgba(25,135,84,0.12); border-color:#a7d7b3; transform:translateY(-1px); }
+    @keyframes flashRowIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    .flash-row-main { flex:1; min-width:0; display:flex; align-items:baseline; gap:0.4rem; flex-wrap:wrap; }
+    .flash-row-name { font-weight:700; color:#0f4c2a; font-size:0.98rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .flash-row-nne { font-size:0.82rem; color:#6b8578; white-space:nowrap; }
+    .flash-row-code {
+        font-family:monospace; font-weight:700; font-size:0.9rem; color:#146C43;
+        background:#edfaf3; border:1px solid #c3e6cb; border-radius:8px;
+        padding:0.35rem 0.75rem; white-space:nowrap; flex-shrink:0;
+    }
+    .flash-btn {
+        flex-shrink:0; width:38px; height:38px; border-radius:50%;
+        border:none; background:linear-gradient(135deg,#ffc107,#ff9800);
+        color:#fff; display:flex; align-items:center; justify-content:center;
+        cursor:pointer; box-shadow:0 2px 8px rgba(255,152,0,0.35);
+        transition: transform 0.18s, box-shadow 0.18s;
+    }
+    .flash-btn:hover { transform:scale(1.12) rotate(-8deg); box-shadow:0 4px 14px rgba(255,152,0,0.5); }
+    .flash-btn i { width:18px; height:18px; }
+
+    .patient-detail-overlay {
+        display:none; position:fixed; inset:0; z-index:2000;
+        background:rgba(15,76,42,0.35); backdrop-filter:blur(3px);
+        align-items:flex-start; justify-content:center;
+        padding:2.5rem 1rem; overflow-y:auto;
+    }
+    .patient-detail-overlay.open { display:flex; }
+    .patient-detail-panel {
+        position:relative; width:100%; max-width:980px;
+        background:#f8fafc; border-radius:16px; padding:1.5rem;
+        box-shadow:0 20px 60px rgba(0,0,0,0.3);
+        animation: detailPanelIn 0.28s cubic-bezier(.2,.8,.2,1);
+    }
+    @keyframes detailPanelIn { from { opacity:0; transform:scale(0.94) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+    .patient-detail-close {
+        position:absolute; top:0.75rem; right:0.75rem; z-index:5;
+        width:34px; height:34px; border-radius:50%; border:none;
+        background:#fff; color:#334155; box-shadow:0 2px 8px rgba(0,0,0,0.15);
+        display:flex; align-items:center; justify-content:center; cursor:pointer;
+    }
+    .patient-detail-close:hover { background:#fdecea; color:#D62828; }
+
+    @media (max-width: 640px) {
+        .flash-row { flex-wrap:wrap; }
+        .flash-row-code { order:3; }
+    }
+</style>
+
 <!-- Pending Results Table -->
 <div class="hosp-card">
     <h2><i data-lucide="clipboard-list" style="width:20px;height:20px;vertical-align:bottom;margin-right:4px;"></i> Rapports Médicaux en Attente de Co-signature Administrative</h2>
@@ -49,8 +107,26 @@
             <p>Aucun résultat en attente de co-signature. Tous les rapports ont été traités.</p>
         </div>
     {% else %}
-        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+        <!-- ═══ Flash Quick-Access List ═══ -->
+        <div class="flash-list">
             {% for res in pending_results %}
+            <div class="flash-row" style="animation-delay:{{ loop.index0 * 0.04 }}s;">
+                <div class="flash-row-main">
+                    <span class="flash-row-name">{{ res.patient.prenom }} {{ res.patient.nom }}</span>
+                    <span class="flash-row-nne">({{ res.patient.numero_national }})</span>
+                </div>
+                <div class="flash-row-code">{{ res.code_secret }}</div>
+                <button type="button" class="flash-btn" onclick="openPatientDetail('{{ res._id }}')" title="Ouvrir le dossier complet">
+                    <i data-lucide="search-check"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% for res in pending_results %}
+        <div class="patient-detail-overlay" id="patient-detail-{{ res._id }}">
+            <div class="patient-detail-panel">
+                <button type="button" class="patient-detail-close" onclick="closePatientDetail('{{ res._id }}')" title="Fermer"><i data-lucide="x"></i></button>
             <div style="border:1px solid #e8f5e9; border-radius:14px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
                 <!-- Result Card Header -->
                 <div style="background:linear-gradient(135deg,#edfaf3,#f8fffe); padding:1rem 1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-bottom:1px solid #d1f2d9;">
@@ -98,11 +174,53 @@
                             <strong>Conclusion:</strong>
                             <p style="margin-top:0.2rem; margin-bottom:0;">{{ res.resultat.conclusion }}</p>
                         </div>
-                        {% if res.resultat.images %}
-                            <div style="margin-top:0.75rem; display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:#198754; font-weight:600;">
-                                <i data-lucide="image" style="width:14px;height:14px;vertical-align:bottom;"></i> <span>{{ res.resultat.images|length }} cliché(s) joint(s) au rapport</span>
+                        <!-- Dossier d'Examen — full folder: report + images, reviewable before validation -->
+                        <div style="margin-top:1rem; padding:0.85rem 1rem; border-radius:10px; background:#f8fafc; border:1px solid #e2e8f0;">
+                            <div style="font-size:0.82rem; font-weight:700; color:#334155; margin-bottom:0.6rem;"><i data-lucide="folder-open" style="width:14px;height:14px;vertical-align:bottom;"></i> Dossier d'Examen Complet</div>
+                            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                                <button type="button" class="btn-hosp btn-hosp-sm btn-hosp-primary" onclick="openPdfModal('{{ res.report_preview_url }}', 'Rapport Médical — {{ res.patient.prenom }} {{ res.patient.nom }}')">
+                                    <i data-lucide="file-text" style="width:14px;height:14px;vertical-align:bottom;"></i> Voir le Rapport Médical (PDF)
+                                </button>
+                                {% if res.image_urls %}
+                                <button type="button" class="btn-hosp btn-hosp-sm" style="background:#e2e8f0; color:#334155;" onclick="openClichesModal({{ res.image_urls|tojson }}, '{{ res.numero_de_rendez_vous }}')">
+                                    <i data-lucide="image" style="width:14px;height:14px;vertical-align:bottom;"></i> {{ res.image_urls|length }} Image(s) Médicale(s)
+                                </button>
+                                {% endif %}
+                                <button type="button" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd; color:#1565c0;" onclick="openPdfModal('{{ url_for('download_receipt', reservation_id=res._id) }}', 'Reçu Numérique')">
+                                    <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu Numérique
+                                </button>
+                                {% if res.paiement and res.paiement.mode_paiement == 'CNAM' %}
+                                <button type="button" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd; color:#1565c0;" onclick="openPdfModal('{{ url_for('fiche_cnam', reservation_id=res._id) }}', 'Fiche CNAM')">
+                                    <i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> Fiche CNAM
+                                </button>
+                                {% endif %}
                             </div>
-                        {% endif %}
+                        </div>
+
+                        <!-- CNAM Coverage Summary — same visual language as elsewhere (blue CNAM accents) -->
+                        <div style="margin-top:1rem; padding:0.85rem 1rem; border-radius:10px; background:#e3f2fd; border:1px solid #90caf9;">
+                            <div style="font-size:0.82rem; font-weight:700; color:#1565c0; margin-bottom:0.6rem;"><i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> Prise en Charge CNAM</div>
+                            {% if res.paiement and res.paiement.mode_paiement == 'CNAM' %}
+                                <span class="status-badge status-active" style="margin-bottom:0.6rem; display:inline-block;">Couvert par la CNAM</span>
+                                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; font-size:0.85rem; color:#334155;">
+                                    <div>
+                                        <div style="font-size:0.72rem; text-transform:uppercase; color:#5a7a6a;">Montant Total</div>
+                                        <strong>{{ res.paiement.montant_total }} MRU</strong>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:0.72rem; text-transform:uppercase; color:#5a7a6a;">Part CNAM ({{ (cnam_rate * 100)|round|int }}%)</div>
+                                        <strong style="color:#1565c0;">{{ res.paiement.cnam_amount }} MRU</strong>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:0.72rem; text-transform:uppercase; color:#5a7a6a;">Part Patient</div>
+                                        <strong>{{ res.paiement.patient_amount }} MRU</strong>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <span class="status-badge status-pending" style="margin-bottom:0.4rem; display:inline-block;">Paiement Normal</span>
+                                <p style="font-size:0.82rem; color:#5a7a6a; font-style:italic; margin:0;">Réservation hors couverture CNAM — aucune prise en charge à afficher.</p>
+                            {% endif %}
+                        </div>
                         {% else %}
                         <div style="background:#fff3cd; border:1px solid #ffeeba; border-radius:10px; padding:1rem; color:#856404;">
                             Le rapport n'est pas encore disponible ou incomplet.
@@ -112,8 +230,12 @@
                         <!-- Doctor Signature Verification -->
                         <div style="margin-top:1rem; padding:0.75rem 1rem; border-radius:10px; {% if res.medecin_signature %}background:#edfaf3; border:1px solid #c3e6cb;{% else %}background:#fdecea; border:1px solid #f5c6cb;{% endif %}">
                             {% if res.medecin_signature %}
-                                <div style="font-size:0.85rem; font-weight:700; color:#146C43;"><i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:bottom;"></i> Signature Médecin Vérifiée</div>
-                                <div style="font-size:0.75rem; color:#555; margin-top:0.3rem; font-family:monospace;">Hash: {{ res.medecin_signature.signature_hash[:32] }}...</div>
+                                <div style="font-size:0.85rem; font-weight:700; color:#146C43; margin-bottom:0.5rem;"><i data-lucide="check-circle" style="width:14px;height:14px;vertical-align:bottom;"></i> Signature Médecin Vérifiée</div>
+                                {% if res.medecin_sig_image %}
+                                <div style="background:#fff; border:1px solid #c3e6cb; border-radius:8px; padding:0.5rem; display:inline-block;">
+                                    <img src="{{ res.medecin_sig_image }}" alt="Signature manuscrite du médecin" style="max-height:60px; max-width:180px; display:block;">
+                                </div>
+                                {% endif %}
                             {% else %}
                                 <div style="font-size:0.85rem; font-weight:700; color:#D62828;"><i data-lucide="alert-triangle" style="width:14px;height:14px;vertical-align:bottom;"></i> Signature médecin manquante</div>
                             {% endif %}
@@ -141,8 +263,73 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}
+            </div>
         </div>
+        {% endfor %}
     {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openPatientDetail(reservationId) {
+        const overlay = document.getElementById('patient-detail-' + reservationId);
+        if (!overlay) return;
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function closePatientDetail(reservationId) {
+        const overlay = document.getElementById('patient-detail-' + reservationId);
+        if (!overlay) return;
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    // Close on backdrop click or Escape key
+    document.addEventListener('click', function (e) {
+        if (e.target.classList && e.target.classList.contains('patient-detail-overlay')) {
+            e.target.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.patient-detail-overlay.open').forEach(function (ov) {
+                ov.classList.remove('open');
+            });
+            document.body.style.overflow = '';
+        }
+    });
+
+    function openClichesModal(urls, ticketNumber) {
+        const modal = document.getElementById('pdf-viewer-modal');
+        const iframe = document.getElementById('pdf-iframe');
+        const titleEl = document.getElementById('pdf-viewer-title');
+        const dlBtn = document.getElementById('pdf-download-btn');
+
+        titleEl.textContent = `Clichés d'Imagerie — RDV #${ticketNumber}`;
+        dlBtn.href = urls[0] || '#';
+
+        const gallery = urls.map((u, i) => `
+            <div style="margin-bottom:1.5rem;text-align:center;">
+                <p style="font-weight:600;color:#334155;margin-bottom:0.5rem;">Cliché ${i + 1}</p>
+                <img src="${u}" style="max-width:100%;border:1px solid #e2e8f0;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            </div>`).join('');
+
+        iframe.removeAttribute('src');
+        iframe.srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+            <body style="font-family:Arial,sans-serif;padding:1.5rem;background:#f8fafc;margin:0;overflow-y:auto;">
+                ${gallery || '<p style="color:#888;">Aucun cliché disponible.</p>'}
+            </body></html>`;
+
+        modal.style.display = 'block';
+        void modal.offsetWidth;
+        modal.style.opacity = '1';
+        document.body.style.overflow = 'hidden';
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+</script>
 {% endblock %}

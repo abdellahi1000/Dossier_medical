@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - CENTRE EMELLE ===
+Rendez-vous: #7 | Groupe: e4 | Appel: A1
+Patient: kik dey (22222222)
+Montant Paye: 1300.0 MRU (Mode: Normal)
+Date: 13/07/2026 03:22
+Code Secret Patient: M6F41F

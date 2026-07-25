@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Espace Médecin - Système de Gestion Médicale{% endblock %}
+{% block title %}Espace Médecin - KHIDMATY – Gestion des Dossiers Médicaux{% endblock %}
 
 {% block content %}
 <div style="margin-bottom: 2rem;">
@@ -85,8 +85,11 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% set is_lab = 'true' if res.examens|selectattr("categorie", "equalto", "laboratoire")|list|length > 0 else 'false' %}
-                                {% set is_imaging = 'true' if res.examens|selectattr("categorie", "equalto", "radiologie")|list|length > 0 or res.examens|selectattr("categorie", "equalto", "cardiologie")|list|length > 0 else 'false' %}
+                                {% set is_lab = 'true' if res.examens|selectattr("categorie", "equalto", "Analyse Sanguine")|list|length > 0 or res.examens|selectattr("categorie", "equalto", "Laboratoire")|list|length > 0 else 'false' %}
+                                {% set is_imaging = 'true' if res.examens|selectattr("categorie", "equalto", "Radiologie")|list|length > 0 or res.examens|selectattr("categorie", "equalto", "Cardiologie")|list|length > 0 else 'false' %}
+                                <a href="{{ url_for('fiche_cnam', reservation_id=res._id) }}" target="_blank" class="btn btn-secondary btn-sm" style="margin-right:0.4rem;">
+                                    <i data-lucide="file-text" style="width:14px;height:14px;vertical-align:bottom;"></i> Fiche CNAM
+                                </a>
                                 {% if not res.resultat or res.resultat.statut_resultat == 'Saisi' %}
                                     <button class="btn btn-primary btn-sm" onclick="openResultForm({{ (res._id|string)|tojson|forceescape }}, {{ (res.patient.prenom ~ ' ' ~ res.patient.nom)|tojson|forceescape }}, {{ res.code_secret|tojson|forceescape }}, {{ is_lab }}, {{ is_imaging }})">
                                         <i data-lucide="edit-3" style="width:14px;height:14px;vertical-align:bottom;"></i> Saisir Résultat
@@ -160,11 +163,36 @@
             <input type="hidden" name="lab_data" id="lab_data">
         </div>
 
-        <!-- Dynamic Imaging Section -->
-        <div id="imaging-section" style="display:none; margin-bottom: 2rem; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem;">
-            <h4 style="margin-top:0;"><i data-lucide="image"></i> Clichés d'Imagerie</h4>
-            <p style="font-size: 0.85rem; color: #666;">Téléchargez les images médicales (elles ne seront pas intégrées au PDF mais archivées séparément).</p>
-            <input type="file" name="medical_images" multiple accept="image/*, .dcm" class="form-control" style="padding:0.4rem;">
+        <!-- Pièces Jointes du Dossier: Imagerie + Signature Manuscrite -->
+        <div style="margin-bottom: 2rem; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1.5rem;">
+            <h4 style="margin-top:0;"><i data-lucide="paperclip"></i> Pièces Jointes du Dossier</h4>
+
+            <!-- Dynamic Imaging Section -->
+            <div id="imaging-section" style="display:none; margin-bottom: 1.5rem;">
+                <h5 style="margin-bottom: 0.25rem;"><i data-lucide="image" style="width:16px;height:16px;vertical-align:bottom;"></i> Clichés d'Imagerie</h5>
+                <p style="font-size: 0.85rem; color: #666;">Importez les images médicales (DICOM, JPG, JPEG, PNG, PDF). Elles seront automatiquement enregistrées dans le sous-dossier « Images médicales » du dossier de ce patient.</p>
+                <input type="file" name="medical_images" multiple accept="image/*, .dcm, .pdf" class="form-control" style="padding:0.4rem;">
+            </div>
+
+            <!-- Doctor Handwritten Signature Import -->
+            <div id="result-form-signature-import" style="padding-top: 1.25rem; border-top: 1px dashed #cbd5e1;">
+                <h5 style="margin-bottom: 0.25rem;"><i data-lucide="pen-tool" style="width:16px;height:16px;vertical-align:bottom;"></i> Signature Manuscrite du Médecin</h5>
+                <p style="font-size: 0.85rem; color: #666;">Importez une image de votre véritable signature manuscrite (stylo). Elle sera utilisée automatiquement comme signature numérique dans le compte rendu — pas de texte ni de code.</p>
+
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom: 0.75rem;">
+                    <div style="width:110px; height:70px; border:1px solid #e2e8f0; border-radius:8px; background:#fafcfb; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                        <img id="result-form-signature-preview" src="{% if medecin.get('signature_image_path') %}{{ url_for('serve_own_doctor_signature') }}{% endif %}" alt="Signature" style="max-width:100%; max-height:100%; {% if not medecin.get('signature_image_path') %}display:none;{% endif %}">
+                        <span id="result-form-signature-placeholder" style="font-size:0.7rem; color:#999; font-style:italic; {% if medecin.get('signature_image_path') %}display:none;{% endif %}">Aucune signature</span>
+                    </div>
+                    <div style="flex:1;">
+                        <input type="file" id="result-form-signature-file" accept="image/png, image/jpeg" class="form-control" style="padding:0.4rem; margin-bottom:0.5rem;">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="uploadDoctorSignatureFromResultForm()">
+                            <i data-lucide="upload" style="width:14px;height:14px;vertical-align:bottom;"></i> Importer une signature
+                        </button>
+                        <span id="result-form-signature-status" style="font-size:0.8rem; margin-left:0.5rem; color: var(--vert-principal); font-weight:600;"></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="form-group">
@@ -225,6 +253,45 @@
         document.getElementById('result-form-title').innerText = "Saisir les résultats pour " + patientName;
         document.getElementById('result-entry-card').style.display = 'block';
         window.scrollTo({ top: document.getElementById('result-entry-card').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function uploadDoctorSignatureFromResultForm() {
+        const fileInput = document.getElementById('result-form-signature-file');
+        const statusEl = document.getElementById('result-form-signature-status');
+        if (!fileInput.files.length) {
+            statusEl.style.color = 'var(--rouge)';
+            statusEl.textContent = 'Veuillez sélectionner un fichier image.';
+            return;
+        }
+        const formData = new FormData();
+        formData.append('signature_image', fileInput.files[0]);
+        statusEl.style.color = '#666';
+        statusEl.textContent = 'Importation...';
+
+        fetch("{{ url_for('doctor_upload_signature') }}", {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                const preview = document.getElementById('result-form-signature-preview');
+                preview.src = data.image_url + '?t=' + Date.now();
+                preview.style.display = 'block';
+                document.getElementById('result-form-signature-placeholder').style.display = 'none';
+                statusEl.style.color = 'var(--vert-principal)';
+                statusEl.textContent = 'Signature enregistrée ✓';
+                fileInput.value = '';
+            } else {
+                statusEl.style.color = 'var(--rouge)';
+                statusEl.textContent = data.error || "Erreur lors de l'import.";
+            }
+        })
+        .catch(() => {
+            statusEl.style.color = 'var(--rouge)';
+            statusEl.textContent = "Erreur réseau lors de l'import.";
+        });
     }
 
     function closeResultForm() {

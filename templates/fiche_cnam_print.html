@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fiche CNAM — Feuille de Soins</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .lucide { width: 1.25em; height: 1.25em; stroke-width: 2px; vertical-align: middle; }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.5;
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            background: #fff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px double #2196F3;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+        .header-logo { display: flex; align-items: center; gap: 10px; }
+        .header-logo img { height: 48px; }
+        .header-logo-text { font-size: 18px; color: #2196F3; font-weight: bold; line-height: 1.2; }
+        .header-info { text-align: right; font-size: 12px; color: #666; }
+        .header-qr { text-align: center; }
+        .header-qr img { width: 72px; height: 72px; }
+        .header-qr span { display: block; font-size: 9px; color: #999; margin-top: 2px; }
+        .title { text-align: center; margin-bottom: 20px; }
+        .title h1 { color: #2196F3; font-size: 20px; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .title p { margin: 5px 0 0 0; color: #888; font-size: 12px; }
+        .section { margin-bottom: 22px; }
+        .section-title {
+            font-weight: bold; font-size: 13px; text-transform: uppercase; color: #2196F3;
+            border-bottom: 1px solid #2196F3; padding-bottom: 5px; margin-bottom: 12px;
+        }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+        .grid-item { font-size: 13px; }
+        .grid-item strong { display: block; color: #777; font-size: 10px; text-transform: uppercase; margin-bottom: 2px; }
+        table.fiche-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 12px; }
+        table.fiche-table th, table.fiche-table td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+        table.fiche-table th { background-color: #eef4fb; color: #333; font-weight: bold; }
+        table.fiche-table input, table.fiche-table textarea {
+            width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 5px; font-size: 12px; font-family: inherit;
+        }
+        .admin-box { background:#f9fafb; border:1px solid #e2e8f0; border-radius:6px; padding:16px; }
+        .admin-box .grid input, .admin-box .grid textarea {
+            width: 100%; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px; font-size: 13px; font-family: inherit; margin-top: 4px;
+        }
+        .badge { display:inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .badge.pending { background:#fff3cd; color:#856404; }
+        .badge.final { background:#d1e7dd; color:#0f5132; }
+        .add-row-btn, .save-btn {
+            background-color: #2196F3; color: white; border: none; padding: 8px 16px;
+            border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; margin-top: 6px;
+        }
+        .add-row-btn { background-color: #64748b; }
+        .print-btn {
+            background-color: #1B7F3A; color: white; border: none; padding: 10px 20px; border-radius: 4px;
+            font-size: 14px; font-weight: bold; cursor: pointer; display: block; margin: 20px auto 0 auto;
+        }
+        .footer { margin-top: 30px; border-top: 1px solid #eee; padding-top: 12px; text-align: center; font-size: 11px; color: #999; }
+        @media print {
+            .no-print { display: none !important; }
+            body { border: none; box-shadow: none; padding: 0; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-logo">
+            <img src="/static/logo_officiel.png" alt="Logo">
+            <div class="header-logo-text">CAISSE NATIONALE<br>D'ASSURANCE MALADIE</div>
+        </div>
+        <div class="header-info">
+            <strong>{{ centre.nom_centre if centre else '' }}</strong><br>
+            {{ centre.adresse if centre else '' }}<br>
+            Tél: {{ centre.telephone if centre else '' }}
+        </div>
+        {% if qr_code_data %}
+        <div class="header-qr">
+            <img src="{{ qr_code_data }}" alt="QR Code">
+            <span>Vérification</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="title">
+        <h1>Feuille de Soins — Fiche CNAM</h1>
+        <p>
+            Code Feuille de Soins #{{ reservation.numero_de_rendez_vous }} &nbsp;|&nbsp;
+            Date des Soins {{ cnam.date_soins.strftime('%d/%m/%Y %H:%M') if cnam.date_soins else '' }} &nbsp;|&nbsp;
+            {% if cnam.valide_administration %}
+                <span class="badge final">Finalisée</span>
+            {% else %}
+                <span class="badge pending">En cours</span>
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- Patient Identification -->
+    <div class="section">
+        <div class="section-title">Identification du Patient</div>
+        <div class="grid">
+            <div class="grid-item">
+                <strong>Nom de l'Assuré</strong>
+                {{ patient.prenom }} {{ patient.nom }}
+            </div>
+            <div class="grid-item">
+                <strong>Identifiant National d'Assurance Maladie</strong>
+                {{ cnam.numero_cnam or '—' }}
+            </div>
+            <div class="grid-item">
+                <strong>Numéro National d'Identité (NNI)</strong>
+                {{ patient.numero_national }}
+            </div>
+            <div class="grid-item">
+                <strong>Date de Naissance / Âge</strong>
+                {{ patient.date_naissance if patient.get('date_naissance') else '—' }}{% if age %} ({{ age }} ans){% endif %}
+            </div>
+            <div class="grid-item">
+                <strong>Centre Médical</strong>
+                {{ centre.nom_centre if centre else '—' }}
+            </div>
+            <div class="grid-item">
+                <strong>Médecin</strong>
+                {{ 'Dr. ' + medecin.prenom + ' ' + medecin.nom if medecin else 'Non assigné' }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Prescription Section -->
+    <div class="section">
+        <div class="section-title">Prescription du Médecin</div>
+        {% set can_edit_medecin = (session.get('role') == 'medecin' and not cnam.valide_administration) %}
+        <form method="POST" action="{{ url_for('update_fiche_cnam_medecin', reservation_id=reservation._id) }}" id="prescription-form">
+        <table class="fiche-table" id="prescription-table">
+            <thead>
+                <tr>
+                    <th>Médicament</th>
+                    <th style="width:70px;">Qté</th>
+                    <th style="width:90px;">Durée</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in cnam.prescriptions %}
+                <tr>
+                    {% if can_edit_medecin %}
+                    <td><input type="text" name="medicament[]" value="{{ p.medicament }}"></td>
+                    <td><input type="text" name="quantite[]" value="{{ p.quantite }}"></td>
+                    <td><input type="text" name="duree[]" value="{{ p.duree }}"></td>
+                    <td><input type="text" name="notes_medicament[]" value="{{ p.notes }}"></td>
+                    {% else %}
+                    <td>{{ p.medicament }}</td>
+                    <td>{{ p.quantite }}</td>
+                    <td>{{ p.duree }}</td>
+                    <td>{{ p.notes }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                {% if can_edit_medecin %}
+                <tr class="extra-row">
+                    <td><input type="text" name="medicament[]"></td>
+                    <td><input type="text" name="quantite[]"></td>
+                    <td><input type="text" name="duree[]"></td>
+                    <td><input type="text" name="notes_medicament[]"></td>
+                </tr>
+                {% elif not cnam.prescriptions %}
+                <tr><td colspan="4" style="text-align:center; color:#999;">Aucune prescription enregistrée</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+        {% if can_edit_medecin %}
+        <button type="button" class="add-row-btn no-print" onclick="addRow('prescription-table', 4)">+ Ajouter une ligne</button>
+        {% endif %}
+
+        <!-- Analyses / Examens / Radio -->
+        <div class="section-title" style="margin-top:20px;">Analyses, Examens et Radio</div>
+        <table class="fiche-table" id="analyses-table">
+            <thead>
+                <tr>
+                    <th style="width:150px;">Type</th>
+                    <th>Prestation</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in cnam.analyses %}
+                <tr>
+                    {% if can_edit_medecin %}
+                    <td>
+                        <select name="analyse_type[]" style="width:100%; padding:5px; border-radius:4px; border:1px solid #cbd5e1;">
+                            {% for t in ['Analyse Sanguine', 'Radiologie', 'IRM', 'Scanner (CT)', 'Laboratoire', 'Autre'] %}
+                            <option value="{{ t }}" {{ 'selected' if a.type == t else '' }}>{{ t }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="text" name="analyse_prestation[]" value="{{ a.prestation }}"></td>
+                    <td><input type="text" name="analyse_notes[]" value="{{ a.notes }}"></td>
+                    {% else %}
+                    <td>{{ a.type }}</td>
+                    <td>{{ a.prestation }}</td>
+                    <td>{{ a.notes }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                {% if can_edit_medecin %}
+                <tr class="extra-row">
+                    <td>
+                        <select name="analyse_type[]" style="width:100%; padding:5px; border-radius:4px; border:1px solid #cbd5e1;">
+                            {% for t in ['Analyse Sanguine', 'Radiologie', 'IRM', 'Scanner (CT)', 'Laboratoire', 'Autre'] %}
+                            <option value="{{ t }}">{{ t }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="text" name="analyse_prestation[]"></td>
+                    <td><input type="text" name="analyse_notes[]"></td>
+                </tr>
+                {% elif not cnam.analyses %}
+                <tr><td colspan="3" style="text-align:center; color:#999;">Aucune analyse enregistrée</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        {% if can_edit_medecin %}
+        <label style="font-weight:600; font-size:12px; color:#475569; display:block; margin-top:10px;">Observations Médicales</label>
+        <textarea name="observations_medecin" rows="3" style="width:100%; border:1px solid #cbd5e1; border-radius:6px; padding:8px; font-family:inherit;">{{ cnam.observations_medecin }}</textarea>
+        <button type="submit" class="save-btn no-print" style="margin-top:10px;">Enregistrer les modifications médicales</button>
+        {% elif cnam.observations_medecin %}
+        <div class="grid-item" style="margin-top:10px;">
+            <strong>Observations Médicales</strong>
+            {{ cnam.observations_medecin }}
+        </div>
+        {% endif %}
+        </form>
+    </div>
+
+    <!-- Administrative Section -->
+    <div class="section">
+        <div class="section-title">Section Administrative</div>
+        {% set can_edit_admin = (session.get('role') == 'admin') %}
+
+        {% if cnam.numero_cnam %}
+        <div class="admin-box" style="margin-bottom:16px;">
+            <p style="font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:0.4px; color:#2196F3; margin:0 0 10px 0;">
+                <i data-lucide="shield-check" style="width:14px;height:14px;vertical-align:bottom;"></i> Informations d'Adhésion CNAM
+            </p>
+            <div class="grid">
+                <div class="grid-item">
+                    <strong>Numéro d'Adhérent CNAM</strong>
+                    {{ cnam.numero_cnam or '—' }}
+                </div>
+                <div class="grid-item">
+                    <strong>Statut CNAM</strong>
+                    {% if cnam_membership_status == 'Active' %}
+                        <span class="badge final">Active</span>
+                    {% elif cnam_membership_status == 'Expirée' %}
+                        <span class="badge pending" style="background:#f8d7da; color:#842029;">Expirée</span>
+                    {% else %}
+                        —
+                    {% endif %}
+                </div>
+                <div class="grid-item">
+                    <strong>Date de Début</strong>
+                    {% if can_edit_admin %}<input type="date" name="date_debut_cnam" form="admin-section-form" value="{{ cnam.date_debut_cnam or '' }}">{% else %}{{ cnam.date_debut_cnam or '—' }}{% endif %}
+                </div>
+                <div class="grid-item">
+                    <strong>Date de Fin</strong>
+                    {{ cnam.date_expiration or '—' }}
+                </div>
+                <div class="grid-item">
+                    <strong>Taux de Couverture</strong>
+                    {{ (cnam_rate * 100)|round|int }}%
+                </div>
+                <div class="grid-item">
+                    <strong>Type de Couverture</strong>
+                    {{ cnam.type_couverture or '—' }}
+                </div>
+                <div class="grid-item" style="grid-column: span 2;">
+                    <strong>Bénéficiaire</strong>
+                    {{ cnam.ayant_droit or (patient.prenom + ' ' + patient.nom) }} — {{ cnam.relation or 'Bénéficiaire principal' }}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="admin-box" style="margin-bottom:16px;">
+            <p style="font-size:12px; color:#888; margin:0;"><i data-lucide="info" style="width:14px;height:14px;vertical-align:bottom;"></i> Réservation hors couverture CNAM (Paiement Normal) — aucune information d'adhésion à afficher.</p>
+        </div>
+        {% endif %}
+
+        <div class="admin-box">
+        <form method="POST" action="{{ url_for('update_fiche_cnam_admin', reservation_id=reservation._id) }}" id="admin-section-form">
+            <div class="grid">
+                <div class="grid-item">
+                    <strong>Date d'Entrée</strong>
+                    {{ cnam.date_entree or '—' }}
+                    <span style="font-size:9px; color:#999; display:block;">(rempli automatiquement)</span>
+                </div>
+                <div class="grid-item">
+                    <strong>Date de Sortie</strong>
+                    {{ cnam.date_sortie or '—' }}
+                    <span style="font-size:9px; color:#999; display:block;">(généré automatiquement à la validation finale)</span>
+                </div>
+                <div class="grid-item">
+                    <strong>Montant Global de la Facture</strong>
+                    {{ cnam.montant_facture if cnam.montant_facture is not none else '—' }}
+                    <span style="font-size:9px; color:#999; display:block;">(rempli automatiquement)</span>
+                </div>
+                <div class="grid-item">
+                    <strong>Montant à Rembourser par la CNAM</strong>
+                    {{ cnam.montant_rembourse_cnam if cnam.montant_rembourse_cnam is not none else '—' }}
+                    <span style="font-size:9px; color:#999; display:block;">(rempli automatiquement)</span>
+                </div>
+                <div class="grid-item" style="grid-column: span 2;">
+                    <strong>Notes Administratives</strong>
+                    {% if can_edit_admin %}<textarea name="notes_admin" rows="2">{{ cnam.notes_admin }}</textarea>{% else %}{{ cnam.notes_admin or '—' }}{% endif %}
+                </div>
+            </div>
+            {% if can_edit_admin and not cnam.valide_administration %}
+            <div style="margin-top:12px;">
+                <label style="font-size:13px;"><input type="checkbox" name="finalize"> Valider et finaliser définitivement cette fiche</label>
+            </div>
+            <button type="submit" class="save-btn no-print" style="margin-top:10px;">Enregistrer la validation administrative</button>
+            {% elif cnam.valide_administration %}
+            <p style="margin-top:10px; font-size:12px; color:#0f5132;"><i data-lucide="check-circle"></i> Fiche validée et finalisée par l'administration.</p>
+            {% endif %}
+        </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Ce document est un document médical unique et confidentiel, partagé entre le patient, le médecin et l'administration.</p>
+        <p style="font-size: 10px; color: #bbb;">Réf. Fiche: {{ cnam._id }} • Généré le {{ date_impression }}</p>
+    </div>
+
+    <button class="print-btn no-print" onclick="window.print()"><i data-lucide="printer"></i> Imprimer / Enregistrer en PDF</button>
+
+<script>
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    function addRow(tableId, cols) {
+        const tbody = document.getElementById(tableId).querySelector('tbody');
+        const lastRow = tbody.querySelector('tr.extra-row');
+        const clone = lastRow.cloneNode(true);
+        clone.querySelectorAll('input').forEach(i => i.value = '');
+        tbody.insertBefore(clone, lastRow);
+    }
+
+    // Lightweight polling so Patient/Doctor/Admin views stay in sync without a manual refresh
+    let lastUpdatedAt = "{{ cnam.updated_at.isoformat() if cnam.updated_at else '' }}";
+    setInterval(function() {
+        fetch("{{ url_for('fiche_cnam_status', reservation_id=reservation._id) }}")
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (data && data.updated_at && data.updated_at !== lastUpdatedAt) {
+                    location.reload();
+                }
+            })
+            .catch(() => {});
+    }, 5000);
+</script>
+</body>
+</html>

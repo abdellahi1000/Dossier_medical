@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Système de Gestion Médicale{% endblock %}</title>
+    <title>{% block title %}KHIDMATY – Gestion des Dossiers Médicaux{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
@@ -182,6 +182,21 @@
             gap: 0.5rem;
         }
         .dp-doc-item:hover { background: #f0fdf4; }
+        .dp-images-subfolder {
+            margin: 0.15rem 0 0.3rem 1.4rem;
+            padding-left: 0.6rem;
+            border-left: 2px solid #d7ede0;
+        }
+        .dp-subfolder-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #198754;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 0.3rem 0.5rem 0.1rem;
+        }
+        .dp-doc-item-nested { padding-top: 0.4rem; padding-bottom: 0.4rem; }
+        .dp-doc-item-nested .dp-doc-type-icon { font-size: 1.05rem; }
         .dp-doc-left { display: flex; align-items: center; gap: 0.6rem; flex: 1; min-width: 0; }
         .dp-doc-type-icon { font-size: 1.2rem; flex-shrink: 0; }
         .dp-doc-name {
@@ -458,8 +473,8 @@
                         <i data-lucide="menu" style="width:28px;height:28px;"></i>
                     </button>
                 {% endif %}
-                <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;border:2px solid rgba(255,255,255,0.35);"><i data-lucide="activity"></i></div>
-                <h1 style="color:var(--blanc);font-size:1.4rem;font-weight:700;margin-bottom:0;">Système de Gestion Médicale</h1>
+                <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid rgba(255,255,255,0.35);"><img src="{{ nav_logo_url or url_for('static', filename='logo_officiel.png') }}" alt="Logo" style="width:100%;height:100%;object-fit:cover;"></div>
+                <h1 style="color:var(--blanc);font-size:1.4rem;font-weight:700;margin-bottom:0;">{{ nav_brand_text }}</h1>
             </div>
             <nav>
                 <ul class="nav-menu">
@@ -476,6 +491,7 @@
                         <li><a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm logout-btn">Déconnexion</a></li>
                     {% elif session.get('role') == 'medecin' %}
                         <li><a href="{{ url_for('doctor_dashboard') }}" class="nav-link">Espace Médecin (Dr. {{ session.get('user_name') }})</a></li>
+                        <li><a href="{{ url_for('doctor_profile') }}" class="nav-link">Mon Profil</a></li>
                         <li><a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm logout-btn">Déconnexion</a></li>
                     {% elif session.get('role') == 'admin' %}
                         <li><a href="{{ url_for('admin_identity') }}" class="nav-link">Espace Hôpital</a></li>
@@ -517,7 +533,7 @@
     </main>
 
     <footer class="no-print">
-        <p>&copy; 2026 Système de Gestion Médicale. Tous droits réservés.</p>
+        <p>&copy; 2026 {{ nav_brand_text }}. Tous droits réservés.</p>
         <p style="font-size:0.8rem;color:#555;">Développé conformément aux spécifications du document de conception.</p>
     </footer>
 
@@ -697,34 +713,42 @@
             // Receipt
             items += docItem('<i data-lucide="file-text"></i>', 'Reçu Numérique', `Centre: ${res.centre}`, res.receipt_url, res.receipt_url);
 
-            // CNAM doc
-            if (res.cnam_url) {
+            // Shared Fiche (prescriptions, analyses, administrative validation — includes CNAM info)
+            if (res.fiche_cnam_url) {
                 items += `<hr class="dp-divider">`;
-                items += docItem('<i data-lucide="clipboard-list"></i>', 'Document CNAM', `N° CNAM: ${res.cnam_num || '—'}`, res.cnam_url, res.cnam_url);
+                items += docItem('<i data-lucide="file-text"></i>', 'Fiche CNAM', `Centre: ${res.centre}`, res.fiche_cnam_url, res.fiche_cnam_url);
             }
 
-            // Final result PDF
+            // Final result PDF, with its Images subfolder nested directly beneath it
+            // (mirrors the on-disk layout: Resultats_<examen>/rapport_final.html + Images_medicales/)
             if (res.result_url) {
                 items += `<hr class="dp-divider">`;
                 items += docItem('<i data-lucide="download"></i>', 'Rapport Médical Signé', `Résultat final — ${res.examens}`, res.result_url, res.result_url);
-            }
 
-            // Medical images
-            if (res.images && res.images.length) {
+                if (res.images && res.images.length) {
+                    items += `
+                    <div class="dp-images-subfolder">
+                        <div class="dp-subfolder-label"><i data-lucide="folder" style="width:13px;height:13px;vertical-align:bottom;"></i> Images (${res.images.length})</div>`;
+                    res.images.forEach((img, i) => {
+                        items += docItem('<i data-lucide="image"></i>', `Image_${String(i+1).padStart(2,'0')}`, `Image médicale originale`, img, img, true);
+                    });
+                    items += `</div>`;
+                }
+            } else if (res.images && res.images.length) {
                 items += `<hr class="dp-divider">`;
                 res.images.forEach((img, i) => {
-                    items += docItem('<i data-lucide="image"></i>', `Cliché d'Imagerie ${i+1}`, `Image médicale originale`, img, img);
+                    items += docItem('<i data-lucide="image"></i>', `Image_${String(i+1).padStart(2,'0')}`, `Image médicale originale`, img, img);
                 });
             }
 
             return items || `<div class="dp-doc-item"><span style="color:#718096;font-size:0.82rem;padding:0.25rem 0.5rem;">Aucun document disponible pour cette réservation.</span></div>`;
         }
 
-        function docItem(icon, name, sub, viewUrl, dlUrl) {
+        function docItem(icon, name, sub, viewUrl, dlUrl, nested) {
             // Escape names for JS function argument
             const safeName = name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
             return `
-            <div class="dp-doc-item">
+            <div class="dp-doc-item${nested ? ' dp-doc-item-nested' : ''}">
                 <div class="dp-doc-left">
                     <span class="dp-doc-type-icon">${icon}</span>
                     <div>
@@ -788,6 +812,7 @@
             applyPdfTransform();
             
             titleEl.textContent = title || "Visualiseur de Document";
+            iframe.removeAttribute('srcdoc');
             iframe.src = url;
             dlBtn.href = url;
             
@@ -809,6 +834,7 @@
             setTimeout(() => {
                 modal.style.display = 'none';
                 iframe.src = '';
+                iframe.removeAttribute('srcdoc');
                 document.body.style.overflow = '';
             }, 300);
         }

@@ -1,0 +1,50 @@
+[
+  {
+    "_id": {
+      "$oid": "6a61769ff9ef528c4e6986c3"
+    },
+    "phone": "48287378",
+    "message": "R\u00e9servation confirm\u00e9e au CENTRE EL AWNNE. RDV le 23/07/2026 (Cr\u00e9neau: 09:15 - 11:00). Code secret: COWC41, Groupe: d7, Appel: R1.",
+    "time": "23/07/2026 02:04:15"
+  },
+  {
+    "_id": {
+      "$oid": "6a61896f3471ca1c560fa1f3"
+    },
+    "phone": "48287378",
+    "message": "Votre dossier a \u00e9t\u00e9 valid\u00e9. Vous serez pris en charge par le Dr. bb b.",
+    "time": "23/07/2026 03:24:31"
+  },
+  {
+    "_id": {
+      "$oid": "6a618d7ab203495af8f44439"
+    },
+    "phone": "48287378",
+    "message": "R\u00e9servation confirm\u00e9e au CENTRE EL AWNNE. RDV le 23/07/2026 (Cr\u00e9neau: 09:15 - 11:00). Code secret: EM9Y11, Groupe: d7, Appel: R2.",
+    "time": "23/07/2026 03:41:46"
+  },
+  {
+    "_id": {
+      "$oid": "6a618dcfb203495af8f4443f"
+    },
+    "phone": "48287378",
+    "message": "Votre dossier a \u00e9t\u00e9 valid\u00e9. Vous serez pris en charge par le Dr. bb b.",
+    "time": "23/07/2026 03:43:11"
+  },
+  {
+    "_id": {
+      "$oid": "6a62253c42b9aa991bb2e8e8"
+    },
+    "phone": "48287378",
+    "message": "Votre r\u00e9sultat final est disponible dans votre espace personnel. Code d'acc\u00e8s: COWC41.",
+    "time": "23/07/2026 14:29:16"
+  },
+  {
+    "_id": {
+      "$oid": "6a62c0d2e083f7b8e4e285ef"
+    },
+    "phone": "48287378",
+    "message": "Votre r\u00e9sultat final est disponible dans votre espace personnel. Code d'acc\u00e8s: EM9Y11.",
+    "time": "24/07/2026 01:33:06"
+  }
+]

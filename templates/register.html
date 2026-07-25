@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription — Système de Gestion Médicale</title>
+    <title>Inscription — KHIDMATY – Gestion des Dossiers Médicaux</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
@@ -232,6 +232,21 @@
             opacity: 0.45;
             pointer-events: none;
         }
+        .pw-toggle-btn {
+            position: absolute;
+            right: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            opacity: 0.5;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+        .pw-toggle-btn:hover { opacity: 0.9; }
         .form-control {
             width: 100%;
             padding: 0.85rem 1rem 0.85rem 2.6rem;
@@ -337,7 +352,7 @@
 <nav>
     <a class="nav-brand" href="#">
         <img class="nav-logo" src="/static/logo_officiel.png" alt="Logo">
-        <span class="nav-title">Système de Gestion Médicale</span>
+        <span class="nav-title">KHIDMATY – Gestion des Dossiers Médicaux</span>
     </a>
     <a class="nav-link-back" href="/login">← Retour Connexion</a>
 </nav>
@@ -394,14 +409,14 @@
                             <label>Nom</label>
                             <div class="input-wrap">
                                 <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
-                                <input type="text" name="nom" class="form-control" placeholder="Entrez votre nom">
+                                <input type="text" name="nom" class="form-control" placeholder="Entrez votre nom" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Prénom</label>
                             <div class="input-wrap">
                                 <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
-                                <input type="text" name="prenom" class="form-control" placeholder="Entrez votre prénom">
+                                <input type="text" name="prenom" class="form-control" placeholder="Entrez votre prénom" autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -409,14 +424,14 @@
                         <label>Numéro National (NNI)</label>
                         <div class="input-wrap">
                             <span class="input-icon"><i data-lucide="id-card" style="width:18px;height:18px;"></i></span>
-                            <input type="text" name="numero_national" class="form-control" placeholder="Entrez votre numéro national">
+                            <input type="text" name="numero_national" class="form-control" placeholder="Entrez votre numéro national" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Téléphone</label>
                         <div class="input-wrap">
                             <span class="input-icon"><i data-lucide="phone" style="width:18px;height:18px;"></i></span>
-                            <input type="tel" name="telephone" class="form-control" placeholder="Entrez votre numéro de téléphone">
+                            <input type="tel" name="telephone" class="form-control" placeholder="Phone Number" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -428,14 +443,14 @@
                             <label>Nom</label>
                             <div class="input-wrap">
                                 <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
-                                <input type="text" name="nom_adm" class="form-control" placeholder="Entrez votre nom">
+                                <input type="text" name="nom_adm" class="form-control" placeholder="Entrez votre nom" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Prénom</label>
                             <div class="input-wrap">
                                 <span class="input-icon"><i data-lucide="user" style="width:18px;height:18px;"></i></span>
-                                <input type="text" name="prenom_adm" class="form-control" placeholder="Entrez votre prénom">
+                                <input type="text" name="prenom_adm" class="form-control" placeholder="Entrez votre prénom" autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -443,14 +458,14 @@
                         <label>Identifiant Administratif</label>
                         <div class="input-wrap">
                             <span class="input-icon"><i data-lucide="id-card" style="width:18px;height:18px;"></i></span>
-                            <input type="text" name="identifiant_administratif" class="form-control" placeholder="Entrez votre identifiant administratif">
+                            <input type="text" name="identifiant_administratif" class="form-control" placeholder="Entrez votre identifiant administratif" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Centre médical</label>
                         <div class="input-wrap">
                             <span class="input-icon"><i data-lucide="building-2" style="width:18px;height:18px;"></i></span>
-                            <input type="text" name="centre_medical_adm" style="text-transform: uppercase;" class="form-control" placeholder="Nom du centre médical">
+                            <input type="text" name="centre_medical_adm" style="text-transform: uppercase;" class="form-control" placeholder="Nom du centre médical" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -462,14 +477,20 @@
                         <label>Mot de passe</label>
                         <div class="input-wrap">
                             <span class="input-icon"><i data-lucide="key" style="width:18px;height:18px;"></i></span>
-                            <input type="password" name="password" id="pw1" class="form-control" placeholder="Password" required>
+                            <input type="password" name="password" id="pw1" class="form-control" placeholder="Password" autocomplete="new-password" style="padding-right:2.6rem;" required>
+                            <button type="button" class="pw-toggle-btn" onclick="togglePasswordVisibility('pw1', this)" tabindex="-1" title="Afficher/Masquer le mot de passe">
+                                <i data-lucide="eye" style="width:18px;height:18px;"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Confirmation</label>
                         <div class="input-wrap">
                             <span class="input-icon"><i data-lucide="check" style="width:18px;height:18px;"></i></span>
-                            <input type="password" name="confirm_password" id="pw2" class="form-control" placeholder="Password" required>
+                            <input type="password" name="confirm_password" id="pw2" class="form-control" placeholder="Confirm Password" autocomplete="new-password" style="padding-right:2.6rem;" required>
+                            <button type="button" class="pw-toggle-btn" onclick="togglePasswordVisibility('pw2', this)" tabindex="-1" title="Afficher/Masquer le mot de passe">
+                                <i data-lucide="eye" style="width:18px;height:18px;"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -491,7 +512,7 @@
 
 </div><!-- /page-wrap -->
 
-<footer>&copy; 2026 Système de Gestion Médicale — Tous droits réservés</footer>
+<footer>&copy; 2026 KHIDMATY – Gestion des Dossiers Médicaux — Tous droits réservés</footer>
 
 <script>
     const ROLES = {
@@ -561,6 +582,14 @@
         }
     });
     lucide.createIcons();
+
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        btn.innerHTML = `<i data-lucide="${isHidden ? 'eye-off' : 'eye'}" style="width:18px;height:18px;"></i>`;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
 </script>
 </body>
 </html>

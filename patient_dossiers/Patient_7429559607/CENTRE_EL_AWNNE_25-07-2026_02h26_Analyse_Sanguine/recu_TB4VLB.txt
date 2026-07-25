@@ -1,0 +1,6 @@
+=== RECU NUMERIQUE - CENTRE EL AWNNE ===
+Rendez-vous: #3 | Groupe: d7 | Appel: A1
+Patient: tru tkp (7429559607)
+Montant Paye: 1300.0 MRU (Mode: Normal)
+Date: 25/07/2026 02:26
+Code Secret Patient: TB4VLB

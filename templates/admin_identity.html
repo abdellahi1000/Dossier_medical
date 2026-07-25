@@ -20,7 +20,7 @@
             <i data-lucide="clock" style="width:24px;height:24px;"></i>
         </div>
         <div class="stat-info">
-            <p>En attente de validation</p>
+            <p>Reçus en attente de validation</p>
             <h3>{{ pending_receipts|length }}</h3>
         </div>
     </div>
@@ -126,6 +126,9 @@
                                     <button type="button" class="btn-hosp btn-hosp-sm btn-hosp-info" onclick="openIframeModal('Reçu de Réservation', '{{ url_for('download_receipt', reservation_id=res._id) }}')">
                                         <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu
                                     </button>
+                                    <button type="button" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd;color:#1565c0;border:none;" onclick="openIframeModal('Fiche CNAM', '{{ url_for('fiche_cnam', reservation_id=res._id) }}')">
+                                        <i data-lucide="file-text" style="width:14px;height:14px;vertical-align:bottom;"></i> Fiche CNAM
+                                    </button>
                                     {% if res.statut == 'En attente de validation' %}
                                         <form action="{{ url_for('admin_validate_receipt', reservation_id=res._id) }}" method="POST" style="display:flex;flex-direction:column;gap:0.5rem;margin:0;">
                                             <select name="assigned_doctor" required class="hosp-form-group" style="padding:0.4rem; border-radius:6px; border:1px solid #cbd5e1; font-size:0.8rem; width:100%; margin:0;">
@@ -215,7 +218,7 @@
                                     <i data-lucide="printer" style="width:14px;height:14px;vertical-align:bottom;"></i> Reçu
                                 </button>
                                 {% if res.paiement.mode_paiement == 'CNAM' %}
-                                    <button type="button" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd;color:#1565c0;border:none;" onclick="openIframeModal('Vérification CNAM', '{{ url_for('download_cnam', reservation_id=res._id) }}')">
+                                    <button type="button" class="btn-hosp btn-hosp-sm" style="background:#e3f2fd;color:#1565c0;border:none;" onclick="openIframeModal('Fiche CNAM', '{{ url_for('fiche_cnam', reservation_id=res._id) }}')">
                                         <i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> CNAM
                                     </button>
                                 {% endif %}

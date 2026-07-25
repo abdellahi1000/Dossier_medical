@@ -1,0 +1,52 @@
+[
+  {
+    "_id": {
+      "$oid": "6a62222d0e8f2b8172f0ceaf"
+    },
+    "id_reservation": {
+      "$oid": "6a618d7ab203495af8f44435"
+    },
+    "id_medecin": {
+      "$oid": "6a61749df9ef528c4e6986b2"
+    },
+    "date_resultat": {
+      "$date": "2026-07-23T14:16:13.804Z"
+    },
+    "statut_resultat": "Valid\u00e9 par Administration",
+    "observations": "e45rt67y8ui",
+    "diagnosis": "sdrfgthyju",
+    "results": "drfgtyhuji",
+    "recommendations": "3we4rftgyhuij",
+    "conclusion": "a3swedrftgyhu",
+    "lab_items": [],
+    "images": [
+      "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_7429559607\\CENTRE_EL_AWNNE_23-07-2026_03h41_Radiologie\\Resultats_Radiologie\\Images_medicales\\Image_01.png",
+      "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_7429559607\\CENTRE_EL_AWNNE_23-07-2026_03h41_Radiologie\\Resultats_Radiologie\\Images_medicales\\Image_02.png",
+      "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_7429559607\\CENTRE_EL_AWNNE_23-07-2026_03h41_Radiologie\\Resultats_Radiologie\\Images_medicales\\Image_03.jpeg"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "6a62c1e20e8f2b8172f0ceb1"
+    },
+    "id_reservation": {
+      "$oid": "6a61769ff9ef528c4e6986bf"
+    },
+    "id_medecin": {
+      "$oid": "6a61749df9ef528c4e6986b2"
+    },
+    "date_resultat": {
+      "$date": "2026-07-24T01:37:38.034Z"
+    },
+    "statut_resultat": "Sign\u00e9 par M\u00e9decin",
+    "observations": "45668654655",
+    "diagnosis": "erywiuopq[",
+    "results": "tyuqiowpl[;as",
+    "recommendations": "wytgeijwpo[s",
+    "conclusion": "5rtw6yurihope[4w",
+    "lab_items": [],
+    "images": [
+      "C:\\Users\\hp\\Dossier_medical\\patient_dossiers\\Patient_7429559607\\CENTRE_EL_AWNNE_23-07-2026_02h04_Radiologie\\Resultats_Radiologie\\Images_medicales\\Image_01.png"
+    ]
+  }
+]
