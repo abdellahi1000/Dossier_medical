@@ -5,7 +5,7 @@
 
 {% block hosp_content %}
 <!-- Page Header -->
-<div class="hosp-page-header" style="margin: 0 -1.5rem 1.75rem; padding: 1.4rem 1.5rem;">
+<div class="hosp-page-header hosp-page-header-bleed">
     <h1>
         <i data-lucide="check-square" style="width:28px;height:28px;vertical-align:bottom;margin-right:8px;color:#198754;"></i>
         Validation & Co-signature Numérique des Résultats
@@ -91,6 +91,13 @@
         .flash-row { flex-wrap:wrap; }
         .flash-row-code { order:3; }
     }
+
+    @media (max-width: 860px) {
+        .admin-result-grid { grid-template-columns: 1fr !important; }
+    }
+    @media (max-width: 480px) {
+        .admin-cnam-summary { grid-template-columns: 1fr !important; }
+    }
 </style>
 
 <!-- Pending Results Table -->
@@ -148,7 +155,7 @@
                     </div>
                 </div>
 
-                <div style="display:grid; grid-template-columns:1fr auto; gap:1.5rem; padding:1.5rem; align-items:start; flex-wrap:wrap;">
+                <div class="admin-result-grid" style="display:grid; grid-template-columns:1fr auto; gap:1.5rem; padding:1.5rem; align-items:start;">
                     <!-- Report Content -->
                     <div>
                         <p style="font-size:0.8rem;font-weight:700;color:#0f4c2a;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;"><i data-lucide="file-text" style="width:14px;height:14px;vertical-align:bottom;"></i> Compte-Rendu Médical</p>
@@ -202,7 +209,7 @@
                             <div style="font-size:0.82rem; font-weight:700; color:#1565c0; margin-bottom:0.6rem;"><i data-lucide="clipboard-list" style="width:14px;height:14px;vertical-align:bottom;"></i> Prise en Charge CNAM</div>
                             {% if res.paiement and res.paiement.mode_paiement == 'CNAM' %}
                                 <span class="status-badge status-active" style="margin-bottom:0.6rem; display:inline-block;">Couvert par la CNAM</span>
-                                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; font-size:0.85rem; color:#334155;">
+                                <div class="admin-cnam-summary" style="display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; font-size:0.85rem; color:#334155;">
                                     <div>
                                         <div style="font-size:0.72rem; text-transform:uppercase; color:#5a7a6a;">Montant Total</div>
                                         <strong>{{ res.paiement.montant_total }} MRU</strong>
@@ -243,7 +250,7 @@
                     </div>
 
                     <!-- Co-signature Action Form -->
-                    <div style="min-width:260px;">
+                    <div style="min-width:min(260px, 100%);">
                         <form action="{{ url_for('admin_sign_result', reservation_id=res._id) }}" method="POST" style="background:linear-gradient(135deg,#edfaf3,#f8fffe); padding:1.25rem; border-radius:12px; border:1.5px solid #c3e6cb;">
                             <p style="font-size:0.8rem;font-weight:700;color:#0f4c2a;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;"><i data-lucide="building" style="width:14px;height:14px;vertical-align:bottom;"></i> Co-signature Administrative</p>
 

@@ -239,7 +239,6 @@
             font-size: 1.25rem;
             cursor: pointer;
             transition: all 0.2s;
-            margin-left: 0.5rem;
             flex-shrink: 0;
         }
         .nav-folder-btn:hover {
@@ -476,19 +475,24 @@
                 <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid rgba(255,255,255,0.35);"><img src="{{ nav_logo_url or url_for('static', filename='logo_officiel.png') }}" alt="Logo" style="width:100%;height:100%;object-fit:cover;"></div>
                 <h1 style="color:var(--blanc);font-size:1.4rem;font-weight:700;margin-bottom:0;">{{ nav_brand_text }}</h1>
             </div>
-            <nav>
+            <nav class="nav-links-wrap">
                 <ul class="nav-menu">
                     {% if session.get('role') == 'patient' %}
                         <li><a href="{{ url_for('patient_dashboard') }}" class="nav-link">Mon Espace</a></li>
                         <li><a href="{{ url_for('book_exam') }}" class="nav-link">Réserver un Examen</a></li>
-                        <!-- 📂 Folder Icon -->
-                        <li>
-                            <button class="nav-folder-btn" onclick="openDocPanel()" title="Mon Dossier Médical">
-                                <i data-lucide="folder"></i>
-                                <span class="nav-folder-badge" id="doc-badge"></span>
-                            </button>
+                        <li class="nav-icon-cluster">
+                            <div class="nav-icon-row">
+                                <!-- 📂 Folder Icon -->
+                                <button class="nav-folder-btn" onclick="openDocPanel()" title="Mon Dossier Médical">
+                                    <i data-lucide="folder"></i>
+                                </button>
+                                <!-- 💬 SMS Icon -->
+                                <button class="nav-folder-btn" onclick="openSMSPanel()" title="Console SMS" style="background: rgba(220,53,69,0.8); border-color: #dc3545;">
+                                    <i data-lucide="message-square"></i>
+                                </button>
+                            </div>
+                            <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm logout-btn">Déconnexion</a>
                         </li>
-                        <li><a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm logout-btn">Déconnexion</a></li>
                     {% elif session.get('role') == 'medecin' %}
                         <li><a href="{{ url_for('doctor_dashboard') }}" class="nav-link">Espace Médecin (Dr. {{ session.get('user_name') }})</a></li>
                         <li><a href="{{ url_for('doctor_profile') }}" class="nav-link">Mon Profil</a></li>
@@ -498,16 +502,6 @@
                         <li><a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm logout-btn">Déconnexion</a></li>
                     {% else %}
                         <li><a href="{{ url_for('login') }}" class="nav-link">Connexion</a></li>
-                    {% endif %}
-                    
-                    {% if session.get('role') == 'patient' %}
-                        <!-- 💬 SMS Icon -->
-                        <li>
-                            <button class="nav-folder-btn" onclick="openSMSPanel()" title="Console SMS" style="background: rgba(220,53,69,0.8); border-color: #dc3545; margin-left: 0.5rem;">
-                                <i data-lucide="message-square"></i>
-                                <span class="nav-folder-badge" id="sms-badge"></span>
-                            </button>
-                        </li>
                     {% endif %}
                 </ul>
             </nav>
@@ -545,7 +539,6 @@
             document.getElementById('sms-panel').style.right = '0';
             document.body.style.overflow = 'hidden';
             updateSMSLogs();
-            document.getElementById('sms-badge').style.display = 'none'; // reset badge on open
         }
 
         function closeSMSPanel() {
@@ -770,7 +763,7 @@
 
         function updateBadge(count) {
             const badge = document.getElementById('doc-badge');
-            if (count > 0) {
+            if (badge && count > 0) {
                 badge.textContent = count > 9 ? '9+' : count;
                 badge.classList.add('show');
             }

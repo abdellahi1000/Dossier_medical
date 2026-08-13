@@ -75,9 +75,11 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    gap: 0.75rem;
+    padding: 1rem clamp(1rem, 4vw, 2rem);
     color: var(--blanc);
 }
 
@@ -85,14 +87,23 @@ header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
+}
+
+.nav-links-wrap {
+    min-width: 0;
 }
 
 .logo-section h1 {
     color: var(--blanc);
-    font-size: 1.5rem;
+    font-size: clamp(1.05rem, 3vw, 1.5rem);
     margin-bottom: 0;
     font-weight: 700;
     letter-spacing: -0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
 }
 
 .logo-icon {
@@ -103,7 +114,8 @@ header {
     display: flex;
     align-items: center;
     list-style: none;
-    gap: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
 }
 
 .nav-link {
@@ -112,6 +124,22 @@ header {
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius-md);
     transition: var(--transition-smooth);
+}
+
+/* Groups the folder/SMS icon buttons with the logout button so they move
+   together as one unit instead of spreading out across the nav row.
+   margin-left:auto pins the cluster to the right edge of whichever line it
+   lands on, whether the nav is a single row (desktop) or wrapped (mobile). */
+.nav-icon-cluster {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-left: auto;
+}
+.nav-icon-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -138,13 +166,14 @@ main {
     max-width: 1200px;
     width: 100%;
     margin: 2rem auto;
-    padding: 0 2rem;
+    padding: 0 clamp(1rem, 4vw, 2rem);
+    box-sizing: border-box;
 }
 
 /* Cards & Layout Containers */
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
     gap: 2rem;
     margin-top: 1.5rem;
 }
@@ -539,6 +568,51 @@ tbody tr:hover {
 
 .sms-log-time {
     color: #888888;
+}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE — Desktop / Laptop / Tablet / Mobile
+══════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+    main { margin: 1.5rem auto; }
+    .card { padding: 1.5rem; }
+    .wizard-steps { flex-wrap: wrap; gap: 0.75rem 0; }
+    .wizard-steps::before { display: none; }
+    .wizard-step { padding: 0 0.5rem; }
+}
+
+@media (max-width: 640px) {
+    .nav-container { padding: 0.85rem 1rem; }
+    /* flex-basis:100% (not width:100%) forces the wrapper onto its own full
+       row with a *definite* size — .nav-menu's width:100% below needs that
+       to resolve against, otherwise it's a percentage of an undefined box
+       and silently falls back to shrink-to-fit, leaving items stranded. */
+    .nav-links-wrap { flex-basis: 100%; }
+    .nav-menu { gap: 0.5rem 0.6rem; width: 100%; align-items: flex-start; }
+    .nav-link { padding: 0.4rem 0.7rem; font-size: 0.85rem; }
+
+    /* Icons stay side-by-side; Déconnexion drops directly underneath them,
+       right-aligned to the icon pair, instead of stretching the row taller. */
+    .nav-icon-cluster { flex-direction: column; align-items: flex-end; gap: 0.4rem; }
+    .logout-btn { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+    .logo-section h1 { font-size: 1.05rem; }
+
+    main { padding: 0 0.85rem; }
+    .card { padding: 1.1rem; border-radius: var(--border-radius-md); }
+    .card-grid { gap: 1.25rem; }
+
+    th, td { padding: 0.65rem 0.75rem; font-size: 0.88rem; }
+
+    .btn { padding: 0.65rem 1.15rem; font-size: 0.92rem; }
+    .flash-message { flex-wrap: wrap; gap: 0.5rem; padding: 0.85rem 1.1rem; }
+
+    .selectable-item { padding: 0.85rem; gap: 0.75rem; }
+}
+
+@media (max-width: 420px) {
+    .nav-link { padding: 0.35rem 0.55rem; font-size: 0.8rem; }
+    .nav-folder-btn { width: 36px; height: 36px; margin-left: 0.35rem; }
+    main { padding: 0 0.65rem; }
 }
 
 /* Printing styles */

@@ -38,7 +38,7 @@ def test_mongodb():
         client = MongoClient(uri, serverSelectionTimeoutMS=5000)
         client.admin.command("ping")
 
-        db = client["Dossier_medical"]
+        db = client[app.config['DATABASE_NAME']]
 
         return {
             "status": "success",
