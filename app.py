@@ -27,6 +27,32 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 client = MongoClient(app.config['MONGO_URI'])
 db = client[app.config['DATABASE_NAME']]
 
+@app.route("/test-mongodb")
+def test_mongodb():
+    try:
+        uri = os.getenv("MONGODB_URI")
+
+        if not uri:
+            return {"status": "error", "message": "MONGODB_URI is missing"}, 500
+
+        client = MongoClient(uri, serverSelectionTimeoutMS=5000)
+        client.admin.command("ping")
+
+        db = client["Dossier_medical"]
+
+        return {
+            "status": "success",
+            "mongodb": "connected",
+            "database": db.name,
+            "collections": db.list_collection_names()
+        }
+
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e)
+        }, 500
+
 # --- SAFE OBJECTID HELPER ---
 def safe_object_id(id_val):
     if not id_val:
