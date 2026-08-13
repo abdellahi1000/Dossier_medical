@@ -9,7 +9,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'dcm'}
 # an environment variable — "localhost" only ever works when MongoDB is
 # running on the same machine as the app (e.g. local development).
 MONGO_URI = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/')
-DATABASE_NAME = os.environ.get('DATABASE_NAME', 'dossier_medical')
+DATABASE_NAME = os.environ.get('DATABASE_NAME', 'Dossier_medical')
 SECRET_KEY = os.environ.get('SECRET_KEY', 'super_secret_key_for_session_management')
 
 # CNAM insurance coverage ratio applied to reservations paid via CNAM.

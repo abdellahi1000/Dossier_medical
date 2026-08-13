@@ -1,14 +1,11 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": { "includeFiles": ["templates/**", "static/**"] }
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "{templates,static}/**"
     }
-  ],
-  "routes": [
-    { "src": "/static/(.*)", "dest": "api/index.py" },
-    { "src": "/(.*)", "dest": "api/index.py" }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/index.py" }
   ]
 }
